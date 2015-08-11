@@ -12,4 +12,4 @@ set :environment, stage
 set :unicorn_pid, "/tmp/unicorn.pid"
 set :unicorn_socket, "/tmp/unicorn.sock"
 
-#set :branch, "multiuser"
+set :branch, ENV["DEPLOY_STAGING_BRANCH"]

@@ -12,4 +12,4 @@ set :environment, stage
 set :unicorn_pid, "/tmp/unicorn.pid"
 set :unicorn_socket, "/tmp/unicorn.sock"
 
-set :branch, "release"
+set :branch, ENV["DEPLOY_PRODUCTION_BRANCH"]
