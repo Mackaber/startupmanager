@@ -1,3 +1,6 @@
+require "dotenv"
+Dotenv.load
+
 worker_processes (ENV['RACK_ENV'] == "production" ? 5 : 3)
 
 current = ENV["UNICORN_CURRENT"]
