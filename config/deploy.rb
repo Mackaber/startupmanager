@@ -1,3 +1,6 @@
+require "dotenv"
+Dotenv.load
+
 require "bundler/capistrano"
 require "capistrano/ext/multistage"
 require File.expand_path("../../lib/capistrano-db-tasks/lib/dbtasks", __FILE__)
