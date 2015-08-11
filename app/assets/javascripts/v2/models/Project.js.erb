@@ -1,0 +1,128 @@
+lll.models.Project = Backbone.Model.extend({
+
+  defaults: {
+    type: "project"
+  }, 
+  
+  validation: {
+    name: {
+      required: true,
+      minLength: 1,
+      maxLength: 255
+    },
+    url: {
+      pattern: /^((http|https|ftp)\:\/\/)?([a-zA-Z0-9\.\-]+(\:[a-zA-Z0-9\.&amp;%\$\-]+)*@)*((25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9])\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[0-9])|([a-zA-Z0-9\-]+\.)*[a-zA-Z0-9\-]+\.(com|edu|gov|int|mil|net|org|biz|arpa|info|name|pro|aero|coop|museum|[a-zA-Z]{2}))(\:[0-9]+)*(\/($|[a-zA-Z0-9\.\,\?\'\\\+&amp;%\$#\=~_\-]+))*$/,
+      msg: "URLs should be formatted like \"https://www.leanlaunchlab.com/\" or \"leanlaunchlab.com\".",
+      required: false
+    }
+  },
+  
+  toString: function() {
+    var self = this;
+    return self.get("name");
+  },
+
+  url: function() {
+    return "/v1/projects" + (this.isNew() ? "" : ("/" + this.id)) + ".json";
+  },
+
+  parse: function(response) {
+    var self = this;
+    var attrs = _.clone(response);
+    
+    if (attrs.created_at) {
+      attrs.created_at = Date.parse(attrs.created_at);
+    }
+    if (attrs.updated_at) {
+      attrs.updated_at = Date.parse(attrs.updated_at);
+    }
+    if (attrs.canvas_updated_at) {
+      attrs.canvas_updated_at = Date.parse(attrs.canvas_updated_at);
+    }
+    
+    attrs = Backbone.Model.prototype.parse.call(this, attrs);
+    // this._changed = true;
+    return attrs;
+  },
+  
+  currentMember: function() {
+    var self = this;
+    return lll.models.members.find(function(m) { 
+      return (m.get("user_id") == lll.models.User.current.id) && (m.get("project_id") == self.id);
+    });
+  },
+  
+  organization: function() {
+    var self = this;
+    if (!self._organization) {
+      if (!self.get("organization_id") && self.attributes.organization) {
+        self._organization = new lll.models.Organization(self.attributes.organization);
+      }
+      else {
+        self._organization = lll.models.organizations.get(self.get("organization_id"));
+      }
+    }    
+    return self._organization;
+  },
+  
+  members: function() {
+    var self = this;
+    if (!self._members) {
+      self._members = new (Backbone.Subset.extend({
+        parent: function () {
+          return lll.models.members;
+        },
+        sieve: function (member) {
+          return (member.get("project_id") == self.id);
+        }
+      }))();      
+    }
+    return self._members;
+  },
+  
+  blogPosts: function() {
+    var self = this;
+    if (!self._blogPosts) {
+      self._blogPosts = new (Backbone.Subset.extend({
+        parent: function () {
+          return lll.models.blogPosts;
+        },
+        sieve: function (member) {
+          return (member.get("project_id") == self.id);
+        }
+      }))();
+      self._blogPosts.liveupdate_keys = "project_id";
+    }
+    return self._blogPosts;
+  },
+
+  hypotheses: function() {
+    var self = this;
+    if (!self._hypotheses) {
+      self._hypotheses = new (Backbone.Subset.extend({
+        parent: function () {
+          return lll.models.hypotheses;
+        },
+        sieve: function (member) {
+          return (member.get("project_id") == self.id);
+        }
+      }))();
+      self._hypotheses.liveupdate_keys = "project_id";      
+    }
+    return self._hypotheses;
+  }
+    
+});
+
+lll.models.projects = new (Backbone.Collection.extend({
+  model: lll.models.Project,
+  
+  comparator: function(project) {
+    return project.get("name").toLowerCase();
+  },
+  
+  url: function() {
+    return "/v1/projects.json";
+  }
+}))();
+  

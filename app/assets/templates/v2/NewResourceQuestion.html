@@ -1,0 +1,69 @@
+<% if (label) { %>
+  <h3>
+    <%= label %>
+  </h3>
+<% } %>
+<form action="" method="get">
+  <p>
+    <label>Name</label>
+    <input type="text" name="name" id="name" value="<%= question.get('name') %>">
+  </p>
+  <p>
+    <label>Email</label>
+    <input type="text" name="email" id="email" value="<%= question.get('email') %>">
+  </p>
+  <p>
+    <label>Company</label>
+    <input type="text" name="company" id="company" value="<%= question.get('company') %>">
+  </p>
+  <% if (!compact) { %>
+  <p>
+    <label>URL</label>
+    <input type="text" name="url" id="url" value="<%= question.get('url') %>">
+  </p>
+  <p>
+    <label>Location</label>
+    <input type="text" name="location" id="location" value="<%= question.get('location') %>">    
+  </p>
+  <p>
+    <label>Industry</label>
+    <select name="industry" id="industry">
+      <option value="">Select your industry</option>
+      <option value="Communications & Media">Communications &amp; Media</option>
+      <option value="Distribution & Retail">Distribution &amp; Retail</option>
+      <option value="Energy & Chemicals">Energy &amp; Chemicals</option>
+      <option value="Financial Services">Financial Services</option>
+      <option value="Healthcare">Healthcare</option>
+      <option value="High Tech Hardware">High Tech Hardware</option>
+      <option value="High Tech Software & Service">High Tech Software &amp; Service</option>
+      <option value="Insurance">Insurance</option>
+      <option value="Life Sciences">Life Sciences</option>
+      <option value="Manufacturing">Manufacturing</option>
+      <option value="Nonprofit , Education & Public sector">Nonprofit , Education &amp; Public sector</option>
+      <option value="Travel & Transportation">Travel &amp; Transportation</option>
+    </select>
+  </p>
+  <p>
+    <label>How funded</label>
+    <select name="funded" id="funded">
+      <option value="">Select funding stage</option>
+      <option value="Self-funded/Friends & Family">Self-funded/Friends &amp; Family</option>
+      <option value="Angel investment">Angel investment</option>
+      <option value="Venture capital - A round">Venture capital - A round</option>
+      <option value="Venture capital - B round">Venture capital - B round</option>
+      <option value="Venture capital - C round">Venture capital - C round</option>
+      <option value="Partner/ Corporate">Partner/ Corporate</option>
+      <option value="Private placement">Private placement</option>
+      <option value="Other">Other</option>
+    </select>
+  </p>
+  <% } %>
+  <p>
+    <label class="big">Your Question</label>
+    <textarea name="question" id="question">
+</textarea>
+  </p>
+  <p>
+    <input type="button" class="bttn save">
+  </p>
+</form>

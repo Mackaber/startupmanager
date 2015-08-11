@@ -1,0 +1,90 @@
+lll.views.OrganizationHeadingView = Backbone.View.extend({
+  
+  events: {
+    "click a.project": "organizationMenu",
+    "click .project-list a.new-project": "newOrganization"
+  },
+   
+  template: null,
+  
+  initialize: function() {
+    var self = this;
+    
+    _.bindAll(self, "destroy", "make", "render", "organizationMenu", "newOrganization");
+    
+    var currentMemberOrganizationIds = lll.models.User.current.organizationMembers().map(function(member) { return member.get("organization_id") });
+    self.collection = new (Backbone.Subset.extend({
+      parent: function () {
+        return lll.models.organizations;
+      },
+      sieve: function (organization) {
+        return _.include(currentMemberOrganizationIds, organization.id);
+      }
+    }))();
+    
+    self.collection.on("reset", self.render);
+  },
+  
+  onDestroy: function() {
+    var self = this;
+    self.collection.off("reset", self.render);
+  },
+  
+  make: function() {
+    var el = $("<div class='project-heading'/>");
+    return el;
+  },
+  
+  render: function() {
+    var self = this;
+    templateLoader.loadRemoteTemplate("<%= asset_path 'v2/OrganizationHeading.html' %>", function(data) {
+      if (!self.template) {
+        self.template = _.template(data);
+      }
+
+      $(self.el).html(self.template({
+        organization: self.model
+      }));
+      
+      // Fetch data for organization menu
+      self.$(".project-list").hide();
+      
+      self.collection.each(function(organization) {
+        self.$(".project-list ul").append("<li><a href='" + organization.get(self.options.url_attribute) + "'>" + organization.get("name") + "</a></li>");
+      });           
+
+      if (self.model.get("locked")) {
+        s = "This organization is read-only";
+                
+        if (self.model.currentMember().get("level") == "Admin") {
+          s += " - ";
+          s += "<a href='" + self.model.get("payment_url") + "'>UPGRADE</a>";
+        }
+        
+        setTimeout(function() { 
+          lll.views.perm(s);
+        }, 0);
+      }
+
+      self._rendered = true;
+    });
+    return self;
+  },
+  
+  organizationMenu: function() {
+    self.$(".project-list").toggle();
+  },
+  
+  newOrganization: function() {
+    var self = this;
+    var model = new lll.models.Organization();
+    var view = new lll.views.EditOrganizationSettingsView({
+      model: model,
+      create: function(model) {
+        window.location.href = model.get(self.options.url_attribute);
+      }
+    });
+    view.render();    
+  }
+  
+});

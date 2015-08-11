@@ -1,0 +1,54 @@
+lll.models.Question = Backbone.Model.extend({
+
+  validation: {
+    title: {
+      required: true,
+      minLength: 1,
+      maxLength: 255      
+    }
+  },
+
+  defaults: {
+    type: "question"
+  },
+  
+  toString: function() {
+    return this.get("title");
+  },
+  
+  url: function() {
+    return "/v1/questions" + (this.isNew() ? "" : ("/" + this.id)) + ".json";
+  },
+  
+  parse: function(response) {
+    var self = this;
+    var attrs = _.clone(response);
+
+    if (attrs.created_at) {
+      attrs.created_at = Date.parse(attrs.created_at);
+    }
+    
+    attrs = Backbone.Model.prototype.parse.call(this, attrs);
+    // this._changed = true;
+    return attrs;
+  },
+
+  toJSON: function() {
+    var attrs = _.clone(this.attributes);
+    if (attrs.created_at) {
+      attrs.created_at = attrs.created_at.toISOString();
+    }
+    return attrs;
+  }
+
+});
+
+lll.models.questions = new (Backbone.Collection.extend({
+  
+  model: lll.models.Question,
+  
+  comparator: function(model) {
+    return model.get("position");
+  }  
+  
+}))();

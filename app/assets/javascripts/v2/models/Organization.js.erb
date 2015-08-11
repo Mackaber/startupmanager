@@ -1,0 +1,112 @@
+lll.models.Organization = Backbone.Model.extend({
+
+  validation: {
+    name: {
+      required: true,
+      minLength: 1,
+      maxLength: 255
+    }
+  },
+  
+  toString: function() {
+    return this.get("name");
+  },
+
+  url: function() {
+    return "/v1/organizations" + (this.isNew() ? "" : ("/" + this.id)) + ".json";
+  },
+  
+  parse: function(response) {
+    var self = this;
+    var attrs = _.clone(response);
+
+    if (attrs.trial_end_date) { 
+      attrs.trial_end_date = Date.parse(attrs.trial_end_date);
+    }
+    
+    if (attrs.promotion_expires_at) {
+      attrs.promotion_expires_at = Date.parse(attrs.promotion_expires_at);
+    }
+    
+    attrs = Backbone.Model.prototype.parse.call(this, attrs);
+    // this._changed = true;
+    return attrs;
+  },
+  
+  currentMember: function() {
+    var self = this;
+    return lll.models.organizationMembers.find(function(m) {
+      return (m.get("user_id") == lll.models.User.current.id) && (m.get("organization_id") == self.id);
+    });
+  },
+  
+  organizationMembers: function() {
+    var self = this;
+    if (!self._organizationMembers) {
+      self._organizationMembers = new (Backbone.Subset.extend({
+        parent: function () {
+          return lll.models.organizationMembers;
+        },
+        sieve: function (member) {
+          return (member.get("organization_id") == self.id);
+        }
+      }))();      
+    }
+    return self._organizationMembers;
+  },
+  
+  projects: function() {
+    var self = this;
+    if (!self._projects) {
+      self._projects = new (Backbone.Subset.extend({
+        parent: function () {
+          return lll.models.projects;
+        },
+        sieve: function (member) {
+          return (member.get("organization_id") == self.id);
+        }
+      }))();
+      self.projects.liveupdate_keys = "all";
+    }
+    return self._projects;
+  },
+  
+  charges: function() {
+    var self = this;
+    if (!self._charges) {
+      self._charges = new (Backbone.Subset.extend({
+        parent: function () {
+          return lll.models.charges;
+        },
+        sieve: function (member) {
+          return (member.get("organization_id") == self.id);
+        }
+      }))();      
+    }
+    return self._charges;
+  },
+  
+  subscriptionLevel: function() {
+    var self = this;
+    return self.get("subscription_level_id") ? lll.models.subscriptionLevels.get(self.get("subscription_level_id")) : null;
+  },
+  
+  promotion: function() {
+    var self = this;
+    return self.get("promotion_id") ? lll.models.promotions.get(self.get("promotion_id")) : null;
+  }  
+  
+});
+
+lll.models.organizations = new (Backbone.Collection.extend({
+  model: lll.models.Organization,
+  
+  comparator: function(organization) {
+    return organization.get("name").toLowerCase();
+  },
+  
+  url: function() {
+    return "/v1/organizations.json";
+  }   
+  
+}))();

@@ -1,0 +1,19 @@
+<% title("LeanLaunchLab - #{@project}") %>
+
+<% body_class("organization") %>
+<% content_for(:scripts) do %>
+  <%= javascript_include_tag("https://js.stripe.com/v1/") %>  
+  <script type="text/javascript">
+  //<![CDATA[
+    $(function() {      
+      Stripe.setPublishableKey("<%= STRIPE_PUBLISHABLE_KEY %>");
+      var project = lll.models.projects.get(<%= @project.id %>);
+      var view = new lll.views.SpecialPaymentView({
+        el: $("#main")[0],
+        model: project
+      });
+      view.render();
+    });
+  //]]>
+  </script>
+<% end %>

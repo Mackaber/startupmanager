@@ -1,0 +1,118 @@
+lll.views.NewProjectMemberView = Backbone.View.extend({
+  
+  events: {
+    "click .add": "save"
+  },
+  
+  initialize: function() {
+    var self = this;
+    _.bindAll(self, "destroy", "render", "save");    
+    Backbone.Validation.bind(self);    
+  },
+
+  onDestroy: function() {
+    var self = this;
+    Backbone.Validation.unbind(self);
+  },
+  
+  make: function() {
+    var self = this;
+    var el = $("<div class='member-top-area' />");
+    return el;
+  },
+  
+  render: function() {
+    var self = this;
+    templateLoader.loadRemoteTemplate("<%= asset_path 'v2/NewProjectMember.html' %>", function(data) {
+      if (!self.template) {
+        self.template = _.template(data);
+      }
+      
+      $(self.el).html(self.template({
+        member: self.model
+      }));
+      
+      _.each(self.options.levels, function(level) {
+        self.$("select#level").append("<option value='" + level + "' " + (self.model.get("level") == level ? " selected='selected'" : "") + ">" + level + "</option>");
+      });
+      
+      _.each(self.options.roles, function(role) {
+        self.$("select#role").append("<option value='" + role + "' " + (self.model.get("role") == role ? " selected='selected'" : "") + ">" + role + "</option>");
+      });      
+      
+      self.$(".member-perm label img").attr("src", "<%= asset_path 'v2/question-note.gif' %>");
+      self.$(".member-role label img").attr("src", "<%= asset_path 'v2/question-note.gif' %>");
+    });
+    return self;
+  },
+  
+  save: function() {
+    var self = this;
+    
+    if (!self.model.project().organization().organizationMembers().find(function(om) { return om.user().get("email").toLowerCase() == self.$("#email").val().trim().toLowerCase() }) && !self.model.project().organization().get("can_add_member")) {
+      new lll.views.UpgradeSubscriptionView({
+        model: self.model.project().organization()
+      }).render();
+      return false;
+    }
+    
+    self.$("div.error").removeClass("error");
+    self.$("span.error").empty();
+    var user = new lll.models.User();
+    var userView = new Backbone.View({
+      model: user,
+      el: $(self.el)
+    });
+    Backbone.Validation.bind(userView);    
+    user.set({
+      name: self.$("#name").val().trim(),
+      email: self.$("#email").val().trim()
+    });
+    self.model.set({
+      level: self.$("#level").val(),
+      role: self.$("#role").val(),
+      user: user.attributes
+    });
+    if (user.isValid() && self.model.isValid()) {
+      if (self.model.isNew()) {
+        if (self.options.create) {
+          self.options.create(self.model);
+        }
+      }
+      else {
+        if (self.options.update) {
+          self.options.update(self.model);
+        }
+      }
+      lll.views.track("member", self.model.isNew() ? "add" : "edit");
+      self.model.save(self.model.attributes, {
+        wait: true,
+        success: function(model, response) {
+          lll.models.loadData(response);
+        },
+        error: function(model, response) {
+          if (response.readyState == 0 || response.status == 0) {
+            // ajax call cancelled
+          }
+          else {
+            lll.views.error("error saving project member: " + response.responseText);
+            if (self.options.error) {
+              self.options.error(model, response);
+            }
+          }          
+        }
+      });
+      $(self.el).dialog("close");
+    }
+    else {
+      self.$(".invalid").each(function() {
+        $(this).closest("div").addClass("error");
+        $(this).closest("div").find("span.error").text($(this).attr("data-error"));
+      });
+    }
+    Backbone.Validation.unbind(userView);
+    userView.destroy();
+    return false;
+  }
+  
+});

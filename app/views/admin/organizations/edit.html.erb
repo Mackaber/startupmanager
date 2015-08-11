@@ -1,0 +1,170 @@
+<ul class="breadcrumb">
+  <li><%= link_to("Organizations", admin_organizations_path) %> <span class="divider">/</span></li>
+  <li class="active"><%= @organization %></li>
+</ul>
+
+<%= form_for([:admin, @organization]) do |form| %>
+
+    <% form.object.errors.full_messages.each do |msg| %>  
+      <div class="alert-message error">
+        <%= msg %>
+      </div>
+    <% end %>
+
+
+  <fieldset>
+    <div class="clearfix">
+      <label for="trial_end_date">Trial End Date</label>
+      <div class="input">
+        <%= form.text_field(:trial_end_date, :class => "date") %>
+      </div>
+    </div>
+    <div class="clearfix">
+      <%= form.label(:stripe_customer_id) %>
+      <div class="input">
+        <%= form.text_field(:stripe_customer_id, :disabled => true) %>
+      </div>
+    </div>    
+    <div class="clearfix">
+      <div class="input">
+        <ul class="inputs-list">
+          <li>
+            <label>
+              <%= form.check_box(:invoice_billing) %>
+              <span>Invoice billing</span>
+            </label>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <%= form.fields_for(:subscriptions, [@organization.subscriptions.active.first || @organization.subscriptions.build]) do |subscription_form| %>
+      <div class="clearfix">
+        <label>Plan</label>
+        <div class="input">
+          <ul class="inputs-list">
+            <% SubscriptionLevel.all.sort_by{|x| x.name.downcase}.each do |level| %>
+            <li>
+              <label>
+                <%= subscription_form.radio_button(:subscription_level_id, level.id) %>
+                <span><%= level %> (<%= [level.monthly_price, level.yearly_price].compact.collect{|x| number_to_currency(x)}.join(" / ") %>)</span>
+              </label>
+            </li>
+            <% end %>
+          </ul>
+      </div>
+      <div class="clearfix">
+        <div class="input">
+          <ul class="inputs-list">
+            <li>
+              <label>
+                <%= subscription_form.check_box(:yearly) %>
+                <span>Yearly</span>
+              </label>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="clearfix">
+        <%= subscription_form.label(:price) %>
+        <div class="input">
+          <%= subscription_form.text_field(:price) %>
+        </div>
+      </div>
+      <div class="clearfix">
+        <%= subscription_form.label(:start_date) %>
+        <div class="input">
+          <%= subscription_form.text_field(:start_date, :class => "date") %>
+        </div>
+      </div>
+      <div class="clearfix">
+        <%= subscription_form.label(:end_date) %>
+        <div class="input">
+          <%= subscription_form.text_field(:end_date, :class => "date") %>
+        </div>
+      </div>
+      <div class="clearfix">
+        <label for="member_price">Member Price</label>
+        <div class="input">
+          <%= form.text_field(:member_price) %>
+        </div>
+      </div>      
+    <% end %>
+    <div class="clearfix">
+      <div class="input">
+        <ul class="inputs-list">
+          <li>
+            <label>
+              <%= form.check_box(:auto_locked, :disabled => true) %>
+              <span>Auto Locked</span>
+            </label>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="clearfix">
+      <div class="input">
+        <ul class="inputs-list">
+          <li>
+            <label>
+              <%= form.check_box(:admin_locked) %>
+              <span>Manually Locked</span>
+            </label>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="clearfix">
+      <%= form.label(:admin_comments) %>
+      <div class="input">
+        <%= form.text_area(:admin_comments) %>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="btn primary">Save</button>
+    </div>     
+  </fieldset>
+<% end %>
+
+<% if !(projects = @organization.projects.where("payment_code is not null or stripe_customer_id is not null")).empty? %>
+  <table class="zebra-striped">
+    <thead>
+      <tr>
+        <th>Project</th>
+        <th>Stripe customer</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% projects.sort_by{|x| x.name.downcase}.each do |project| %>
+        <tr>
+          <td><%= project.name %></td>
+          <td><%= project.stripe_customer_id %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>
+
+<% if !(members = @organization.organization_members.where("payment_code is not null or stripe_customer_id is not null")).empty? %>
+  <table class="zebra-striped">
+    <thead>
+      <tr>
+        <th>Member</th>
+        <th>Stripe customer</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% members.sort_by{|x| x.user.name.downcase}.each do |member| %>
+        <tr>
+          <td><%= member.user.name %></td>
+          <td><%= member.stripe_customer_id %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>
+
+<div class="actions">
+  <%= button_to("Delete", admin_organization_path(@organization), :method => :delete, :confirm => "Are you sure?", :class => "btn danger") %>      
+</div>     
+
+

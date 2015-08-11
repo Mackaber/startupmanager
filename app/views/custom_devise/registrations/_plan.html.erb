@@ -1,0 +1,47 @@
+<div class="price-box <%= plan.name.normalize %>">
+  <h3>
+    <strong><%= plan.name %></strong> - <em><%= plan.tagline %></em>
+  </h3>
+  <ul>
+    <li>
+      <% if plan.max_projects %>
+        <%= pluralize(plan.max_projects, "project") %>
+      <% else %>
+        Unlimited projects
+      <% end %>
+    </li>
+    <li class="collab">
+      <% if plan.max_members %>
+        <%= pluralize(plan.max_members, "collaborator") %>
+      <% else %>
+        Unlimited collaborators
+      <% end %>
+    </li>
+    <li class="storage"><%= number_to_human_size(plan.max_storage_mb*1048576).downcase %> file storage</li>
+    <li class="email">
+      <% a = [:phone, :email, :chat].select{|x| plan.send("support_#{x}")}.collect{|x| x.to_s.capitalize} %>
+      <% if (a.length > 1); a[-2] = "#{a[-2]} and #{a[-1]}"; a.pop; end %>
+      <%= a.join(", ").capitalize %> support
+    </li>
+  </ul>
+  <div class="price-bttn">
+    <% if plan.monthly_price %>
+      <% if plan.monthly_price.zero? %>
+        <a href="#">FREE<small>&nbsp;</small></a>
+      <% else %>
+        <a href="#">
+          <%= number_to_currency(plan.monthly_price, :precision => 0) %><small>per month</small>
+        </a>
+        <% if plan.yearly_price %>
+          <p>
+            or <%= number_to_currency(plan.yearly_price, :precision => 0) %>
+            for 12 months
+            (<%= ((1 - plan.yearly_price / (plan.monthly_price*12)) * 100).round %>% discount)
+          </p>
+        <% end %>
+      <% end %>
+    <% else %>
+      <a href="#">&nbsp;<small>Contact Sales</small></a>
+    <% end %>
+  </div>
+</div>

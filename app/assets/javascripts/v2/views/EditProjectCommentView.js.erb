@@ -1,0 +1,74 @@
+lll.views.EditProjectCommentView = Backbone.View.extend({
+  
+  events: {
+    "click .save": "save"
+  },
+  
+  initialize: function() {
+    var self = this;
+    _.bindAll(self, "destroy", "render", "save");    
+    Backbone.Validation.bind(self);    
+  },
+
+  onDestroy: function() {
+    var self = this;
+    Backbone.Validation.unbind(self);
+  },
+  
+  render: function() {
+    var self = this;
+	  templateLoader.loadRemoteTemplate("<%= asset_path 'v2/EditProjectComment.html' %>", function(data) {
+      if (!self.template) {
+        self.template = _.template(data);
+      }
+      
+      $(self.el).html(self.template({
+	      comment: self.model
+	    }));	  	     
+	  });
+	  return self;
+  },
+  
+  save: function() {
+    var self = this;
+    self.$(".clearfix.error").removeClass("error");
+    self.$("span.error").empty();
+    self.model.set({
+      body: self.$('#body').val(),
+    });
+    if (self.model.isValid()) {
+      if (self.model.isNew()) {
+        if (self.options.create) {
+          self.options.create(self.model);
+        }
+      }
+      else {
+        if (self.options.update) {
+          self.options.update(self.model);
+        }
+      }
+      lll.views.track("comment", self.model.isNew() ? "add" : "edit");
+      self.model.save(self.model.attributes, {
+        error: function(model, response) {
+          if (response.readyState == 0 || response.status == 0) {
+            // ajax call cancelled
+          }
+          else {
+            lll.views.error("error saving comment: " + response.responseText);
+            if (self.options.error) {
+              self.options.error(model, response);
+            }
+          }          
+        }
+      });
+    }
+    else {
+      self.$(".invalid").each(function() {
+        $(this).closest(".clearfix").addClass("error");
+        $(this).closest(".clearfix").find("span.error").text($(this).attr("data-error"));
+      });
+    }
+    return false;
+  }
+    
+});

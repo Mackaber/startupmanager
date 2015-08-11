@@ -1,0 +1,603 @@
+body#canvas
+{  
+  .box-wrapper
+  {
+    width: 974px;
+    padding: 0;
+    
+    .top-links
+    {
+      margin-left: 20px;
+    }
+    
+    .date-controller
+    {
+      margin-left: 175px;
+    }
+    
+    .post-it-notes
+    {
+      margin-right: 20px;
+    }
+    
+    .box-area-wrapper
+    {
+      width: 972px;
+      height: 564px;
+      clear: both;  
+      padding: 1px;
+      
+      .box-area
+      {
+        margin: 20px;
+        width: 928px;
+        clear: both;
+        
+        .topbox-area, .box-bottom
+        {
+          width: 928px;
+          
+          .box-bottom-left
+          {
+            width: 456px;
+          }
+          
+          .box-bottom-right
+          {
+            width: 458px;
+          }
+        }
+      }
+    }
+
+    .footer-left
+    {
+      margin-left: 20px;
+      margin-top: 0;
+      padding-top: 0;
+    }
+    
+    .footer-right
+    {
+      margin-right: 20px;
+      margin-top: 0;
+      padding-top: 0;
+    }
+  }
+  
+  .topbox-top, .topbox-bottom
+  {
+    height: 165px;
+  }
+  
+  .date-controller
+  {
+    ul
+    {
+      padding-left: 2px
+    }
+    
+    li
+    {
+      &.current-week
+      {
+        width: 90px;
+      }
+    }
+  }
+  
+  .canvas-item-container
+  {
+    h2
+    {
+      font-size: inherit;
+      line-height: inherit;
+      display: inline;
+    }
+    
+    &.active
+    {
+      background: rgb(128,128,128);
+      background: rgba(128,128,128,0.5);
+    }    
+        
+  }
+  
+  .canvas_item
+  {
+    width: 70px;
+    height: 60px;
+    overflow: hidden;
+    padding: 5px;
+    background-repeat: no-repeat;
+    font-weight: normal;
+    
+    .title
+    {
+      line-height: 13px;
+      font-size: 11px;
+
+      a
+      {
+        color: black;      
+        text-align: center;
+        display: block;
+        height: 40px;
+        overflow: hidden;
+      
+        &:hover
+        {
+          text-decoration: underline;
+        }     
+      }
+    }
+   
+    &.yellow
+    {
+      background-image: url(<%= asset_path 'v2/canvas-item-yellow.png' %>);
+    } 
+
+    &.red
+    {
+      background-image: url(<%= asset_path 'v2/canvas-item-red.png' %>);
+    } 
+   
+    &.blue
+    {
+      background-image: url(<%= asset_path 'v2/canvas-item-blue.png' %>);
+    }
+    
+    &.green
+    {
+      background-image: url(<%= asset_path 'v2/canvas-item-green.png' %>);
+    }
+    
+    &.purple
+    {
+      background-image: url(<%= asset_path 'v2/canvas-item-purple.png' %>);
+    }
+    
+    &.current .title
+    {
+      color: red;
+      
+      a
+      {
+        color: inherit;
+      }
+    }
+    
+    &.ui-draggable
+    {
+      cursor: move;
+    }
+    
+    img.description
+    {
+      bottom: 10px;
+      left: 10px;
+      position: absolute;
+      cursor: pointer;
+    }
+
+    img.valid, img.invalid
+    {
+      bottom: 10px;
+      right: 10px;
+      position: absolute;
+    }
+  }
+  
+  .ui-dialog.edit-canvas-item
+  {
+    .ui-dialog-titlebar
+    {
+      display: none;
+    }
+    
+    form.edit-canvas-item
+    {   
+      textarea
+      {
+        height: 265px;
+      }      
+       
+      button.delete
+      {
+        float: right;
+      }
+      
+      .color
+      {
+        a
+        {
+          width: 34px;
+          height: 31px;
+          padding: 2px;
+          display: block;
+          float: left;
+          
+          &.selected
+          {
+            border: 1px solid blue;
+          }
+        }
+      }
+      
+      .state, .include
+      {
+        label
+        {
+          display: inline;
+          margin-right: 1em;
+          
+          img
+          {
+            vertical-align: middle;
+          }
+        }
+      }
+    }    
+    
+    &.red
+    {
+      background: rgb(251,218,154);
+      
+      .ui-dialog-content.ui-widget-content
+      {
+        background: rgb(251,218,154);
+      }
+    }     
+
+    &.yellow
+    {
+      background: rgb(251,252,195);
+      
+      .ui-dialog-content.ui-widget-content
+      {
+        background: rgb(251,252,195);
+      }
+    }     
+
+    &.blue
+    {
+      background: rgb(216,234,252);
+      
+      .ui-dialog-content.ui-widget-content
+      {
+        background: rgb(216,234,252);
+      }
+    }    
+    
+    &.green
+    {
+      background-color: #eaf5db;
+      
+      .ui-dialog-content.ui-widget-content
+      {
+        background-color: #eaf5db;
+      }
+    } 
+    
+    &.purple
+    {
+      background-color: #f6eaf8;
+      
+      .ui-dialog-content.ui-widget-content
+      {
+        background-color: #f6eaf8;
+      }
+    }
+  }
+  
+  form.canvas-settings
+  {
+    div.clearfix
+    {
+      margin-bottom: 5px
+    }
+    
+    label
+    {
+      display: inline;
+    }
+  }
+  
+  .canvas-wizard
+  {
+    .ui-dialog-titlebar
+    {
+      border-bottom: none;
+      
+      .ui-dialog-title
+      {
+        margin: 0;
+        padding: 0;
+      }
+      
+      .ui-dialog-titlebar-close
+      {
+        margin: 0;
+      }
+    }
+    
+    h1
+    {
+      margin: 10px 0 10px 0;
+      color: #ef5c08;
+      text-transform: none;
+      
+      ol
+      {
+        margin: 4px 0 0 0;
+        float: right;
+        list-style: none;
+        
+        li
+        {
+          cursor: pointer;
+          display: block;
+          float: left;
+          width: 29px;
+          height: 21px;
+          background: url(<%= asset_path 'v2/canvas-wizard-step-bg.png' %>) no-repeat;
+          color: white;
+          font-size: 14px;
+          padding-top: 3px;
+          text-align: center;
+          
+          &.active
+          {
+            background: url(<%= asset_path 'v2/canvas-wizard-step-active-bg.png' %>) no-repeat;
+          }
+        }
+      }
+    }
+    
+    form
+    {
+      clear: both;
+      
+      fieldset
+      {
+        max-height: 400px;
+        overflow-y: auto;
+      }
+      
+      legend
+      {
+        font-size: 14px;
+        font-weight: bold;
+        color: black;
+      }
+      
+      .tip
+      {
+        font-weight: bold;
+        padding: 10px 10px 10px 30px;
+        background: url(<%= asset_path 'v2/tip.png' %>) no-repeat 9px 9px #dddddd;
+      }
+      
+      input, textarea
+      {
+        width: 98%;
+      }
+      
+      .help-block,
+      .help-inline
+      {
+        color: #999;
+      }
+      
+      .help-block
+      {
+        max-width: none;
+
+        .length
+        {
+          float: right;
+        }
+      }
+      
+      .examples
+      {
+        label, ul
+        {
+          float: left;
+        }
+        
+        ul
+        {
+          list-style: none;
+        }
+      }
+      
+      ul.hov { 
+        padding:0; 
+        margin:0 0 4px; 
+        list-style:none;
+      }
+      ul.hov li { 
+        padding:2px; 
+        margin:0; 
+        position:relative; 
+        display:block; 
+        font-size:12px; 
+        color:#000; 
+        font-weight:bold;
+      }
+      ul.hov li a.new-win {
+        background:url(<%= asset_path 'v2/new-win-icon.gif' %>) 100% 45% no-repeat;
+        padding-right:13px;
+      } 
+      ul.hov li strong.strikethru {
+        text-decoration:line-through; 
+      }
+      ul.hov li strong.name {
+        font-style:italic;
+        color:#999999;
+      }
+      ul.hov li p.details {
+        padding:0 30px 0 0;
+        margin:0;
+      }
+      ul.hov li p{ 
+        padding:0; 
+        margin:0;
+      }
+      ul.hov li span { 
+        display:block; 
+        position:absolute; 
+        top:3px; right:4px; 
+        visibility:hidden; 
+        margin-right:15px;
+      }
+      ul.hov li span.delete { 
+        margin-right:0px;
+      }
+      ul.hov li:hover { 
+        border:1px solid #E2DFA4; 
+        padding:1px; 
+        background-color:#EBE9B5;
+      }
+      ul.hov li:hover span { 
+        visibility:visible;
+      }      
+      
+      ul.hov
+      {
+        list-style: decimal inside;
+        margin: 0;
+
+        li
+        {
+          &:hover
+          {
+            cursor: default;
+            background-color: #EFEFEF;
+            border-color: #CFCFCF;
+          }
+
+          textarea
+          {
+            display: block;
+          }
+          
+          font-weight: normal;
+          display: list-item;
+
+          div.edit
+          {
+            display: inline;
+            
+            .btn
+            {
+              float: none;
+            }
+            
+            input
+            {
+              color: black;
+              font-weight: normal;
+              width: 65%;
+            }
+
+            textarea
+            {
+              color: black;
+              font-weight: normal;
+              width: 95%;
+              height: 75px;
+            }
+          }
+        }
+
+        &.details, &.title
+        {
+          list-style: none;
+        }
+      }
+      
+      .actions
+      {
+        clear: both;
+        bottom: 10px;        
+        position: absolute;
+        width: 714px;
+        
+        .btn {
+          cursor: pointer;
+          display: inline-block;
+          background-color: #e6e6e6;
+          background-repeat: no-repeat;
+          background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), color-stop(25%, #ffffff), to(#e6e6e6));
+          background-image: -webkit-linear-gradient(#ffffff, #ffffff 25%, #e6e6e6);
+          background-image: -moz-linear-gradient(top, #ffffff, #ffffff 25%, #e6e6e6);
+          background-image: -ms-linear-gradient(#ffffff, #ffffff 25%, #e6e6e6);
+          background-image: -o-linear-gradient(#ffffff, #ffffff 25%, #e6e6e6);
+          background-image: linear-gradient(#ffffff, #ffffff 25%, #e6e6e6);
+          filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#e6e6e6', GradientType=0);
+          padding: 5px 14px 6px;
+          text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75);
+          color: #333;
+          font-size: 13px;
+          line-height: normal;
+          border: 1px solid #ccc;
+          border-bottom-color: #bbb;
+          -webkit-border-radius: 4px;
+          -moz-border-radius: 4px;
+          border-radius: 4px;
+          -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+          -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+          -webkit-transition: 0.1s linear all;
+          -moz-transition: 0.1s linear all;
+          -ms-transition: 0.1s linear all;
+          -o-transition: 0.1s linear all;
+          transition: 0.1s linear all;
+        }
+        .btn:hover {
+          background-position: 0 -15px;
+          color: #333;
+          text-decoration: none;
+        }
+        .btn.primary {
+          color: #ffffff;
+          background-color: #0064cd;
+          background-repeat: repeat-x;
+          background-image: -khtml-gradient(linear, left top, left bottom, from(#049cdb), to(#0064cd));
+          background-image: -moz-linear-gradient(top, #049cdb, #0064cd);
+          background-image: -ms-linear-gradient(top, #049cdb, #0064cd);
+          background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #049cdb), color-stop(100%, #0064cd));
+          background-image: -webkit-linear-gradient(top, #049cdb, #0064cd);
+          background-image: -o-linear-gradient(top, #049cdb, #0064cd);
+          background-image: linear-gradient(top, #049cdb, #0064cd);
+          filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#049cdb', endColorstr='#0064cd', GradientType=0);
+          text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+          border-color: #0064cd #0064cd #003f81;
+          border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+        }
+        
+        .prev, .next
+        {
+          div
+          {
+            margin-top: 5px;
+            color: #999;
+          }
+        }
+        
+        .prev
+        {
+          float: left;
+          
+        }
+        .next 
+        {
+          float: right;
+          text-align: right;
+        }
+      }
+    }
+  }
+}

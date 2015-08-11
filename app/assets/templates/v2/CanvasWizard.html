@@ -1,0 +1,351 @@
+<div class="step step0">
+  <h1>Welcome to LeanLaunchLab!</h1>
+  <form class="form-stacked">
+    <fieldset>
+      <legend>Let&rsquo;s get started by creating a new project.</legend>
+      <br class="spacer"/>
+      <div class="clearfix">
+        <label for="name">Project Name</label>
+        <div class="input">
+          <input id="name" name="name" type="text" value="<%= project.get('name') %>"/>
+        </div>
+      </div>
+      <div class="clearfix">
+        <label for="name">Elevator Pitch</label>
+        <div class="input">
+          <textarea id="pitch" name="pitch" data-maxsize="140" data-output="pitch-length"><%= project.get('pitch') %></textarea>
+          <span class="help-block">
+            What does your product or service do, in 140 chars or less
+            <span class="length">
+              <span class="help-inline" id="pitch-length"></span><span class="help-inline">/ 140 chars</span>
+            </span>
+          </span>
+        </div>
+      </div>
+      <div class="examples">
+        <label>Examples:</label>
+        <ul>
+          <li>&ldquo;Quora for legal advice&rdquo;</li>
+          <li>&ldquo;Fun, safe, mobile apps for kids&rdquo;</li>
+          <li>&ldquo;Matching engineers with startups&rdquo;</li>
+          <li>&ldquo;Appsumo for weddings&rdquo;</li>
+        </ul>
+      </div>
+      <div class="actions">
+        <div class="next">
+          <button class="btn large">Next</button>
+          <div>Define Customer Segments</div>
+        </div>
+      </div>
+    </fieldset>
+  </form>
+</div>
+<div class="step step1">
+  <h1>
+    Customer Segments
+    <ol><li title="Customer Segments">1</li><li title="Value Propositions">2</li><li title="Channels">3</li><li title="Customer Relationships">4</li><li title="Revenue Streams">5</li><li title="Key Resources">6</li><li title="Key Activities">7</li><li title="Key Partnerships">8</li><li title="Cost Structure">9</li></ol>
+  </h1>
+  <form class="form-stacked">
+    <fieldset>
+      <legend>Which groups of people or organizations are you trying to serve?</legend>
+      <br class="spacer"/>
+      <div class="tip">TIP: Most projects have 3-5 customer segments</div>
+      <br class="spacer"/>
+      <div class="clearfix">
+      </div>
+      <div class="examples">
+        <label>Examples:</label>
+        <ul>
+          <li>Google: Internet users, advertisers</li>
+          <li>LinkedIn: Professionals, Recruiters, Advertisers</li>
+          <li>Amazon: Online shoppers, retailers</li>
+          <li>Zynga: Casual gamers, merchants</li>
+          <li>LeanLaunchLab: Entrepreneurs, Investors, Universities</li>
+        </ul>
+      </div>
+      <div class="actions">
+        <div class="prev">
+          <button class="btn large">Back</button>
+          <div>Elevator Pitch</div>
+        </div>
+        <div class="next">
+          <button class="btn large">Next</button>
+          <div>Value Propositions</div>
+        </div>
+      </div>
+    </fieldset>
+  </form>
+</div>
+<div class="step step2">
+  <h1>
+    Value Propositions
+    <ol><li title="Customer Segments">1</li><li title="Value Propositions">2</li><li title="Channels">3</li><li title="Customer Relationships">4</li><li title="Revenue Streams">5</li><li title="Key Resources">6</li><li title="Key Activities">7</li><li title="Key Partnerships">8</li><li title="Cost Structure">9</li></ol>
+  </h1>
+  <form class="form-stacked">
+    <fieldset>
+      <legend>What value are you delivering?  What problems are you solving for your customers?</legend>
+      <br class="spacer"/>
+      <div class="tip">TIP: Most projects have 2-3 value propositions</div>
+      <br class="spacer"/>
+      <div class="clearfix">
+      </div>
+      <div class="examples">
+        <label>Examples:</label>
+        <ul>
+          <li>Google: Fast accurate search results, targeted ads</li>
+          <li>LinkedIn: make it easy to network with other professionals</li>
+          <li>Amazon: buy anything online</li>
+          <li>Zynga: fun games with friends</li>
+          <li>LeanLaunchLab: makes it easy for startups to practice lean startup principles</li>
+        </ul>
+      </div>
+      <div class="actions">
+        <div class="prev">
+          <button class="btn large">Back</button>
+          <div>Customer Segments</div>
+        </div>
+        <div class="next">
+          <button class="btn large">Next</button>
+          <div>Channels</div>
+        </div>
+      </div>
+    </fieldset>
+  </form>
+</div>
+<div class="step step3">
+  <h1>
+    Channels
+    <ol><li title="Customer Segments">1</li><li title="Value Propositions">2</li><li title="Channels">3</li><li title="Customer Relationships">4</li><li title="Revenue Streams">5</li><li title="Key Resources">6</li><li title="Key Activities">7</li><li title="Key Partnerships">8</li><li title="Cost Structure">9</li></ol>
+  </h1>
+  <form class="form-stacked">
+    <fieldset>
+      <legend>How will your product be distributed and sold?</legend>
+      <br class="spacer"/>
+      <div class="tip">TIP: Most projects have 1-2 channels</div>
+      <br class="spacer"/>
+      <div class="clearfix">
+      </div>
+      <div class="examples">
+        <label>Examples:</label>
+        <ul>
+          <li>Google: google.com</li>
+          <li>Apple: retails stores, Apple stores, apple.com, iTunes</li>
+          <li>Salesforce: salesforce.com, direct sales</li>
+          <li>Microsoft: resellers, microsoft.com, retail stores</li>
+          <li>LeanLaunchLab: leanlaunchlab.com</li>
+        </ul>
+      </div>
+      <div class="actions">
+        <div class="prev">
+          <button class="btn large">Back</button>
+          <div>Value Propositions</div>
+        </div>
+        <div class="next">
+          <button class="btn large">Next</button>
+          <div>Customer Relationships</div>
+        </div>
+      </div>
+    </fieldset>
+  </form>
+</div>
+<div class="step step4">
+  <h1>   
+    Customer Relationships 
+    <ol><li title="Customer Segments">1</li><li title="Value Propositions">2</li><li title="Channels">3</li><li title="Customer Relationships">4</li><li title="Revenue Streams">5</li><li title="Key Resources">6</li><li title="Key Activities">7</li><li title="Key Partnerships">8</li><li title="Cost Structure">9</li></ol>
+  </h1>
+  <form class="form-stacked">
+    <fieldset>
+      <legend>How will you create demand for your product, retain existing customers, and grow your customer base?</legend>
+      <br class="spacer"/>
+      <div class="tip">TIP: Most projects have 1-3 customer relationships</div>
+      <br class="spacer"/>
+      <div class="clearfix">
+      </div>
+      <div class="examples">
+        <label>Examples:</label>
+        <ul>
+          <li>Online ads, SEO, loyalty programs, customer surveys, referrals, dedicated customer support</li>
+        </ul>
+      </div>
+      <div class="actions">
+        <div class="prev">
+          <button class="btn large">Back</button>
+          <div>Channels</div>
+        </div>
+        <div class="next">
+          <button class="btn large">Next</button>
+          <div>Revenue Streams</div>
+        </div>
+      </div>
+    </fieldset>
+  </form>
+</div>
+<div class="step step5">
+  <h1>
+    Revenue Streams  
+    <ol><li title="Customer Segments">1</li><li title="Value Propositions">2</li><li title="Channels">3</li><li title="Customer Relationships">4</li><li title="Revenue Streams">5</li><li title="Key Resources">6</li><li title="Key Activities">7</li><li title="Key Partnerships">8</li><li title="Cost Structure">9</li></ol>
+  </h1>
+  <form class="form-stacked">
+    <fieldset>
+      <legend>The cash you generate from each customer segment. Show me the money!</legend>
+      <br class="spacer"/>
+      <div class="tip">TIP: Most projects have 1-2 revenue streams</div>
+      <br class="spacer"/>
+      <div class="clearfix">
+      </div>
+      <div class="examples">
+        <label>Examples:</label>
+        <ul>
+          <li>Usage fees, subscription fees, freemium, rental fees, licensing fees, brokerage fees, advertising</li>
+        </ul>
+      </div>
+      <div class="actions">
+        <div class="prev">
+          <button class="btn large">Back</button>
+          <div>Customer Relationships</div>
+        </div>
+        <div class="next">
+          <button class="btn large">Next</button>
+          <div>Key Resources</div>
+        </div>
+      </div>
+    </fieldset>
+  </form>
+</div>
+<div class="step step6">
+  <h1>
+    Key Resources
+    <ol><li title="Customer Segments">1</li><li title="Value Propositions">2</li><li title="Channels">3</li><li title="Customer Relationships">4</li><li title="Revenue Streams">5</li><li title="Key Resources">6</li><li title="Key Activities">7</li><li title="Key Partnerships">8</li><li title="Cost Structure">9</li></ol>
+  </h1>
+  <form class="form-stacked">
+    <fieldset>
+      <legend>What assets do you need to make your business model work?  These assets can be physical, financial, intellectual, or human.</legend>
+      <br class="spacer"/>
+      <div class="tip">TIP: Most projects have 1-3 key resources</div>
+      <br class="spacer"/>
+      <div class="clearfix">
+      </div>
+      <div class="examples">
+        <label>Examples:</label>
+        <ul>
+          <li>Google: top tier engineering talent</li>
+          <li>Walmart: distribution centers</li>
+          <li>Nike: Nike Brand</li>
+          <li>Pfizer: Researchers and Scientists</li>
+          <li>Any Bank or Financial Institution: cash, lines of credit</li>
+        </ul>
+      </div>
+      <div class="actions">
+        <div class="prev">
+          <button class="btn large">Back</button>
+          <div>Revenue Streams</div>
+        </div>
+        <div class="next">
+          <button class="btn large">Next</button>
+          <div>Key Activities</div>
+        </div>
+      </div>
+    </fieldset>
+  </form>
+</div>
+<div class="step step7">
+  <h1>    
+    Key Activities
+    <ol><li title="Customer Segments">1</li><li title="Value Propositions">2</li><li title="Channels">3</li><li title="Customer Relationships">4</li><li title="Revenue Streams">5</li><li title="Key Resources">6</li><li title="Key Activities">7</li><li title="Key Partnerships">8</li><li title="Cost Structure">9</li></ol>
+  </h1>
+  <form class="form-stacked">
+    <fieldset>
+      <legend>What do you need to do in order to deliver your Value Propositions?</legend>
+      <br class="spacer"/>
+      <div class="tip">TIP: Most projects have 1-3 key activities</div>
+      <br class="spacer"/>
+      <div class="clearfix">
+      </div>
+      <div class="examples">
+        <label>Examples:</label>
+        <ul>
+          <li>Google: recruit top engineering talent</li>
+          <li>Apple: hardware design, marketing</li>
+          <li>Nike: endorse superstars</li>
+        </ul>
+      </div>
+      <div class="actions">
+        <div class="prev">
+          <button class="btn large">Back</button>
+          <div>Key Resources</div>
+        </div>
+        <div class="next">
+          <button class="btn large">Next</button>
+          <div>Key Partnerships</div>
+        </div>
+      </div>
+    </fieldset>
+  </form>
+</div>
+<div class="step step8">
+  <h1> 
+    Key Partnerships   
+    <ol><li title="Customer Segments">1</li><li title="Value Propositions">2</li><li title="Channels">3</li><li title="Customer Relationships">4</li><li title="Revenue Streams">5</li><li title="Key Resources">6</li><li title="Key Activities">7</li><li title="Key Partnerships">8</li><li title="Cost Structure">9</li></ol>
+  </h1>
+  <form class="form-stacked">
+    <fieldset>
+      <legend>What partnerships do you need to reach customers or deliver a Value Proposition?</legend>
+      <br class="spacer"/>
+      <div class="tip">TIP: Most projects have 0-2 key partnerships</div>
+      <br class="spacer"/>
+      <div class="clearfix">
+      </div>
+      <div class="examples">
+        <label>Examples:</label>
+        <ul>
+          <li>Microsoft: resellers</li>
+          <li>Apple: record labels, hardware manufacturers</li>
+          <li>Zynga: Facebook</li>
+        </ul>
+      </div>
+      <div class="actions">
+        <div class="prev">
+          <button class="btn large">Back</button>
+          <div>Key Activities</div>
+        </div>
+        <div class="next">
+          <button class="btn large">Next</button>
+          <div>Cost Structure</div>
+        </div>
+      </div>
+    </fieldset>
+  </form>
+</div>
+<div class="step step9">
+  <h1>
+    Cost Structure
+    <ol><li title="Customer Segments">1</li><li title="Value Propositions">2</li><li title="Channels">3</li><li title="Customer Relationships">4</li><li title="Revenue Streams">5</li><li title="Key Resources">6</li><li title="Key Activities">7</li><li title="Key Partnerships">8</li><li title="Cost Structure">9</li></ol>
+  </h1>
+  <form class="form-stacked">
+    <fieldset>
+      <legend>List all of the costs incurred by your business.</legend>
+      <br class="spacer"/>
+      <div class="tip">TIP: Only list significant costs</div>
+      <br class="spacer"/>
+      <div class="clearfix">
+      </div>
+      <div class="examples">
+        <label>Examples:</label>
+        <ul>
+          <li>Apple: people, marketing/sales, manufacturing</li>
+          <li>Starbucks: people, coffee beans, retail stores</li>
+        </ul>
+      </div>
+      <div class="actions">
+        <div class="prev">
+          <button class="btn large">Back</button>
+          <div>Key Partnerships</div>
+        </div>
+        <div class="next">
+          <button class="btn large primary">Go to Next Tab</button>
+          <div>The Plan</div>
+        </div>
+      </div>
+    </fieldset>
+  </form>
+</div>

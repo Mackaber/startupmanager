@@ -1,0 +1,348 @@
+lll.views.CanvasWizardView = Backbone.View.extend({
+  
+  categories: [
+    null,
+    "customer_segments",
+    "value_propositions",
+    "channels",
+    "customer_relationships",
+    "revenue_stream",
+    "key_resources",
+    "key_activities",
+    "key_partners",
+    "cost_structure"    
+  ],
+  
+  events: {
+    "click .actions .prev button": "back",
+    "click .actions .next button": "next",
+    "keypress .step0 input": "keypress",
+    "click h1 ol li": "jump"
+  },
+  
+  initialize: function() {
+    var self = this;
+    
+    _.bindAll(self, "destroy", "render", "back", "next", "go", "keypress", "handleCanvasItems", "jump");
+    
+    self.categoryViews = [
+      null,
+      new lll.views.ListView({
+        collection: new (Backbone.Collection.extend({model: lll.models.CanvasItem}))(),
+        placeholder: "Enter Customer Segment",
+        saveNew: false,
+        addExplicit: true,
+        manage: true
+      }),
+      new lll.views.ListView({
+        collection: new (Backbone.Collection.extend({model: lll.models.CanvasItem}))(),
+        placeholder: "Enter Value Proposition",
+        saveNew: false,
+        addExplicit: true,
+        manage: true
+      }),
+      new lll.views.ListView({
+        collection: new (Backbone.Collection.extend({model: lll.models.CanvasItem}))(),
+        placeholder: "Enter Channel",
+        saveNew: false,
+        addExplicit: true,
+        manage: true
+      }),
+      new lll.views.ListView({
+        collection: new (Backbone.Collection.extend({model: lll.models.CanvasItem}))(),
+        placeholder: "Enter Customer Relationship",
+        saveNew: false,
+        addExplicit: true,
+        manage: true
+      }),
+      new lll.views.ListView({
+        collection: new (Backbone.Collection.extend({model: lll.models.CanvasItem}))(),
+        placeholder: "Enter Revenue Stream",
+        saveNew: false,
+        addExplicit: true,
+        manage: true
+      }),
+      new lll.views.ListView({
+        collection: new (Backbone.Collection.extend({model: lll.models.CanvasItem}))(),
+        placeholder: "Enter Key Resource",
+        saveNew: false,
+        addExplicit: true,
+        manage: true
+      }),
+      new lll.views.ListView({
+        collection: new (Backbone.Collection.extend({model: lll.models.CanvasItem}))(),
+        placeholder: "Enter Key Activity",
+        saveNew: false,
+        addExplicit: true,
+        manage: true
+      }),
+      new lll.views.ListView({
+        collection: new (Backbone.Collection.extend({model: lll.models.CanvasItem}))(),
+        placeholder: "Enter Key Partnership",
+        saveNew: false,
+        addExplicit: true,
+        manage: true
+      }),
+      new lll.views.ListView({
+        collection: new (Backbone.Collection.extend({model: lll.models.CanvasItem}))(),
+        placeholder: "Enter Cost",
+        saveNew: false,
+        addExplicit: true,
+        manage: true
+      })
+    ];
+    
+    _.each(self.categoryViews, function(categoryView) {
+      if (categoryView) {        
+        categoryView.on("itemAdded", function(title) {
+          var canvas_item = new lll.models.CanvasItem({
+            title: title
+          });
+          categoryView.collection.add(canvas_item);
+        }, self);
+        categoryView.on("itemRemoved", function(item) {
+          categoryView.collection.remove(item);
+        }, self);
+      }
+    });
+    
+    Backbone.Validation.bind(self);       
+  },
+  
+  onDestroy: function() {  
+    var self = this;
+    $(self.el).dialog("close");  
+    Backbone.Validation.unbind(self);
+    _.each(self.categoryViews, function(categoryView) {
+      if (categoryView) {        
+        categoryView.off("itemAdded", null, self);
+        categoryView.off("itemRemoved", null, self);
+      }
+    });
+  },
+  
+  make: function() {
+    var self = this;
+    var el = $("<div></div>");
+    return el;
+  },
+  
+  render: function() {
+    var self = this;
+    templateLoader.loadRemoteTemplate("<%= asset_path 'v2/CanvasWizard.html' %>", function(data) {
+      if (!self.template) {
+        self.template = _.template(data);
+      }
+      
+      $(self.el).html(self.template({
+        project: self.model
+      }));
+      
+      self.step = self.options.display_init ? 0 : 1;
+      self.go();
+      
+      for (var i = 1; i <= 9; i++) {
+        self.$(".step" + i + " div.clearfix").append(self.categoryViews[i].el);
+      }
+      
+      if (!self.options.display_init) {
+        self.$(".step1 .actions .prev").remove();
+      }
+            
+      $(self.el).dialog({
+        dialogClass: "canvas-wizard",
+        width: 740,
+        height: 550,
+        modal: true,
+        open: function(event, ui) {
+          self.delegateEvents();
+        },
+        close: function(event, ui) { 
+          $(this).dialog("destroy");
+        }
+      });            
+    });
+    return self;
+  },
+  
+  back: function() {
+    var self = this;
+    self.step -= 1;
+    self.go();
+    return false;
+  },
+  
+  next: function() {
+    var self = this;
+    if (self.step == 0) {
+      self.model.set({
+        name: self.$(".step0 #name").val().trim(),
+        pitch: self.$(".step0 #pitch").val().trim()
+      });
+      if (self.model.isValid()) {
+        self.model.save(self.model.attributes, { 
+          error: function(model, response) {
+            if (response.readyState == 0 || response.status == 0) {
+              // ajax call cancelled
+            }
+            else {
+              lll.views.error("error saving project: " + response.responseText);
+              if (self.options.error) {
+                self.options.error(model, response);
+              }
+            }          
+          }
+        });
+        self.step += 1;
+        self.go();
+      }
+      Backbone.Validation.unbind(self);   // Huh?
+    } else {
+      self.handleCanvasItems(self.categoryViews[self.step], self.categories[self.step], function() {
+        if (self.step == 9) {
+          window.location.href = self.model.get("plan_url");
+        }
+        else {
+          self.step += 1;
+          self.go();
+        }
+      });
+    }
+    return false;
+  },
+  
+  // FIXME: consolidate this with next() above
+  jump: function(e) {
+    var self = this;
+    var to = parseInt($(e.currentTarget).text());
+    if (self.step == 0) {
+      self.model.set({
+        name: self.$(".step0 #name").val().trim(),
+        pitch: self.$(".step0 #pitch").val().trim()
+      });
+      if (self.model.isValid()) {
+        self.model.save(self.model.attributes, { 
+          error: function(model, response) {
+            if (response.readyState == 0 || response.status == 0) {
+              // ajax call cancelled
+            }
+            else {
+              lll.views.error("error saving project: " + response.responseText);
+              if (self.options.error) {
+                self.options.error(model, response);
+              }
+            }          
+          }
+        });
+        self.step = to;
+        self.go();
+      }
+      Backbone.Validation.unbind(self);   // Huh?
+    } else {
+      self.handleCanvasItems(self.categoryViews[self.step], self.categories[self.step], function() {
+        self.step = to;
+        self.go();
+      });
+    }
+    return false;
+  },
+  
+  go: function() {
+    var self = this;
+        
+    if (self.step > 0) {
+      self.$("h1 ol li").removeClass("active");
+      self.$("h1 ol li:nth-child(" + self.step + ")").addClass("active");
+      var view = self.categoryViews[self.step];
+      var category = self.categories[self.step];
+      var items = _.select(
+        self.collection.active(), 
+        function(canvas_item) { 
+          return canvas_item.get("category") == category;
+        }
+      );
+      view.collection.reset(items);
+      view.render();
+      setTimeout(function() {
+        self.$("input[type='text']").focus();
+      }, 100);
+      
+    }
+    
+    self.$(".step").hide();
+    self.$(".step" + self.step).show();
+  },
+  
+  keypress: function (e) {  
+    var self = this;
+    if ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13)) {
+      return false;  
+    } else {  
+      return true;  
+    }
+  },
+  
+  handleCanvasItems: function(view, category, done) {
+    var self = this;
+    
+    view.addPending();
+    
+    _.each(
+      _.select(
+        self.collection.active(), 
+        function(canvas_item) { 
+          return canvas_item.get("category") == category;
+        }
+      ), 
+      function(old_model) {
+        if (!view.collection.get(old_model.id)) {
+          old_model.destroy();
+        }
+      }
+    );
+    
+    if (view.collection.models.length == 0) {
+      done();
+      return;
+    }
+    
+    var count = 0;
+    _.each(view.collection.models, function(model, index) {
+      setTimeout(function() {
+        var wrapperOffset = $(".box-area-wrapper").offset();
+        var boxOffset = $("#" + category).offset();
+        model.set({
+          category: category,
+          include_in_plan: true,
+          project_id: self.model.id,
+          created_at: new Date(),
+          x: boxOffset.left - wrapperOffset.left + 20*index,
+          y: boxOffset.top - wrapperOffset.top + 20*index + 20,
+          z: index
+        });
+        var wasNew = model.isNew();
+        model.save(model.attributes, {
+          success: function(model, response) {
+            lll.models.loadData(response);
+            // self.collection.addMissing([model]);
+            count += 1;
+            if (count == view.collection.models.length) {
+              done();
+            }
+          },
+          error: function(model, response) {
+            if (response.readyState == 0 || response.status == 0) {
+              // ajax call cancelled
+            }
+            else {
+              lll.views.error("error saving canvas item: " + response.responseText);
+              if (self.options.error) {
+                self.options.error(model, response);
+              }
+            }          
+          }
+        }, 50*index);
+      });
+    });
+  }
+});

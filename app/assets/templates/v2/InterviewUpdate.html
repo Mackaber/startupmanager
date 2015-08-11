@@ -1,0 +1,41 @@
+<p class="hypothesis-title">
+  <span class="cal"><%= blog_post.get("published_at").toString("MMM d, yyyy")%></span>
+  <a href="#" class="interview">
+    <% if (is_new) { %>
+      <span class="new">New</span>
+    <% } %>
+    <%= blog_post.get("title") %>
+    <% if (blog_post.get("text1")) { %>
+      (<%= blog_post.get("text1") %>)
+    <% } %>
+    <% if (blog_post.get("date")) {%>
+      on
+      <%= blog_post.get("date").toString("MMM d, yyyy") %>
+    <% } %>
+  </a>
+</p>
+<p class="details">
+  in 
+  <a href="<%= blog_post.project().get('interviews_url') %>"><%= blog_post.project().get("name") %></a>
+  <% if (blog_post.member()) { %>
+    (<%= blog_post.member().user().get("name") %>)
+  <% } %>
+</p>
+
+<% if (blog_post.get("the_ask")) { %>
+  <div class="askbar">
+    The Ask
+    <span><%= blog_post.get("the_ask") %></span>
+  </div>
+<% } %>
+
+<% if (blog_post.get("description")) { %>
+  <div class="description"><%- blog_post.get("description") %></div>
+<% } %>
+
+<h4>Attachments</h4>
+<div class="attachments"></div>
+<div class="upload"></div>
+
+<h4>Comments</h4>
+<div class="comments"></div>

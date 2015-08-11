@@ -1,0 +1,38 @@
+lll.models.Attachment = Backbone.Model.extend({
+  
+  url: function() {
+    return "/v1/attachments" + (this.isNew() ? "" : ("/" + this.id)) + ".json";
+  },
+  
+  parse: function(response) {
+    var self = this;
+    var attrs = _.clone(response);
+    
+    if (attrs.created_at) {
+      attrs.created_at = Date.parse(attrs.created_at);
+    }
+    
+    attrs = Backbone.Model.prototype.parse.call(this, attrs);
+    
+    return attrs;
+  },
+
+  toJSON: function() {
+    var attrs = _.clone(this.attributes);
+    if (attrs.created_at) {
+      attrs.created_at = attrs.created_at.toISOString();
+    }
+    return attrs;
+  }
+      
+});
+
+lll.models.attachments = new (Backbone.Collection.extend({
+
+  model: lll.models.Attachment, 
+  
+  comparator: function(attachment) {
+    return attachment.get("name");
+  }
+    
+}))();

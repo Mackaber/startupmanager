@@ -1,0 +1,39 @@
+lll.models.OrganizationMember = Backbone.Model.extend({
+  
+  validation: {
+    level: {
+      required: true,
+      minLength: 1
+    }
+  },
+  
+  url: function() {
+    return "/v1/organization_members" + (this.isNew() ? "" : ("/" + this.id)) + ".json";
+  },
+  
+  organization: function() {
+    var self = this;
+    return lll.models.organizations.get(self.get("organization_id"));
+  },
+  
+  user: function() {
+    var self = this;
+    if (!self._user) {
+      if (self.isNew()) {
+        self._user = new lll.models.User(self.user);
+      }
+      else {
+        self._user = lll.models.users.get(self.get("user_id"));
+      }
+    }
+    return self._user;
+  }
+});
+
+lll.models.organizationMembers = new (Backbone.Collection.extend({
+
+  model: lll.models.OrganizationMember,
+  
+  url: "/v1/organization_members.json"
+  
+}))();

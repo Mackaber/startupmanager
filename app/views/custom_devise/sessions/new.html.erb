@@ -1,0 +1,16 @@
+<% title("LeanLaunchLab - Sign In") %>
+<% body_class("login") %>
+
+<div class="body-wrapper">
+  <div class="login-header">
+    <%= image_tag("v2/login-icon.gif", :alt => "") %>LOGIN
+  </div>
+  <div class="login-body">
+    <%= form_for(resource, :as => resource_name, :url => session_path(resource_name), :html => {:class => "sign-in-form"}) do |f| %>
+      <%= f.email_field :email, :placeholder => "Email" %>
+      <%= f.password_field :password, :placeholder => "Password" %>
+      <a href="/users/password/new" class="forget">forgot password?</a>
+      <button class="btn login">login</button>
+    <% end %>
+  </div>
+</div>

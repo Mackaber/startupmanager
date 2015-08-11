@@ -1,0 +1,153 @@
+lll.views.EditCanvasItemView = Backbone.View.extend({
+  
+  events: {
+    "click .save": "save",
+    "click .cancel": "cancel",
+    "click .delete": "deleteIt",
+    "click .color a": "changeColor",
+    "click #plan": "changePlan"
+  },
+  
+  initialize: function() {
+    var self = this;
+    _.bindAll(self, "destroy", "render", "save", "cancel", "deleteIt", "changeColor", "changePlan")    
+    Backbone.Validation.bind(self);
+  },
+  
+  onDestroy: function() {
+    var self = this;
+    $(self.el).dialog("close");
+    Backbone.Validation.unbind(self);
+  },
+  
+  make: function() {
+    var self = this;
+    var el = $("<div id='EditCanvasItemView'></div>");
+    el.dialog({
+      autoOpen: false,
+      dialogClass: "edit-canvas-item",
+      title: self.model.isNew() ? "New Canvas Item" : "Edit Canvas Item",
+      width: 600,
+      modal: true,
+      open: function(event, ui) {
+        $(this).closest(".ui-dialog").addClass(self.model.get("display_color"));
+        $(this).find("textarea").ckeditor();
+        $(this).find("input#title").focus();
+      },
+      close: function(event, ui) { 
+        $(this).find("textarea").ckeditorGet().destroy();
+        $(this).dialog("destroy");
+      }
+    });
+    return el;
+  },
+  
+  render: function() {
+    var self = this;
+    templateLoader.loadRemoteTemplate("<%= asset_path 'v2/EditCanvasItem.html' %>", function(data) {
+      if (!self.template) {
+        self.template = _.template(data);
+      }
+      
+      $(self.el).html(self.template({
+        canvas_item: self.model
+      }));
+      self.$(".color .yellow img").attr("src", "<%= asset_path 'v2/canvas-item-yellow-small.png' %>");
+      self.$(".color .red img").attr("src", "<%= asset_path 'v2/canvas-item-red-small.png' %>");
+      self.$(".color .blue img").attr("src", "<%= asset_path 'v2/canvas-item-blue-small.png' %>");
+      self.$(".color .green img").attr("src", "<%= asset_path 'v2/canvas-item-green-small.png' %>");
+      self.$(".color .purple img").attr("src", "<%= asset_path 'v2/canvas-item-purple-small.png' %>");
+      
+      self.$(".color ." + self.model.get("display_color")).addClass("selected");
+      
+      self.$(".state label[for='state_valid'] img").attr("src", "<%= asset_path 'v2/right.png' %>");
+      self.$(".state label[for='state_invalid'] img").attr("src", "<%= asset_path 'v2/cross.png' %>");
+      
+      $(self.el).dialog("open");
+    });
+    return self;
+  },
+  
+  save: function() {
+    var self = this;
+    self.$(".clearfix.error").removeClass("error");
+    self.$("span.error").empty();
+    self.model.set({
+      status: self.$("input[name='state']:checked").val(),      
+      title: self.$("#title").val(),
+      description: self.$("#description").val(),
+      display_color: self.$("#display_color").val(),
+      include_in_plan: self.$("#plan").prop("checked"),
+      created_at: new Date(),
+      z: self.options.z
+    });
+    if (self.model.isValid()) {
+      lll.views.track("canvas_item", self.model.isNew() ? "add" : "edit");
+      var wasNew = self.model.isNew();
+      self.model.save(self.model.attributes, {
+        success: function(model, response) {
+          lll.models.loadData(response);
+        },
+        error: function(model, response) {
+          if (response.readyState == 0 || response.status == 0) {
+            // ajax call cancelled
+          }
+          else {
+            lll.views.error("error saving canvas item: " + response.responseText);
+            if (self.options.error) {
+              self.options.error(model, response);
+            }            
+          }                  
+        }
+      });
+      $(self.el).dialog("close");
+    }
+    else {
+      self.$(".invalid").each(function() {
+        $(this).closest(".clearfix").addClass("error");
+        $(this).closest(".clearfix").find("span.error").text($(this).attr("data-error"));
+      });
+    }
+    return false;
+  },
+  
+  cancel: function() {
+    var self = this;
+    $(self.el).dialog("close");
+    return false;
+  },
+  
+  deleteIt: function() {
+    var self = this;
+    if (confirm("Are you sure?")) {
+      lll.views.track(self.model.get("type"), "delete");
+      self.model.destroy();
+    }
+    $(self.el).dialog("close");
+    return false;
+  },
+  
+  changeColor: function(e) {
+    var self = this;
+    var color = $(e.currentTarget).attr("class");
+    $(self.el).closest(".ui-dialog").removeClass("red");
+    $(self.el).closest(".ui-dialog").removeClass("yellow");
+    $(self.el).closest(".ui-dialog").removeClass("blue");
+    $(self.el).closest(".ui-dialog").removeClass("green");
+    $(self.el).closest(".ui-dialog").removeClass("purple");
+    $(self.el).closest(".ui-dialog").addClass(color);
+    self.$(".color a").removeClass("selected");
+    $(e.currentTarget).addClass("selected");
+    self.$("input#display_color").val(color);
+    return false;
+  },
+  
+  changePlan: function(e) {
+    var self = this;
+    if (self.model.isNew() || !self.model.get("include_in_plan") || $(e.currentTarget).prop("checked") || confirm("Are you sure you want to remove this item from the Plan?")) {
+      return true;
+    }
+    return false;
+  }
+  
+});

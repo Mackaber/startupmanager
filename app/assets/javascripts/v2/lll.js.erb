@@ -1,0 +1,404 @@
+// window.onerror = function (em, url, ln) {
+//   if (_.include(["production", "staging"], window.environment) && url.match(/leanlaunchlab\.com\//) && !em.match(/^(a is null|h is null|b is undefined|TypeError: 'null' is not an object \(evaluating 'h.style'\)|Stripe is not defined|'Stripe' is undefined|Uncaught TypeError: Cannot read property 'style' of null|Uncaught TypeError: Cannot read property 'currentStyle' of null)$/)) {
+//     $.post(
+//       "/errors",
+//       {
+//         message: em,
+//         url: url,
+//         line: ln,
+//         stacktrace: printStackTrace()
+//       }
+//     );
+//   }
+//   return false;
+// }
+
+var lll = {
+  models: {
+    loadData: function(response) {
+      if (response.users) {
+        lll.models.users.addMissing(response.users, {parse: true});
+      }
+      if (response.organizations) {
+        lll.models.organizations.addMissing(response.organizations, {parse: true});
+      }
+      if (response.projects) {
+        lll.models.projects.addMissing(response.projects, {parse: true});
+      }
+      if (response.members) {
+        lll.models.members.addMissing(response.members, {parse: true});        
+      }
+      if (response.organization_members) {
+        lll.models.organizationMembers.addMissing(response.organization_members, {parse: true});
+      }
+      if (response.experiments) {
+        lll.models.experiments.addMissing(response.experiments, {parse: true});
+      }
+      if (response.questions) {
+        lll.models.questions.addMissing(response.questions, {parse: true});        
+      }
+      if (response.tasks) {
+        lll.models.tasks.addMissing(response.tasks, {parse: true});
+      }
+      if (response.hypotheses) {
+        lll.models.hypotheses.addMissing(response.hypotheses, {parse: true});        
+      }
+      if (response.blog_posts) {
+        lll.models.blogPosts.addMissing(response.blog_posts, {parse: true});        
+      }
+      if (response.attachments) {
+        lll.models.attachments.addMissing(response.attachments, {parse: true});
+      }
+      if (response.comments) {
+        lll.models.comments.addMissing(response.comments, {parse: true});        
+      }
+      if (response.canvas_items) {
+        lll.models.canvasItems.addMissing(response.canvas_items, {parse: true});
+      }
+      
+      if (response.deleted) {
+        if (response.deleted.hypothesis_ids) {
+          lll.models.hypotheses.removeIds(response.deleted.hypothesis_ids);
+        }
+        if (response.deleted.experiment_ids) {
+          lll.models.experiments.removeIds(response.deleted.experiment_ids);
+        }
+        if (response.deleted.question_ids) {
+          lll.models.questions.removeIds(response.deleted.question_ids);
+        }
+        if (response.deleted.task_ids) {
+          lll.models.tasks.removeIds(response.deleted.task_ids);
+        }
+        if (response.deleted.blog_post_ids) {
+          lll.models.blog_posts.removeIds(response.deleted.blog_post_ids);
+        }
+        if (response.deleted.canvas_item_ids) {
+          lll.models.canvasItems.removeIds(response.deleted.canvas_item_ids);
+        }
+        if (response.deleted.attachment_ids) {
+          lll.models.attachments.removeIds(response.deleted.attachment_ids);
+        }
+        if (response.deleted.comment_ids) {
+          lll.models.comments.removeIds(response.deleted.comment_ids);
+        }
+        if (response.deleted.member_ids) {
+          lll.models.members.removeIds(response.deleted.member_ids);
+        }
+        if (response.deleted.user_ids) {
+          lll.models.users.removeIds(response.deleted.user_ids);
+        }
+      }
+    }
+  },
+  views: {
+    track: function(category, action, label) {
+      _gaq.push(['_trackEvent', category, action, label]);
+      if (action == "load" || (_.include(["hypothesis", "experiment", "task", "interview", "blog_post", "comment", "canvas_item"], category) && _.include(["add"], action))) {
+        action = (action == "load") ? "Loaded" : (action == "add") ? "Created" : action;
+        category = (category == "blog_post") ? "Update" : category.toProperCase();
+        var prop = {};
+        if (label) {
+          prop.label = label;
+        }
+        mpq.track(category + " " + action, prop);
+      }
+    },
+    
+    error: function(s) {
+      $(function() {
+        window.scrollTo(0, 0);
+        if ($("#alert div").text() != s) {
+          var msg = $("<div style='display:none' class='error flashy-message'>" + s + "</div>");
+          $("#alert").append(msg);
+          msg.fadeIn(function() { 
+              setTimeout(function() {
+                msg.fadeOut(function() {
+                  msg.remove();
+                })
+              }, 30000);
+            }
+          );
+        }
+      });
+    },
+    
+    perm: function(s) {
+      $("#alert").prepend("<div class='flashy-message'>" + s + "</div>");
+    },
+    
+    info: function(s) {
+      $(function() {
+        window.scrollTo(0, 0);
+        if ($("#alert div").text() != s) {
+          var msg = $("<div style='display:none' class='info flashy-message'>" + s + "</div>");
+          $("#alert").append(msg);
+          msg.fadeIn(function() { 
+              setTimeout(function() {
+                msg.fadeOut(function() {
+                  msg.remove();
+                })
+              }, 3000);
+            }
+          );          
+        }
+      });
+    },
+    
+    warn: function(s) {
+      $(function() {
+        window.scrollTo(0, 0);
+        if ($("#alert div").text() != s) {
+          var msg = $("<div style='display:none' class='warning flashy-message'>" + s + "</div>");
+          $("#alert").append(msg);
+          msg.fadeIn(function() { 
+              setTimeout(function() {
+                msg.fadeOut(function() {
+                  msg.remove();
+                })
+              }, 3000);
+            }
+          );          
+        }
+      });
+    }
+  }
+};
+_.extend(lll.views, Backbone.Events);
+
+lll.views.timeZoneOffset = -28800;
+
+_.extend(Backbone.Validation.patterns, {
+  url: /^((http|https|ftp)\:\/\/)?([a-zA-Z0-9\.\-]+(\:[a-zA-Z0-9\.&amp;%\$\-]+)*@)*((25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9])\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[0-9])|([a-zA-Z0-9\-]+\.)*[a-zA-Z0-9\-]+\.(com|edu|gov|int|mil|net|org|biz|arpa|info|name|pro|aero|coop|museum|[a-zA-Z]{2}))(\:[0-9]+)*(\/($|[a-zA-Z0-9\.\,\?\'\\\+&amp;%\$#\=~_\-]+))*$/
+});
+
+String.prototype.trim = function() {
+  return this.replace(/^\s+|\s+$/g, ""); 
+}
+
+String.prototype.toProperCase = function () {
+    return this.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+};
+
+String.prototype.truncate = function(len) {
+  if (this.length > len) {
+
+    /* Truncate the content of the P, then go back to the end of the
+       previous word to ensure that we don't truncate in the middle of
+       a word */
+    trunc = this.replace(/(<([^>]+)>)/ig,"").substring(0, len);
+    trunc = trunc.replace(/\w+$/, '');
+
+    /* Add an ellipses to the end and make it a link that expands
+       the paragraph back to its original size */
+    trunc += '...';
+    return trunc;
+  }
+  else {
+    return this;
+  }
+}
+
+function SetEnd(txt) {  
+  if (txt.createTextRange) {  
+   //IE  
+   var FieldRange = txt.createTextRange();  
+   FieldRange.moveStart('character', txt.value.length);  
+   FieldRange.collapse();  
+   FieldRange.select();  
+   }  
+  else {  
+   //Firefox and Opera  
+   txt.focus();  
+   var length = txt.value.length;  
+   txt.setSelectionRange(length, length);  
+  }  
+}
+
+if (typeof console === "undefined" || typeof console.log === "undefined") {
+  console = {log: function() {}};
+}
+
+Backbone.Collection.prototype.addMissing = function(models, options) {
+  var self = this;
+  _.each(models, function(model) {
+    var oldModel;
+    if (oldModel = self.get(model.id)) {
+      oldModel.set(oldModel.parse(model), options);
+    }
+    else {
+      self.add(model, options);
+    }
+  });
+};
+
+Backbone.Collection.prototype.removeIds = function(ids, options) {
+  var self = this;
+  _.each(ids, function(id) {
+    var model = self.get(id);
+    if (model) {
+      self.remove(model, options);
+    }
+  });
+};
+
+Backbone.Collection.prototype.fetch = function(options) {
+  options = options ? _.clone(options) : {};
+  if (options.parse === undefined) options.parse = true;
+  var collection = this;
+  var success = options.success;
+  options.success = function(resp, status, xhr) {
+    collection[options.add ? 'addMissing' : 'reset'](collection.parse(resp, xhr), options);
+    if (success) success(collection, resp);
+  };
+  options.error = Backbone.wrapError(options.error, collection, options);
+  return (this.sync || Backbone.sync).call(this, 'read', this, options);
+};
+
+Backbone.Collection.prototype.getOrFetch = function(id, callback) {
+  var m;
+  if (m = this.get(id)) {
+    callback(m);
+  }
+  else {
+    new this.model({id : id}).fetch({
+      success: function(model) {
+        this.add(model);
+        callback(model);
+      }
+    });
+  }
+};
+
+Backbone.View.prototype.destroy = function() {
+  if (this.onDestroy) {
+    this.onDestroy();
+  }
+  this.off();
+  this.remove();
+}
+
+$(function() {
+  if (lllData.currentUser) {
+    lll.models.User.current = new lll.models.User(lllData.currentUser, {parse: true});
+  }
+  if (lllData.users) {      // users needs to go before members
+    lll.models.users.reset(lllData.users, {parse: true});
+  }
+  if (lllData.attachments) {
+    lll.models.attachments.reset(lllData.attachments, {parse: true});
+  }
+  if (lllData.blogPosts) {
+    lll.models.blogPosts.reset(lllData.blogPosts, {parse: true});
+  }
+  if (lllData.canvasItems) {
+    lll.models.canvasItems.reset(lllData.canvasItems, {parse: true});
+  }
+  if (lllData.charges) {
+    lll.models.charges.reset(lllData.charges, {parse: true});
+  }
+  if (lllData.comments) {
+    lll.models.comments.reset(lllData.comments, {parse: true});
+  }
+  if (lllData.experiments) {
+    lll.models.experiments.reset(lllData.experiments, {parse: true});
+  }
+  if (lllData.members) {
+    lll.models.members.reset(lllData.members, {parse: true});
+  }
+  if (lllData.organizationMembers) {
+    lll.models.organizationMembers.reset(lllData.organizationMembers, {parse: true});
+  }
+  if (lllData.organizations) {
+    lll.models.organizations.reset(lllData.organizations, {parse: true});
+  }
+  if (lllData.projects) {
+    lll.models.projects.reset(lllData.projects, {parse: true});
+  }
+  if (lllData.promotions) {
+    lll.models.promotions.reset(lllData.promotions, {parse: true});
+  }
+  if (lllData.questions) {
+    lll.models.questions.reset(lllData.questions, {parse: true});
+  }
+  if (lllData.subscriptionLevels) {
+    lll.models.subscriptionLevels.reset(lllData.subscriptionLevels, {parse: true});
+  }
+  if (lllData.tasks) {
+    lll.models.tasks.reset(lllData.tasks, {parse: true});
+  }
+  if (lllData.hypotheses) {   // AFTER experiments, questions, tasks
+    lll.models.hypotheses.reset(lllData.hypotheses, {parse: true});
+  }
+  
+  
+  if ($("#header").length > 0) {
+    var headerView = new lll.views.HeaderView({
+      el: $("#header")[0],
+      model: lll.models.User.current
+    });
+    headerView.render();
+  }
+
+  $("a[title], span[title], img[title], button[title], h1[title], h2[title], h3[title], input[title], select[title], li[title]").livequery(function() {
+    var placement = $(this).attr("data-title-placement");
+    $(this).twipsy({
+      html: true,
+      placement: placement ? placement : "below"
+    });
+  });
+  
+  $("img.canvas").livequery(function() {
+    $(this).attr("src", "<%= asset_path 'v2/task-canvas-icon.gif' %>");
+  });
+  
+  $("img.secure").livequery(function() {
+    $(this).attr("src", "<%= asset_path 'v2/secure-icon.gif' %>");
+  })
+  
+  $("img.question").livequery(function() {
+    $(this).attr("src", "<%= asset_path 'v2/question-note.gif' %>");
+  });
+  
+  $("img.interview").livequery(function() {
+    $(this).attr("src", "<%= asset_path 'v2/task-int-icon.gif' %>");
+  });
+  
+  $("img.update").livequery(function() {
+    $(this).attr("src", "<%= asset_path 'v2/update-icon2.gif' %>");
+  });
+  
+  $("img.metric").livequery(function() {
+    $(this).attr("src", "<%= asset_path 'v2/metrics-grey.png' %>");
+  });
+
+  $("img.experiment").livequery(function() {
+    $(this).attr("src", "<%= asset_path 'v2/experiment-grey.png' %>");
+  });
+
+  $("img.task").livequery(function() {
+    $(this).attr("src", "<%= asset_path 'v2/tasks-grey.png' %>");
+  });
+  
+  $("img.edit").livequery(function() {
+    $(this).attr("src", "<%= asset_path 'v2/edit.gif' %>");
+  });
+
+  $("img.delete").livequery(function() {
+    $(this).attr("src", "<%= asset_path 'v2/delete.gif' %>");
+  });
+  
+  $("img.new").livequery(function() {
+    $(this).attr("src", "<%= asset_path 'v2/new-icon.png' %>");
+  });
+  
+  lll.views.router = new (Backbone.Router.extend({
+    routes: {
+      "home": "home"
+    },
+    
+    home: function() {
+      window.location.href = "/";
+    }
+  }));
+  setTimeout(function() { Backbone.history.start() }, 2000);
+});

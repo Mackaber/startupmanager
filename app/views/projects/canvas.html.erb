@@ -1,0 +1,20 @@
+<% title("LeanLaunchLab - #{@project}") %>
+<% body_class("canvas") %>
+
+<% content_for(:scripts) do %>
+  <%= javascript_include_tag("/ckeditor/ckeditor", "/ckeditor/adapters/jquery") %>
+  <script type="text/javascript">
+  //<![CDATA[
+    $(function() {      
+      var project = lll.models.projects.get(<%= @project.id %>);
+      var view = new lll.views.CanvasView({
+        el: $("#main")[0],
+        model: project,
+        categories: lllData.boxes,
+        wizard_display_init: <%= params.has_key?(:wizard) %>
+      });
+      view.render();
+    });
+  //]]>
+  </script>
+<% end %>

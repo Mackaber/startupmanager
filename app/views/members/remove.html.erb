@@ -1,0 +1,18 @@
+<% title("LeanLaunchLab - #{@project}") %>
+<% body_class("members") %>
+
+<% content_for(:scripts) do %>
+  <script type="text/javascript">
+  //<![CDATA[
+    $(function() {   
+	   	var member = new lll.models.Member({id: <%= @member.id %>});
+			member.project = new lll.models.Project({id: <%= @member.project.id %>, name: "<%= @member.project.name %>"});
+      var view = new lll.views.RemoveProjectMemberView({
+        el: $("#main")[0],
+        model: member
+      });
+      view.render();
+    });
+  //]]>
+  </script>
+<% end %>

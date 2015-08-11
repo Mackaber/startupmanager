@@ -1,0 +1,255 @@
+lll.views.ProjectTasksView = Backbone.View.extend({
+  
+  events: {
+    "keypress .left-sidebar input.quest": "keypress",
+    "click .toggle-completed": "toggleCompleted"
+  },
+  
+  template: null,
+  
+  initialize: function() {
+    var self = this;
+    
+    _.bindAll(self, "destroy", "render", "resetTasks", "addTask", "removeTask", "selectTask", "keypress", "toggleCompleted");
+    
+    self.collection = new (Backbone.Subset.extend({
+      parent: function () {
+        return lll.models.tasks;
+      },
+      sieve: function (task) {
+        return (task.get("project_id") == self.model.id);
+      }
+    }))();
+    self.collection.liveupdate_keys = "all";
+    
+    self.collection.on("reset", self.resetTasks);
+    self.collection.trigger("reset");
+    self.collection.on("add", self.addTask);
+    self.collection.on("remove", self.removeTask);    
+    self.model.on("change", self.render);    
+    
+    $(window).resize(function() {
+      self.$(".left-sidebar").height($(window).height() - $("#header").outerHeight() - $("#alerts").outerHeight() - $("#footer").outerHeight() - 146);
+      self.$(".right-sidebar").height($(window).height() - $("#header").outerHeight() - $("#alerts").outerHeight() - $("#footer").outerHeight() - 175);
+    }); 
+  },
+  
+  onDestroy: function() {
+    var self = this;
+    self.collection.off("reset", self.resetTasks);
+    self.collection.off("add", self.addTask);
+    self.collection.off("remove", self.removeTask);    
+    self.model.off("change", self.render);    
+  },
+  
+  keypress: function (e) {  
+    var self = this;
+    if ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13)) {
+      var task = new lll.models.Task({title: self.$("input.quest").val(), project_id: self.model.id});
+      task.save({}, {
+        wait: true,
+        success: function(model, response) {
+          self.$("input.quest").val("");
+          setformfieldsize(self.$("input.quest"));
+          lll.models.loadData(response);
+          setTimeout(function() {
+            self.$("#task_" + response.tasks[0].id).effect("highlight", "slow");
+          }, 0);
+        },
+        error: function(model, response) {
+          if (response.readyState == 0 || response.status == 0) {
+            // ajax call cancelled
+          }
+          else {
+            lll.views.error("error saving task: " + response.responseText);
+            if (self.options.error) {
+              self.options.error(model, response);
+            }
+          }          
+        }
+      });      
+      return false;  
+    } else {  
+      return true;  
+    }
+  },
+  
+  resetTasks: function() {
+    var self = this;
+    self._projectTaskViews = {};
+    self.collection.each(self.addTask);
+  },
+
+  render: function() {
+    var self = this;
+
+    $(self.el).empty();
+
+    $(self.el).append(new lll.views.ProjectHeadingView({
+      model: self.model,
+      url_attribute: "tasks_url"
+    }).render().el);
+
+    $(self.el).append(new lll.views.AlertView().render().el);
+    
+    $(self.el).append(new lll.views.ProjectTabsView({
+      model: self.model,
+      selected: "tasks"
+    }).render().el);
+    
+    templateLoader.loadRemoteTemplate("<%= asset_path 'v2/ProjectTasks.html' %>", function(data) {
+      if (!self.template) {
+        self.template = _.template(data);
+      }
+      
+      $(self.el).append(self.template({
+        project: self.model
+      }));          
+      
+      self.$(".column.last").hide();
+      
+      self.collection.each(function(task) {
+        var view = self._projectTaskViews[task.cid];
+        view.model.trigger("change");
+        self.renderItem(view);
+      });
+      
+      self.$("ul.uncompleted").sortable({
+        axis: "y",
+        handle: "a.verticle-dot",
+        update: function(event, ui) {
+          var task = $(ui.item).data("model");
+          var position = $(ui.item).prevAll("li").length+1;
+          task.save({position: position});
+        }
+      });
+
+      $(self.el).data("view", self);
+      $(window).resize();
+      self._rendered = true;
+    });
+    
+    return self;
+  },
+  
+  renderItem: function(view) {
+    var self = this;
+    
+    if (view.model.get("completed_at")) {
+      var first = _.find(
+        self.$("ul.completed li"),
+        function(e) { 
+          return ($(e).data("model").get("completed_at").getTime() >= view.model.get("completed_at").getTime());
+        }
+      );
+      if (first == view.el) {
+        return;
+      }    
+      if (first) {
+        $(first).before(view.el);
+      }
+      else {
+        self.$("ul.completed").append(view.el);
+      }
+    }
+    else {
+      var first = _.find(
+        self.$("ul.uncompleted li"),
+        function(e) { 
+          return ($(e).data("model").get("position") >= view.model.get("position"));
+        }
+      );
+      if (first == view.el) {
+        return;
+      }    
+      if (first) {
+        $(first).before(view.el);
+      }
+      else {
+        self.$("ul.uncompleted").append(view.el);
+      }
+    }
+                                 
+    if (view.model.isNew()) { 
+      setTimeout(function() {
+        $(view.el).effect("highlight", "slow");
+      }, 0);
+    }
+    view.delegateEvents();
+  },
+  
+  addTask: function(model) {
+    var self = this;
+    var v = new lll.views.ProjectTaskView({
+      model: model,
+      tagName: "li",
+      update: function(model) {
+        lll.views.info("Task updated");
+      }
+    });
+    self._projectTaskViews[model.cid] = v;
+    model.on("selected", self.selectTask);
+    
+    var previousItem = $("#" + model.get("type") + "_" + model.id);
+    if (self._rendered) {
+      v.model.trigger("change");
+      self.renderItem(v);  
+    }
+    if (previousItem.length > 0) {
+      // workaround for the fact that jquery sortable ALSO moves the DOM element
+      previousItem.remove();
+    }    
+  },
+
+  removeTask: function(model) {
+    var self = this;
+    var v = self._projectTaskViews[model.cid];
+    v.model.off("selected", self.selectTask);
+    delete self._projectTaskViews[model.cid];
+    v.destroy();
+  },
+  
+  selectTask: function(task) {
+    var self = this;
+    if (self.taskDetailView) {
+      $(self.taskDetailView.el).remove();
+      self.taskDetailView.destroy();
+    }
+    self.$(".group li.selected").removeClass("selected");
+    self.$(".group li#task_" + task.id).addClass("selected");
+    self.taskDetailView = new lll.views.ProjectTaskDetailView({
+      model: task
+    });
+    self.$(".column.last").append(self.taskDetailView.render().el);
+    self.$(".column.last").show();
+    setTimeout(function() {
+      $(window).resize();
+    }, 100);
+  },
+  
+  paste: function() {
+    var self = this;
+    if (!self.model.organization().get("can_add_member")) {
+      new lll.views.UpgradeSubscriptionView({
+        model: self.model.organization()
+      }).render();
+      return false;
+    }
+    $(self.pasteView.el).slideDown();
+    return false;
+  },
+  
+  toggleCompleted: function(e) {
+    var self = this;
+    if (self.$("ul.completed").css("display") == "none") {
+      self.$("ul.completed").slideDown("fast");
+      $(e.currentTarget).text("hide completed tasks")
+    }
+    else {
+      self.$("ul.completed").slideUp("fast");
+      $(e.currentTarget).text("show completed tasks")
+    }
+    return false;
+  }
+
+});

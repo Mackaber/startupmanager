@@ -1,0 +1,213 @@
+lll.views.OrganizationPaymentView = Backbone.View.extend({
+  
+  events: {
+    "click .edit": "editCreditCard",
+    "click a.yearly": "yearly",
+    "click .price-bttn a": "selectPlan",
+    "click a.cancel-account": "cancelAccount"    
+  },
+  
+  initialize: function() {
+    var self = this;
+    
+    _.bindAll(self, "destroy", "render", "editCreditCard", "yearly", "selectPlan", "cancelAccount");
+    
+    self.model.on("change", self.render);
+    
+    self.editCreditCardView = new lll.views.EditCreditCardView({
+      model: self.model
+    }).render();
+
+    self._initialized = true;
+  },
+  
+  onDestroy: function() {
+    var self = this;
+    self.model.off("change", self.render);
+  },
+
+  render: function() {
+    var self = this;
+    
+    $(self.el).empty();
+    
+    $(self.el).append(new lll.views.OrganizationHeadingView({
+      model: self.model,
+      url_attribute: "payment_url"
+    }).render().el);
+    
+    $(self.el).append(new lll.views.AlertView().render().el);
+
+    $(self.el).append(new lll.views.OrganizationTabsView({
+      model: self.model,
+      selected: "payment"
+    }).render().el);
+    
+    templateLoader.loadRemoteTemplate("<%= asset_path 'v2/OrganizationPayment.html' %>", function(data) {
+      if (!self.template) {
+        self.template = _.template(data);
+      }
+      
+      var currentMember = self.model.currentMember();
+    
+      plans = [
+        lll.models.subscriptionLevels.find(function(x) { return x.get("name") == "Personal" }),
+        lll.models.subscriptionLevels.find(function(x) { return x.get("name") == "Garage" }),
+        lll.models.subscriptionLevels.find(function(x) { return x.get("name") == "Startup Lite" }),
+        lll.models.subscriptionLevels.find(function(x) { return x.get("name") == "Startup Plus" }),
+        lll.models.subscriptionLevels.find(function(x) { return x.get("name") == "Enterprise" }),
+      ];
+      
+      $(self.el).append(self.template({
+        organization: self.model,
+        currentMember: currentMember,
+        plans: plans
+      }));
+      
+      if (self.model.currentMember().get("level") == "Admin") {
+        var sl = self.model.subscriptionLevel(); 
+        if (sl) {
+          switch (sl.get("name")) {
+            case "Personal":
+              self.$(".Personal").addClass("price-box-blue");
+              self.$(".Personal .price-bttn a").text("Your Plan");
+              break;
+            case "Garage":
+              self.$(".Garage").addClass("price-box-blue");
+              self.$(".Garage .price-bttn a").text("Your Plan");
+              break;
+            case "Startup Lite":
+              self.$(".Lite").addClass("price-box-blue");
+              self.$(".Lite .price-bttn a").text("Your Plan");
+              break;
+            case "Startup Plus":
+              self.$(".Plus").addClass("price-box-blue");
+              self.$(".Plus .price-bttn a").text("Your Plan");
+              break;
+            case "Enterprise":
+              self.$(".Enterprise").addClass("price-box-blue");
+              self.$(".Enterprise .price-bttn a").text("Your Plan");
+              break;
+          }
+        }
+        
+        if (!self.model.get("cc_last4") && self.model.get("subscription_price") != 0) {
+          self.$(".cc").html(self.editCreditCardView.el);
+        }
+      }
+      else {
+        self.$(".admin-info, .price-box, .new-project").remove();
+      }      
+      
+      if (!(
+          self.model.currentMember().get("level") == "Admin" && 
+          self.model.get("subscription_level_id") && 
+          self.model.get("cc_last4") &&
+          (!self.model.get("trial_end_date") || Date.compare(self.model.get("trial_end_date"), Date.today()) == -1)
+        )) {
+        self.$("a.cancel-account").remove();
+      }
+      
+      self.delegateEvents();
+      self._rendered = true;
+    });
+    return self;
+  },
+  
+  editCreditCard: function() {
+    var self = this;
+    self.$(".cc").html(self.editCreditCardView.el);
+    return false;
+  },
+  
+  yearly: function() {
+    var self = this;
+    self.model.save({subscription_yearly: !self.model.get("subscription_yearly")}, {wait: true});
+  },
+  
+  cancelAccount: function(e) {
+    var self = this;
+    $("<div><h1>Cancel Account</h1><p>Canceling your account will place all projects in " + self.model.get("name") + " into read-only mode.  Proceed?</p> <div class='well'><button class='btn danger cancel-confirm'>Yes, cancel my account</button> <button class='btn cancel-cancel'>No, not right now</button></div></div>").dialog({
+      dialogClass: "cancel-confirmation",
+      width: 800,
+      modal: true,
+      open: function() {
+        var dialog = $(this);
+        dialog.find(".cancel-confirm").click(function() { 
+          self.model.save({subscription_level_id: null}, {wait: true});
+          dialog.dialog("close");
+        });
+        dialog.find(".cancel-cancel").click(function() { 
+          dialog.dialog("close");
+        });
+      },
+      close: function() {
+        $(this).dialog("destroy").remove();
+      }
+    });
+    
+    return false;
+  },
+  
+  selectPlan: function(e) {
+    var self = this;
+    
+    var plan = $(e.currentTarget).closest(".price-box");
+    var level;
+    if (plan.hasClass("Personal")) {
+      level = lll.models.subscriptionLevels.find(function(x) { return x.get("name") == "Personal" });
+    }
+    else if (plan.hasClass("Garage")) {
+      level = lll.models.subscriptionLevels.find(function(x) { return x.get("name") == "Garage" });
+    }
+    else if (plan.hasClass("Lite")) {
+      level = lll.models.subscriptionLevels.find(function(x) { return x.get("name") == "Startup Lite" });
+    }
+    else if (plan.hasClass("Plus")) {
+      level = lll.models.subscriptionLevels.find(function(x) { return x.get("name") == "Startup Plus" });
+    }
+    else if (plan.hasClass("Enterprise")) {
+      level = lll.models.subscriptionLevels.find(function(x) { return x.get("name") == "Enterprise" });
+    }    
+    
+    if (level == self.model.subscriptionLevel()) {
+      return false;
+    }
+    
+    if (level.get("monthly_price") == null) {
+      var contact = new lll.models.Contact({
+        name: lll.models.User.current.get("name"),
+        email: lll.models.User.current.get("email"),
+        company: self.model.get("name")
+      });
+      new lll.views.ContactView({
+        model: contact,
+        title: "Contact Sales"
+      }).render();
+    }
+    else {
+      if (
+        (level.get("max_members") && self.model.organizationMembers().length > level.get("max_members")) ||
+        (level.get("max_projects") && self.model.projects().length > level.get("max_projects")) ||
+        (level.get("max_storage_mb") && Math.ceil(level.total_attachment_size/1048476.0) > level.get("max_storage_mb"))
+      ) {
+        var e = $("<p>Your current usage (projects or members) exceeds the limits for this plan.  Please remove members and/or projects before downgrading.  For help, contact <a href='mailto:support@leanlaunchlab.com'>support@leanlaunchlab.com</a>.</p>");
+        $("body").append(e);
+        $(e).dialog({
+          width: 400,
+          modal: true,
+          title: "Limits Exceeded",
+          close: function(event, ui) { 
+            $(this).dialog("destroy").remove();
+          }
+        });
+      }
+      else {
+        self.model.save({subscription_level_id: level.id, subscription_yearly: false}, {wait: true});
+      }
+    }
+    
+    return false;
+  }
+  
+}); 

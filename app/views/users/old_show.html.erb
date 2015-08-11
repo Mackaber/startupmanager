@@ -1,0 +1,26 @@
+<h1>Your account is now active</h1>
+<hr>
+
+<% if @user.projects.empty? %>
+  <h4>Get started by creating your first project</h4>
+<% else %>
+  <ul>
+    <% @projects.each do |project| %>
+      <li>
+        <%= link_to project.name, project_path(project) %>
+      </li>
+    <% end %>
+  </ul>
+  <h4>Add a new project</h4>
+<% end %>
+<%= form_for @project do |p| %>
+  <%= p.label "Project Name" %>
+  <%= p.text_field :name %>
+  <%= p.fields_for :members do |m| %>
+    <%= m.hidden_field :role, :value => "Owner" %>
+    <%= m.hidden_field :description, :value => "Project Owner" %>
+    <%= m.hidden_field :user_id, :value => @user.id %>
+  <% end %>
+  <br/>
+  <%= p.submit "Create" %>
+<% end %>

@@ -1,0 +1,51 @@
+<% title("Projects") %>
+
+<table id="the_table">
+  <thead>
+    <tr>
+      <% @columns.each do |column| %>
+        <th><%= column %></th>
+      <% end %>
+    </tr>
+  </thead>
+  <tbody>
+  </tbody>
+</table>
+
+<% content_for(:scripts) do %>
+  <script type="text/javascript">
+    searchTerm = null;
+    searchHandler = null;
+  
+    $(function() {
+      oTable = $('#the_table').dataTable( {
+          "iDisplayLength": 100,
+          "aLengthMenu": [ 10, 100, 1000, 10000 ],
+          "bJQueryUI": true,
+          "bProcessing": true,
+          "bServerSide": true,
+          "sAjaxSource": "#{url_for()}",
+          "bSortClasses": false,
+          "aaSorting": [[0, 'desc']],
+          "aoColumns": [
+            null,
+            null,
+            {"bSortable": false},
+            null,
+            null,
+            null,
+            null
+          ]         
+        } );
+    
+      $("#the_table_filter input").unbind("keyup");
+      $("#the_table_filter input").keyup(function(event) {
+        if (searchHandler != null) {
+          clearTimeout(searchHandler);
+        }
+        searchHandler = setTimeout(function() { oTable.fnFilter(searchTerm); searchTerm = null }, 1000);
+        searchTerm = $(this).val();
+      });
+    });
+  </script>
+<% end %>

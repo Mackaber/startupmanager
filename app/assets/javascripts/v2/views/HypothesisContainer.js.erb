@@ -1,0 +1,75 @@
+lll.views.HypothesisContainer = {
+  
+  initialize: function() {
+    var self = this;    
+    
+    _.bindAll(self, "destroy", "resetHypotheses", "addHypothesis", "removeHypothesis", "render");
+    
+    self.collection.on("reset", self.resetHypotheses);
+    self.resetHypotheses();
+    self.collection.on("add", self.addHypothesis);
+    self.collection.on("remove", self.removeHypothesis);
+  },
+  
+  onDestroy: function() {
+    var self = this;
+    self.collection.off("reset", self.resetHypotheses);
+    self.collection.off("add", self.addHypothesis);
+    self.collection.off("remove", self.removeHypothesis);
+    _.each(self._hypothesisViews, function(v) { v.destroy() });
+  },
+  
+  resetHypotheses: function() {
+    var self = this;
+    self._hypothesisViews = {};
+    self.collection.each(self.addHypothesis);
+  },
+  
+  addHypothesis: function(model) {
+    var self = this;
+    
+    // console.log(model + " added to " + self.model);
+    var v = new lll.views.HypothesisView({
+      model: model,
+      el: $("<li/>")
+    });
+    if (self._hypothesisViews[model.cid]) {
+      self._hypothesisViews[model.cid].destroy();
+    }
+    self._hypothesisViews[model.cid] = v;
+  
+    var previousItem = $("#" + model.get("type") + "_" + model.id);
+    v.render();
+    if (self._rendered) {     
+      self.renderItem(v);      
+    }
+    if (previousItem.length > 0) {
+      // workaround for the fact that jquery sortable ALSO moves the DOM element
+      previousItem.remove();
+    }
+  },
+
+  removeHypothesis: function(model) {
+    var self = this;
+    var v = self._hypothesisViews[model.cid];
+    if (v) {
+      // console.log(model + " removed from " + self.model);
+      delete self._hypothesisViews[model.cid];
+      v.destroy();
+    }
+  },
+  
+  render: function() { 
+    var self = this;        
+    self.collection.each(function(model) {
+      var view;
+      view = self._hypothesisViews[model.cid];
+      if (!view._rendered) {
+        view.render();
+      }
+      view.model.trigger("change");
+      setTimeout(function() { self.renderItem(view) }, 0);
+    });    
+  }
+  
+}

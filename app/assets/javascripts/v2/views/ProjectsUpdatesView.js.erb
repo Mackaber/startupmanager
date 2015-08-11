@@ -1,0 +1,206 @@
+lll.views.ProjectsUpdatesView = Backbone.View.extend({
+  
+  template: null,
+  
+  events: {
+    "click .items": "selectType",
+    "click .more": "more"
+  },
+  
+  initialize: function() {
+    var self = this;
+    
+    _.bindAll(self, "destroy", "render", "selectType", "organizationChanged", "projectChanged", "filter", "more");
+    
+    self.collection.on("reset", self.render);
+    
+    lll.models.hypotheses.on("add", self.filter);
+    lll.models.blogPosts.on("add", self.filter);
+    lll.views.on("project-changed", self.projectChanged);
+    lll.views.on("organization-changed", self.organizationChanged);
+    
+    self.last = (new Date()).getTime();
+    
+    // $(window).resize(function() {
+    //   self.$(".updates-sidebar").height(($(window).height() - $("#header").outerHeight() - $("#alerts").outerHeight() - $("#footer").outerHeight() - 75) + "px");
+    // });    
+  },
+  
+  onDestroy: function() {
+    var self = this;
+    self.collection.off("reset", self.render);
+    lll.models.hypotheses.off("add", self.filter);
+    lll.models.blogPosts.off("add", self.filter);
+    lll.views.off("project-changed", self.projectChanged);
+    lll.views.off("organization-changed", self.organizationChanged);
+  },
+
+  render: function() {
+    var self = this;
+    $(self.el).empty();    
+    templateLoader.loadRemoteTemplate("<%= asset_path 'v2/ProjectsUpdates.html' %>", function(data) {
+      if (!self.template) {
+        self.template = _.template(data);
+      }          
+      
+      $(self.el).append(self.template({
+        projects: self.collection.models
+      }));
+      
+      $(self.el).data("view", self);
+      
+      // $(window).resize();
+      
+      self._rendered = true;
+
+      setTimeout(self.more, 100);
+      lll.views.trigger("item-types-changed", []);
+    });
+    return self;
+  },
+  
+  selectType: function(e) {
+    var self = this;
+    $(e.currentTarget).toggleClass("blue-box");
+    $(e.currentTarget).toggleClass("grey-box");
+    var selectedTypes = self.$(".items.blue-box").map(function() {
+      return $(this).attr("class").match(/([a-z-]+)-items/)[1];
+    });
+    self.itemTypes = selectedTypes;
+    lll.views.trigger("item-types-changed", selectedTypes);
+    self.filter();
+  },
+  
+  organizationChanged: function(organizationId) {
+    var self = this;
+    self.organizationId = organizationId;
+    self.projectId = null;
+    self.filter();
+  },
+  
+  projectChanged: function(projectId) {
+    var self = this;
+    self.projectId = projectId;
+    self.organizationId = null;
+    self.filter();
+  },
+  
+  filter: function() {
+    var self = this;
+    setTimeout(function() {
+      if (!self._rendered) {
+        return;
+      }
+      var allUpdates = [], allInterviews = [], allHypotheses = [], allHypothesesInProgress = [];
+      var updatesCount = 0, interviewsCount = 0, hypothesesCount = 0, hypothesesInProgressCount = 0;
+      var projects;
+      if (self.projectId) {
+        projects = [self.collection.get(self.projectId)];
+      }
+      else if (self.organizationId) {
+        projects = self.collection.filter(function(project) { return project.get("organization_id") == self.organizationId });
+      }
+      else {
+        projects = self.collection.models;
+      }
+      _.each(projects, function(project) {
+        var blog_posts = project.blogPosts();
+        var updates = blog_posts.filter(function(blog_post) {
+          return blog_post.get("post_type") != "interview";
+        });
+        updatesCount += updates.length;
+        if (self.itemTypes == null || self.itemTypes.length == 0 || _.include(self.itemTypes, "update")) {
+          allUpdates = allUpdates.concat(updates);
+        }
+        var interviews = blog_posts.filter(function(blog_post) {
+          return blog_post.get("post_type") == "interview";
+        });
+        interviewsCount += interviews.length;
+        if (self.itemTypes == null || self.itemTypes.length == 0 || _.include(self.itemTypes, "interview")) {
+          allInterviews = allInterviews.concat(interviews);
+        }
+        var hypotheses = project.hypotheses();
+        
+        var hypothesesInProgress = hypotheses.filter(function(x) { return x.get("status") == "started" });
+        hypothesesInProgressCount += hypothesesInProgress.length;
+        if (self.itemTypes == null || self.itemTypes.length == 0 || _.include(self.itemTypes, "hypothesis-in-progress")) {
+          allHypothesesInProgress = allHypothesesInProgress.concat(hypothesesInProgress);
+        }
+        
+        hypotheses = hypotheses.filter(function(x) { return x.get("status") != "started" });
+        hypothesesCount += hypotheses.length;
+        if (self.itemTypes == null || self.itemTypes.length == 0 || _.include(self.itemTypes, "hypothesis")) {
+          allHypotheses = allHypotheses.concat(hypotheses);
+        }
+      });
+      self.$(".summary .update-items .date").text(updatesCount);
+      self.$(".summary .interview-items .date").text(interviewsCount);
+      self.$(".summary .hypothesis-items .date").text(hypothesesCount);
+      self.$(".summary .hypothesis-in-progress-items .date").text(hypothesesInProgressCount);
+    
+      all = _.sortBy(allUpdates.concat(allInterviews).concat(allHypotheses).concat(allHypothesesInProgress), function(item) {
+        return item.get("published_at") || item.get("completed_at");
+      }).reverse();    
+      self.$(".updates-items > *[data-model-id]").hide();
+      _.each(all, function(item) {
+        e = self.$(".updates-items > *[data-model-type='" + item.get("type") + "'][data-model-id='" + item.id + "']");
+        if (e.length == 0) {
+          var v;
+          if (item.get("type") == "blog_post" && item.get("post_type") == "interview") {
+            v = new lll.views.InterviewUpdateView({
+              model: item
+            });
+          }
+          else if (item.get("type") == "blog_post" && item.get("post_type") != "interview") {
+            v = new lll.views.UpdateUpdateView({
+              model: item
+            });
+          }
+          else if (item.get("type") == "hypothesis") {
+            v = new lll.views.HypothesisUpdateView({
+              model: item
+            });
+          }
+          item.trigger("change");
+          if (v) {
+            self.$(".updates-items").append(v.el);
+            $(v.el).show();
+          }
+        }
+        else {
+          e.show();
+        }
+      
+      });
+    }, 0);
+  },
+  
+  more: function() {
+    var self = this;
+    
+    self.$(".more").css("visibility", "hidden");
+    
+    $.get(
+      "/v1/updates.json",
+      {
+        t: self.last
+      },
+      function(response) {
+        lll.models.loadData(response);
+        var newLast = _.min(
+          lll.models.hypotheses.map(function(h) { return h.get("completed_at") }).concat(
+            lll.models.blogPosts.map(function(h) { return h.get("published_at") })
+          )
+        );
+        if (self.last == newLast) {
+          self.$(".more").replaceWith("No more records");
+        }
+        else {
+          self.last = newLast;
+          self.$(".more").css("visibility", "visible");
+        }
+      }
+    );
+    return false;    
+  }
+});

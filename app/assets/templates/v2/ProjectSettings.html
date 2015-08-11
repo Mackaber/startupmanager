@@ -1,0 +1,75 @@
+<div class="body-wrapper">
+	<div class="box-wrapper">
+		<h3>
+			Project Settings
+		</h3>
+		<div class="info-bar">
+			Project Profile
+		</div>
+		<div class="form-body">
+			<div class="name-email">
+				<form class="form">
+					<p class="row">
+						<label for="name">Project Name</label>
+						<input name="name" id="name" type="text" value="<%= project.get('name') %>"/>
+						<span class="help-block error"></span>
+					</p>
+					<p class="row">
+						<label for="name">Organization</label>
+						<select id="organization_id" name="organization_id">
+              <% _.each(_.sortBy(organizations, function(org) { return org.get("name").toLowerCase() }), function(organization) { %>
+                <option value="<%= organization.id %>" <%= organization.id == project.get("organization_id") ? "selected='selected'" : "" %>><%= organization.get("name") %></option>
+              <% }); %>
+            </select>
+            <a href="#" class="new-organization">or create a new organization</a>            
+						<span class="help-block error"></span>
+						<input type="text" class="span7" id="organization_name" name="organization_name"></input>
+            <span class="help-block error"></span>            
+					</p>
+					<p class="row">
+						<label for="url">Website Url</label> 
+						<input name="url" id="url" type="text" value="<%= project.get('url') %>"/>
+						<span class="help-block error"></span>
+					</p>
+					<p class="row">
+						<label for="pitch">Elevator Pitch</label> 
+						<span class="char">
+							<span class="help-inline" id="pitch-length"></span><span class="help-inline">/ 140 chars</span>
+						</span>
+						<textarea name="pitch" id="pitch" data-maxsize="140" data-output="pitch-length"><%= project.get('pitch') %></textarea>
+						<span class="help-block error"></span>
+					</p>
+					<p class="row">
+						<button class="btn save">save</button>
+					</p>
+				</form>
+			</div>
+		</div>
+		<!--
+		<div class="info-bar">
+			Prefrences
+		</div>
+		<div class="form-body last">
+			<div class="name-email">
+				<form action="" method="get">
+					<p class="row">
+						<label class="large">Plan iteration Length</label> <select name="">
+							<option>
+								1 Week
+							</option>
+						</select>
+					</p>
+					<p class="row">
+						<label class="large">When i login. go directly to the</label> <select name="">
+							<option>
+								Dashboard
+							</option>
+						</select>
+					</p>
+				</form>
+			</div>
+		</div>
+		-->
+	</div>
+</div>
+

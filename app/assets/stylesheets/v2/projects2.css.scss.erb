@@ -1,0 +1,234 @@
+body#projects
+{
+  .grey-box span.date {
+    color:#000;
+    text-shadow:1px 1px 1px #fff;
+  }
+    
+  .all-projects
+  {
+    a
+    {
+      color: inherit;
+
+      &:hover
+      {
+        text-decoration: none;
+      }
+    }
+    
+    background-color: white;
+    color: #404040;
+    border-color: silver;
+    
+    &:hover
+    {
+      background-color:#F7F7F7;
+    }
+    
+    &.active
+    {
+       background-color: #355991;
+       color: white;
+       border-color: #012A63;
+    }
+  }
+  
+  ul.group
+  {
+    a.organization
+    {
+      display: block;
+      margin-left: 5px;
+    }
+    
+    li
+    {
+      li.active
+      {
+        background-color: #355991;
+        color: white;
+        
+        a
+        {
+          color: inherit;
+        }
+      }
+      
+      div.projest-label
+      {
+        a
+        {
+          display: block;
+          color: inherit;
+
+          &:hover
+          {
+            text-decoration: none;
+          }
+          
+          span
+          {
+            display:inline-block;
+            font:bold 11px/14px Arial, Helvetica, sans-serif;
+            color:#747474;
+            text-align:center;
+            padding:0 4px;
+            background-color:#E2E2E2;
+            
+            &:hover
+            {
+              background-color:#D1D1D1;
+            }
+          }          
+        }
+
+        background-color: white;
+        color: #404040;
+        border-color: silver;
+
+        &:hover
+        {
+          background-color:#F7F7F7;
+        }
+
+        &.active
+        {
+           background-color: #355991;
+           color: white;
+           border-color: #012A63;
+        }        
+      }
+    }
+  }
+  
+  .summary
+  {
+    span.interviews
+    {
+      margin-top: 5px;
+    }
+    
+    .hypothesis-items
+    {
+      span.interviews
+      {
+        margin-top: 0;
+      }
+    }
+    
+    .grey-box,
+    .blue-box
+    {
+      margin-left: 12px;
+      margin-right: 6px;
+    }
+    
+    .blue-box
+    {
+      span.interviews
+      {
+        color: white;
+      }
+    }
+  }
+  
+  .journal-updates:hover {
+    background-color: #fff;
+  }
+  .hypotheses-validated:hover {
+    background-color:#edf8da;
+  }
+  .not-started:hover {
+    background-color:#fff;
+  }
+  .hypotheses-tested:hover {
+    background-color:#FFF9CE;
+  }
+  .hypotheses-invalidated:hover {
+    background-color:#faeae8;
+  }
+  
+  .hypotheses-unknown, .hypotheses-unknown:hover {
+    background-color: #ddd;
+  }
+  
+  p.hypothesis-title a {
+    background: none;
+    padding: 0;
+  }
+  
+  .canvas-hypothesis p.hypothesis-title a {
+    background:url(<%= asset_path 'v2/dashbord-canvas-icon.gif' %>) 0 100% no-repeat;
+    padding:0 0 0 27px;
+  }
+  
+  .comments
+  {
+    color: #B2B2B2;
+    
+    ol
+    {
+      list-style: none;
+      margin: 0;
+      
+      li
+      {
+        .avatar
+        {
+          float: left;
+          margin-right: 5px;
+        }
+        
+        .body
+        {
+          clear: left;
+          color: black; 
+        }
+
+        .content 
+        {
+          width: 90%;
+          float: left;
+        } 
+
+        .member 
+        {
+          float: left;
+          margin-right: 1em;
+        }
+
+        .created_at 
+        {
+          float: left;
+        }
+        
+        .manage
+        {
+          float: none;
+          margin-left: 1em;
+        }
+      } /* li */                   
+    } /* ol */
+
+  } /* .comments */
+          
+  form.comment
+  {
+    padding-left: 25px;
+
+    textarea#body
+    {
+      width: 95%;
+      height: 50px;
+    }
+  } /* form.comment */
+     
+  p.jbar a span.new,
+  p.hypothesis-title a span.new,
+  p.experiment-title a span.new
+  {
+    color:#FF3300;
+    font-size:12px;
+  }     
+}

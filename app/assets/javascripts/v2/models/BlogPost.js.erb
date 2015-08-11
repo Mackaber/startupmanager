@@ -1,0 +1,98 @@
+lll.models.BlogPost = Backbone.Model.extend({
+  
+  validation: {
+    title: {
+      required: true,
+      minLength: 1,
+      maxLength: 255
+    },
+    the_ask: {
+      required: false,
+      maxLength: 255
+    }
+  },
+  
+  defaults: {
+    type: "blog_post"
+  },
+  
+  toString: function() {
+    return this.get("title");
+  },
+  
+  url: function() {
+    return "/v1/blog_posts" + (this.isNew() ? "" : ("/" + this.id)) + ".json";
+  },
+  
+  initialize: function() {
+    var self = this;
+    
+    self.attachments = new (Backbone.Subset.extend({
+      parent: function() {
+        return lll.models.attachments;
+      },
+      sieve: function(attachment) {
+        return (attachment.get("item_type") == "blog_post" && attachment.get("item_id") == self.id);
+      }
+    }));
+    
+    self.comments = new (Backbone.Subset.extend({
+      parent: function() {
+        return lll.models.comments;
+      },
+      sieve: function(comment) {
+        return (comment.get("blog_post_id") == self.id);
+      }
+    }));
+  },
+  
+  parse: function(response) {
+    var self = this;
+    var attrs = _.clone(response);
+    
+    if (attrs.published_at) {
+      attrs.published_at = Date.parse(attrs.published_at);
+    }
+    if (attrs.date) { 
+      attrs.date = Date.parse(attrs.date);
+    }
+    
+    attrs = Backbone.Model.prototype.parse.call(this, attrs);
+    // this._changed = true;
+    return attrs;
+  },
+  
+  toJSON: function() {
+    var attrs = _.clone(this.attributes);
+    if (attrs.published_at) {
+      attrs.published_at = attrs.published_at.toISOString();      
+    }
+    if (attrs.date) {
+      attrs.date = attrs.date.toString("yyyy-MM-dd");
+    }
+    return attrs;
+  },
+  
+  project: function() {
+    var self = this;
+    return lll.models.projects.get(self.get("project_id"));
+  },
+  
+  member: function() {
+    var self = this;
+    return lll.models.members.get(self.get("member_id"));
+  }
+  
+});
+
+lll.models.blogPosts = new (Backbone.Collection.extend({ 
+  
+  model: lll.models.BlogPost,
+  
+  url: "/v1/blog_posts.json",
+  
+  comparator: function(blog_post) {
+    return -blog_post.get("published_at").getTime();
+  }
+  
+}))();

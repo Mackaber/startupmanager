@@ -1,0 +1,17 @@
+<% title("LeanLaunchLab - #{@organization}") %>
+
+<% body_class("organization") %>
+<% content_for(:scripts) do %>
+  <script type="text/javascript">
+  //<![CDATA[
+    $(function() {      
+      var organization = lll.models.organizations.get(<%= @organization.id %>);
+      var view = new lll.views.OrganizationSummaryView({
+        el: $("#main")[0],
+        model: organization
+      });
+      view.render(); 
+    });
+  //]]>
+  </script>
+<% end %>

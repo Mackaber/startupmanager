@@ -1,0 +1,31 @@
+<% title("LeanLaunchLab") %>
+<% body_class("profile") %>
+
+<%
+  time_zones = Rails.cache.fetch("time_zones") do
+    us_zones = ActiveSupport::TimeZone.us_zones
+    ActiveSupport::TimeZone.all.collect do |tz|
+      us = us_zones.include?(tz)
+      {
+        :value => tz.tzinfo.name,
+        :label => tz.to_s, 
+        :us => us
+      }
+    end
+  end 
+%>
+
+<% content_for(:scripts) do %>
+	<script type="text/javascript">
+  //<![CDATA[
+    $(function() {
+      var view = new lll.views.UserSettingsView({
+        el: $("#main")[0],
+        model: lll.models.User.current,
+        time_zones: <%= time_zones.to_json.html_safe %>
+      });
+      view.render();
+    });
+  //]]>
+  </script>
+<% end %>

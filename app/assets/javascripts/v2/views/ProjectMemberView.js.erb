@@ -1,0 +1,158 @@
+lll.views.ProjectMemberView = Backbone.View.extend({
+  
+  events: {
+    "click .delete": "deleteIt",
+    "change #level, #role": "update"
+  },
+  
+  template: null,
+  
+  initialize: function() {
+    var self = this;
+    
+    _.bindAll(self, "destroy", "make", "render", "deleteIt", "update");
+    
+    Backbone.Validation.bind(self);
+    
+    self.model.on("change", self.render);
+    
+    lll.views.router.route("members/" + self.model.id + "/remove", "remove", self.deleteIt);    
+  },
+  
+  onDestroy: function() {
+    var self = this;
+    self.model.off("change", self.render);
+    Backbone.Validation.unbind(self);
+  },
+  
+  make: function() {
+    var el = $("<div class='member-listing " + this.model.get("type") + "' data-model-type='" + this.model.get("type") + "'></div>");
+    return el;
+  },
+
+  render: function() {
+    var self = this;
+    $(self.el).attr("id", self.model.get("type") + "_" + self.model.id);
+    $(self.el).attr("data-model-id", self.model.id);
+    $(self.el).data("model", self.model);
+    templateLoader.loadRemoteTemplate("<%= asset_path 'v2/ProjectMember.html' %>", function(data) {
+      if (!self.template) {
+        self.template = _.template(data);
+      }
+      
+      var currentMember = self.model.project().currentMember();
+      
+      $(self.el).empty();
+      $(self.el).append(self.template({
+        member: self.model,
+        read_only: !self.model.project().currentMember().get("can_manage_members")
+      }));
+      
+      if (self.model == currentMember || !currentMember.get("can_manage_members")) {
+        self.$(".member-listing-perm select").remove();
+      }
+      else {
+        _.each(self.options.levels, function(level) {
+          self.$("select#level").append("<option value='" + level + "' " + (self.model.get("level") == level ? " selected='selected'" : "") + ">" + level + "</option>");
+        });
+
+        self.$(".member-listing-perm span").remove();
+      }
+      
+      if (!currentMember.get("can_manage_members")) {
+        self.$(".member-listing-role select").remove();
+      }
+      else {        
+        _.each(self.options.roles, function(role) {
+          self.$("select#role").append("<option value='" + role + "' " + (self.model.get("role") == role ? " selected='selected'" : "") + ">" + role + "</option>");
+        });
+
+        self.$(".member-listing-role span").remove();        
+      }
+      
+      if ( !((self.model == currentMember || currentMember.get("can_manage_members"))) ) {
+        self.$("a.delete").remove();
+      }
+
+      self._rendered = true;
+    });
+    return self;
+  },
+  
+  deleteIt: function() {
+    var self = this;
+
+    if (self.model.get("level") == "Owner" && self.model.project().members().select(function(member) { return member.get("level") == "Owner" && member.get("active") == true}).length == 1) {
+      alert("Sorry, you're currently the only Owner on this project so you cannot remove yourself. If you'd like to leave this project, please give another member Owner permissions, then try to remove yourself again.");
+    }
+    else {
+      msg = (self.model.id == self.model.project().currentMember().id) ? "Are you sure you'd like to leave this project?" : ("Are you sure you'd like to remove " + self.model.user().get("name") + "?");
+      if (confirm(msg)) {
+        self.model.destroy({
+          wait: true,
+          success: function(model, response) {
+            lll.models.loadData(response);
+          }
+        });
+        lll.views.track("member", "delete");
+        if (self.model.id == self.model.project().currentMember().id) {
+          window.location.href = "/";
+        }
+        else {
+          lll.views.info(self.model.user().get("name") + " was removed successfully");
+        }
+      }
+    }
+    return false;
+  },
+  
+  update: function() {
+    var self = this;
+    self.$("div.error").removeClass("error");
+    self.$("span.error").empty();
+    attrs = {}
+    if (self.$("#level").length > 0) {
+      attrs["level"] = self.$("#level").val();
+    }
+    if (self.$("#role").length > 0) {
+      attrs["role"] = self.$("#role").val();
+    }
+    self.model.set(attrs);
+    if (self.model.isValid()) {
+      if (self.model.isNew()) {
+        if (self.options.create) {
+          self.options.create(self.model);
+        }
+      }
+      else {
+        if (self.options.update) {
+          self.options.update(self.model);
+        }
+      }
+      lll.views.track("member", "edit");
+      self.model.save(self.model.attributes, { 
+        error: function(model, response) {
+          if (response.readyState == 0 || response.status == 0) {
+            // ajax call cancelled
+          }
+          else {
+            lll.views.error("error saving project member: " + response.responseText);
+            if (self.options.error) {
+              self.options.error(model, response);
+            }
+          }          
+        }
+      });
+      $(self.el).dialog("close");
+    }
+    else {
+      self.$(".invalid").each(function() {
+        $(this).closest("div").addClass("error");
+        $(this).closest("div").find("span.error").text($(this).attr("data-error"));
+      });
+    }
+    return false;
+    
+  }
+  
+});

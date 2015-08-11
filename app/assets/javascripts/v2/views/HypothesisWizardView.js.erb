@@ -1,0 +1,42 @@
+lll.views.HypothesisWizardView = Backbone.View.extend({
+  
+  events: {
+  },
+  
+  initialize: function() {
+    var self = this;    
+    _.bindAll(self, "destroy", "render");    
+  },
+  
+  onDestroy: function() {  
+    var self = this;
+    $(self.el).dialog("close");  
+  },
+  
+  render: function() {
+    var self = this;
+    templateLoader.loadRemoteTemplate("<%= asset_path 'v2/HypothesisWizard.html' %>", function(data) {
+      if (!self.template) {
+        self.template = _.template(data);
+      }
+      
+      $(self.el).html(self.template({
+        hypothesis: self.model
+      }));
+      
+      $(self.el).dialog({
+        dialogClass: "hypothesis-wizard",
+        title: "Tips for Writing a Great Hypothesis",
+        width: 740,
+        modal: true,
+        open: function(event, ui) {
+          self.delegateEvents();
+        },
+        close: function(event, ui) { 
+          $(this).dialog("destroy");
+        }
+      });            
+    });
+    return self;
+  }
+});

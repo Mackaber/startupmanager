@@ -1,0 +1,217 @@
+lll.views.ProjectPlanView = Backbone.View.extend({
+  
+  events: {
+    "click .top-buttons .todo": "toDo",
+    "click .top-buttons .in_progress": "inProgress",
+    "click .top-buttons .done": "done",
+  },
+
+  initialize: function() {
+    var self = this;
+    
+    _.bindAll(self, "destroy", "render", "toDo", "inProgress", "done");
+    
+    self.projectGoalsView = new lll.views.ProjectGoalsView({
+      model: self.model,
+      className: "goals"
+    });    
+    
+    var todoHypotheses = new (Backbone.Subset.extend({
+      parent: function () {
+        return lll.models.hypotheses;
+      },
+      sieve: function (hypothesis) {
+        return (hypothesis.get("project_id") == self.model.id) && !hypothesis.get("hypothesis_id") && (!hypothesis.get("status") || (hypothesis.get("status") == ""));
+      }
+    }))();
+    todoHypotheses.liveupdate_keys = "all";
+    self.toDoView = new lll.views.ProjectPlanSectionView({
+      model: self.model,
+      collection: todoHypotheses,
+      title: "To Do",
+      sortable: true,
+      className: "column todo",
+    });
+
+    var inProgressHypotheses = new (Backbone.Subset.extend({
+      parent: function () {
+        return lll.models.hypotheses;
+      },
+      sieve: function (hypothesis) {
+        return (hypothesis.get("project_id") == self.model.id) && !hypothesis.get("hypothesis_id") && (hypothesis.get("status") == "started");
+      }
+    }))();
+    inProgressHypotheses.liveupdate_keys = "all";
+    self.inProgressView = new lll.views.ProjectPlanSectionView({
+      model: self.model,
+      collection: inProgressHypotheses,
+      title: "In Progress",
+      sortable: true,
+      className: "column in_progress"
+    });
+
+    var doneHypotheses = new (Backbone.Subset.extend({
+      parent: function () {
+        return lll.models.hypotheses;
+      },
+      sieve: function (hypothesis) {
+        return (hypothesis.get("project_id") == self.model.id) && !hypothesis.get("hypothesis_id") && _.include(["valid", "invalid", "unknown"], hypothesis.get("status"));
+      }
+    }))();
+    doneHypotheses.liveupdate_keys = "all";
+    self.doneView = new lll.views.ProjectPlanSectionView({
+      model: self.model,
+      collection: doneHypotheses,
+      title: "Done",
+      className: "column done"
+    });
+    
+    lll.views.track("plan", "load");
+    
+    self.activateUpdates();
+
+    self._initialized = true;
+  },
+  
+  onDestroy: function() {
+    var self = this;
+  },
+  
+  activateUpdates: function() {
+    var self = this;
+    self.ts = self.model.get("updated_at");
+    var errorCount = 0;
+    var interval = setInterval(function() {
+      $.ajax({
+        url: self.model.url(),
+        data: {
+          t: Math.floor(self.ts.getTime()/1000)
+        },
+        error: function() {
+          errorCount += 1;
+          if (errorCount >= 3) {
+            lll.views.error("Error processing updates from server - reload page to retry");
+            clearInterval(interval);
+          }
+        },
+        success: function(response) {
+          lll.models.loadData(response);
+          self.ts = self.model.get("updated_at");
+        }
+      });
+    }, 5000);    
+  },
+
+  render: function() {
+    var self = this;
+        
+    $(self.el).empty();
+    
+    $(self.el).append(new lll.views.ProjectHeadingView({
+      model: self.model,
+      url_attribute: "plan_url"
+    }).render().el);
+    
+    $(self.el).append(new lll.views.AlertView().render().el);
+
+    $(self.el).append(new lll.views.ProjectTabsView({
+      model: self.model,
+      selected: "plan"
+    }).render().el);
+    
+    templateLoader.loadRemoteTemplate("<%= asset_path 'v2/ProjectPlan.html' %>", function(data) {
+      if (!self.template) {
+        self.template = _.template(data);
+      }
+      
+      $(self.el).append(self.template({
+        project: self.model
+      }));
+      
+      var currentMember = self.model.currentMember();
+      
+      self.$(".top-buttons").append(self.projectGoalsView.render().el);
+      
+      self.$("#columns").append(self.toDoView.render().el);
+      if (!currentMember.get("display_plan_todo")) {
+        self.$("#columns .column.todo").hide();
+        self.$(".top-buttons .todo").addClass("inactive");
+      }
+      
+      self.$("#columns").append(self.inProgressView.render().el);
+      if (!currentMember.get("display_plan_in_progress")) {
+        self.$("#columns .column.in_progress").hide();
+        self.$(".top-buttons .in_progress").addClass("inactive");
+      }
+      
+      self.$("#columns").append(self.doneView.render().el);
+      if (!currentMember.get("display_plan_done")) {
+        self.$("#columns .column.done").hide();
+        self.$(".top-buttons .done").addClass("inactive");
+      }
+      
+      self.$("#columns .column:not(:hidden):last").addClass("last");
+      self.$("#columns").addClass("column-" + self.$("#columns .column:not(:hidden)").length);
+                        
+      $(window).resize();
+      self.delegateEvents();
+      $(self.el).data("view", self);
+      self._rendered = true;
+    });
+    return self;
+  },
+  
+  toDo: function() {
+    var self = this;
+    self.$(".top-buttons .todo").toggleClass("inactive");
+    self.$("#columns .column.todo").toggle();  
+    self.$("#columns .column").removeClass("last");
+    self.$("#columns .column:not(:hidden):last").addClass("last");
+    self.$("#columns").removeClass("column-1");
+    self.$("#columns").removeClass("column-2");
+    self.$("#columns").removeClass("column-3");
+    self.$("#columns").addClass("column-" + self.$("#columns .column:not(:hidden)").length);
+    var currentMember = self.model.currentMember();
+    currentMember.set({
+      display_plan_todo: !currentMember.get("display_plan_todo")
+    });
+    currentMember.save(currentMember.attributes);
+    return false; 
+  },
+  
+  inProgress: function() {
+    var self = this;
+    self.$(".top-buttons .in_progress").toggleClass("inactive");
+    self.$("#columns .column.in_progress").toggle();  
+    self.$("#columns .column").removeClass("last");
+    self.$("#columns .column:not(:hidden):last").addClass("last");
+    self.$("#columns").removeClass("column-1");
+    self.$("#columns").removeClass("column-2");
+    self.$("#columns").removeClass("column-3");
+    self.$("#columns").addClass("column-" + self.$("#columns .column:not(:hidden)").length);
+    var currentMember = self.model.currentMember();
+    currentMember.set({
+      display_plan_in_progress: !currentMember.get("display_plan_in_progress")
+    });
+    currentMember.save(currentMember.attributes);
+    return false; 
+  },
+  
+  done: function() {
+    var self = this;
+    self.$(".top-buttons .done").toggleClass("inactive");
+    self.$("#columns .column.done").toggle();  
+    self.$("#columns .column").removeClass("last");
+    self.$("#columns .column:not(:hidden):last").addClass("last");
+    self.$("#columns").removeClass("column-1");
+    self.$("#columns").removeClass("column-2");
+    self.$("#columns").removeClass("column-3");
+    self.$("#columns").addClass("column-" + self.$("#columns .column:not(:hidden)").length);
+    var currentMember = self.model.currentMember();
+    currentMember.set({
+      display_plan_done: !currentMember.get("display_plan_done")
+    });
+    currentMember.save(currentMember.attributes);
+    return false; 
+  }
+}); 

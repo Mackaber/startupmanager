@@ -1,0 +1,25 @@
+<form class="canvas-settings form-stacked">
+  <fieldset>
+    <div class="clearfix">
+      <label>Canvas Version</label>
+      <br/>
+      <input type="radio" name="canvas_startup_headers" value="false" id="canvas_startup_headers_false" <%= !project.get("canvas_startup_headers") ? " checked='checked'" : "" %> />
+      <label for="canvas_startup_headers_false">Classic - Original canvas headers</label>
+      <br/>
+      <input type="radio" name="canvas_startup_headers" value="true" id="canvas_startup_headers_true" <%= project.get("canvas_startup_headers") ? " checked='checked'" : "" %>/>
+      <label for="canvas_startup_headers_true">Lean Canvas - Modified canvas headers for startup activities</label>
+    </div>
+    <div class="clearfix">
+      <input type="checkbox" name="canvas_include_plan_default" id="canvas_include_plan_default" <%= project.get("canvas_include_plan_default") ? " checked='checked'" : "" %> />
+      <label for="canvas_include_plan_default">Include canvas items in plan by default</label>
+    </div>
+    <div class="clearfix">
+      <input type="checkbox" name="canvas_highlight_new" id="canvas_highlight_new" <%= project.get("canvas_highlight_new") ? " checked='checked'" : "" %> />
+      <label for="canvas_highlight_new">Highlight new canvas items with red text</label>
+    </div>
+  </fieldset>
+  <div class="actions">
+    <button class="btn small save">Update</button>
+    <button class="btn small cancel">Cancel</button>
+  </div>
+</form>

@@ -1,0 +1,202 @@
+<% var level = organization.subscriptionLevel(); %>
+<div class="body-wrapper">
+  <div class="box-wrapper">
+    <div class="info-bar">
+      Plans and Payment Info
+    </div>
+    <div class="form-body">
+      <% if (organization.get("locked")) { %>
+        <div class="admin-info">
+          <p><strong>Your free trial has expired. Submit a credit card to activate your account.</strong></p>
+        </div>
+      <% } %>
+      <div class="accountinfo">
+        <% if (level) { %>
+          <h2>
+            Your Plan:
+            <%= level.get("name") %>
+            <% if (organization.get("subscription_price") == 0) { %>
+              (FREE)
+            <% } else { %>
+              ($<%= organization.get("subscription_price").toFixed(0) %>/<%= organization.get("subscription_yearly") ? "year" : "month" %>)
+            <% } %>
+          </h2>        
+          <br class="spacer"/>
+          <% if (organization.get("subscription_yearly")) { %>
+            <a href="#" class="yearly">
+              <small>
+                Back to monthly billing
+              </small>
+            </a>
+          <% } else if (level.get("yearly_price") != null) { %>
+            <a href="#" class="yearly">
+              <small>
+                Save
+                <%= ((1-(level.get("yearly_price") / (level.get("monthly_price")*12)))*100).toFixed(0) %>%
+                by paying
+                $<%= level.get("yearly_price") %> for 12 months
+              </small>
+            </a>
+          <% } %>
+          <br class="spacer"/>
+          <a class="cancel-account" href="#">or cancel account</a>
+        <% } else { %>
+            <h2>Your Plan: Free Trial (FREE)</h2>
+        <% } %>
+        <div class="cc">
+          <% if (organization.get("cc_last4")) { %>
+            <label>We have the following card on file:</label>
+            <span><%= organization.get("cc_type")%> ************<%= organization.get("cc_last4") %> (exp. <%= organization.get("cc_exp_month") %>/<%= organization.get("cc_exp_year") %>)</span>
+            <button class="btn signup-bttn edit">Edit</button>
+          <% } %>
+        </div>
+      </div>      
+      <% if (organization.get("trial_remaining_days")) { %>
+        <div class="price-box <% if (!organization.get("subscription_level_id")) { %> price-box-blue <% } %>">
+          <h3><strong>Free Trial (<%= organization.get("trial_remaining_days") %> days remaining)</strong></h3>
+          <p>
+          <% if (organization.get("subscription_level_id")) { %>
+            Your billing period will begin on <%= organization.get("trial_end_date").toDateString() %>
+          <% } else { %>
+            Unlimited use during free trial
+          <% } %>
+          </p>
+          <div class="price-bttn">                    
+            <a href="#">Your Plan</a>
+          </div>
+        </div>
+      <% } %>
+      <% _.each(plans, function(plan) { %>
+        <div class="price-box <%= plan.get('name') %>">
+          <h3>
+            <strong><%= plan.get("name") %></strong> - <em><%= plan.get("tagline") %></em>
+          </h3>
+          <ul>
+            <li>
+              <% if (plan.get("max_projects") == 1) { %>
+                1 project
+              <% } else if (plan.get("max_projects")) { %>
+                <%= plan.get("max_projects") %> projects
+              <% } else { %>
+                Unlimited projects
+              <% } %>
+            </li>
+            <li class="collab">
+              <% if (plan.get("max_members") == 1) { %>
+                1 collaborator
+              <% } else if (plan.get("max_members")) { %>
+                <%= plan.get("max_members") %> collaborators
+              <% } else { %>
+                Unlimited collaborators
+              <% } %>
+            </li>
+            <li class="storage">
+              <% if (plan.get("max_storage_mb") >= 1024) { %>
+                <%= Math.ceil(plan.get("max_storage_mb") / 1024) %> gb
+              <% } else { %>
+                <%= plan.get("max_storage_mb") %> mb
+              <% } %>
+              file storage
+            </li>
+            <li class="email">
+              <% if (plan.get("support_chat") && plan.get("support_phone")) { %>
+                Email, chat, and phone
+              <% } else if (plan.get("support_chat")) { %>
+                Email and chat
+              <% } else { %>
+                Email
+              <% } %>
+              Support
+            </li>
+          </ul>
+          <div class="price-bttn">
+            <% if (plan.get("monthly_price")) { %>
+              <span class="price-text">
+                $<%= plan.get("monthly_price").toFixed(0) %><small>per month</small>
+              </span>
+              <a href="#">Select</a>
+              <% if (plan.get("yearly_price")) { %>
+                <p>
+                  or $<%= plan.get("yearly_price").toFixed(0) %> for 12 months (<%= ((1-(plan.get("yearly_price")/(12*plan.get("monthly_price"))))*100).toFixed(0) %>% discount)
+                </p>
+              <% } %>
+            <% } else if (plan.get("monthly_price") == 0) { %>
+              <span class="price-text">
+                FREE
+              </span>
+              <a href="#">Select</a>
+            <% } else { %>
+              <a href="#">Contact Sales</a>
+            <% } %>
+          </div>
+        </div>
+      <% }); %>
+    </div>
+    <div class="info-bar">
+      Payment History <!-- <button class="btn small">export as CSV</button> -->
+    </div>
+    <div class="form-body">
+      <table border="0" cellspacing="0" cellpadding="0" class="project-table">
+        <thead>
+          <tr>
+            <th width="276">
+              Transaction Number
+            </th>
+            <th width="112" class="ct">
+              Charge Date
+            </th>
+            <th width="158" class="ct">
+              Charge Amount
+            </th>
+            <th width="158" class="rt">
+              &nbsp;
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (organization.charges().length > 0) { %>
+            <% organization.charges().each(function(charge) { %>
+            <tr>
+              <td>
+                <%= charge.id %>
+              </td>
+              <td class="ct">
+                <%= charge.get("created_at").toString("MMM d, yyyy") %>
+              </td>
+              <td class="ct">
+                $<%= charge.get("amount").toFixed(2) %> USD
+              </td>
+              <td class="ct">
+                &nbsp;
+              </td>
+            </tr>
+            <% }); %>
+          <% } else { %>
+            <tr>
+              <td>(No data to display)</td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+    <div class="info-bar">
+      Payment FAQ
+    </div>
+    <div class="form-body last">
+      <p>
+        <strong>When do you charge my credit card?</strong>
+        We charge all customers on the 1st of each month.  
+        If you sign up in the middle of a month, we bill you for the pro-rated monthly amount.  
+        If you upgrade or downgrade your plan we issue a similar pro-rated charge or credit for the remainder of that month.
+      </p>
+      <p>
+        <strong>What types of payments do you support?</strong><br>
+        We accept all Visa, Mastercard, American Express, Discover, JCB, and Diners Club cards.
+      </p>
+      <p>
+        <strong>I'm located outside of the US, can I pay in a foreign currency?</strong><br>
+        Yes. However all currencies are converted to US dollars at prevailing exchange rates so your bill may fluctuate depending on the current rate.
+      </p>
+    </div>
+  </div>
+</div>

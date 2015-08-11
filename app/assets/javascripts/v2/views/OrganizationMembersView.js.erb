@@ -1,0 +1,166 @@
+lll.views.OrganizationMembersView = Backbone.View.extend({
+  
+  events: {
+    "click .paste": "paste"
+  },
+  
+  template: null,
+  
+  initialize: function() {
+    var self = this;
+    
+    _.bindAll(self, "destroy", "render", "resetMembers", "renderItem", "addMember", "removeMember", "paste");
+    
+    self.model.organizationMembers().on("reset", self.resetMembers);
+    self.model.organizationMembers().trigger("reset");
+    self.model.organizationMembers().on("add", self.addMember);
+    self.model.organizationMembers().on("remove", self.removeMember);
+    
+    self.model.on("change", self.render);    
+  },
+  
+  onDestroy: function() {
+    var self = this;
+    self.model.organizationMembers().off("reset", self.resetMembers);
+    self.model.organizationMembers().off("add", self.addMember);
+    self.model.organizationMembers().off("remove", self.removeMember);    
+    self.model.off("change", self.render);    
+  },
+  
+  resetMembers: function() {
+    var self = this;
+    self._organizationMemberViews = {};
+    self.model.organizationMembers().each(self.addMember);
+  },
+
+  render: function() {
+    var self = this;
+
+    $(self.el).empty();
+
+    $(self.el).append(new lll.views.OrganizationHeadingView({
+      model: self.model,
+      url_attribute: "members_url"
+    }).render().el);
+
+    $(self.el).append(new lll.views.AlertView().render().el);
+    
+    $(self.el).append(new lll.views.OrganizationTabsView({
+      model: self.model,
+      selected: "members"
+    }).render().el);
+    
+    templateLoader.loadRemoteTemplate("<%= asset_path 'v2/OrganizationMembers.html' %>", function(data) {
+      if (!self.template) {
+        self.template = _.template(data);
+      }
+      
+      $(self.el).append(self.template({
+        organization: self.model
+      }));          
+      
+      var currentMember = self.model.currentMember();
+      
+      if (currentMember.get("level") == "Admin") {
+        var newView = function() {
+          var newMember = new lll.models.OrganizationMember({
+            organization_id: self.model.id,
+          });
+          var newMemberView = new lll.views.NewOrganizationMemberView({
+            model: newMember,
+            levels: self.options.levels,
+            create: function(model) {
+              $(newMemberView.el).remove();
+              newView();
+              lll.views.info(model.user().get("name") + " was added successfully");
+            }
+          });     
+          self.$(".member-area").prepend(newMemberView.render().el);                      
+        };
+        
+        newView();
+        
+        self.pasteView = new lll.views.PasteOrganizationMembersView({
+          model: self.model
+        });
+        $(self.pasteView.render().el).hide();
+        self.$(".member-area").append(self.pasteView.el);
+      }
+      
+      self.model.organizationMembers().each(function(member) {
+        var view = self._organizationMemberViews[member.cid];
+        view.model.trigger("change");
+        self.renderItem(view);
+      });
+      
+      $(self.el).data("view", self);
+      self._rendered = true;
+    });
+    
+    return self;
+  },
+  
+  renderItem: function(view) {
+    var self = this;
+    var first = _.find(
+      self.$(".member-area .member-listing"),
+      function(e) { 
+        return (lll.models.users.comparator($(e).data("model").user()) >= lll.models.users.comparator(view.model.user()));
+      }
+    );
+    if (first == view.el) {
+      return;
+    }    
+    if (first) {
+      $(first).before(view.el);
+    }
+    else {
+      self.$(".member-area").append(view.el);
+    }                      
+    if (view.model.isNew()) { 
+      setTimeout(function() {
+        $(view.el).effect("highlight", "slow");
+      }, 0);
+    }
+    view.delegateEvents();
+  },
+  
+  addMember: function(model) {
+    var self = this;
+    var v = new lll.views.OrganizationMemberView({
+      model: model,
+      levels: self.options.levels
+    });
+    self._organizationMemberViews[model.cid] = v;
+    
+    var previousItem = $("#" + model.get("type") + "_" + model.id);
+    if (self._rendered) {
+      v.model.trigger("change");
+      self.renderItem(v);  
+    }
+    if (previousItem.length > 0) {
+      // workaround for the fact that jquery sortable ALSO moves the DOM element
+      previousItem.remove();
+    }
+  },
+
+  removeMember: function(model) {
+    var self = this;
+    var v = self._organizationMemberViews[model.cid];
+    delete self._organizationMemberViews[model.cid];
+    v.destroy();
+  },
+  
+  paste: function() {
+    var self = this;
+    if (!self.model.get("can_add_member")) {
+      new lll.views.UpgradeSubscriptionView({
+        model: self.model
+      }).render();
+      return false;
+    }
+    $(self.pasteView.el).slideDown();
+    return false;
+  }
+
+});

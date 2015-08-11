@@ -1,0 +1,15 @@
+<div class='title'>
+  <% if (member.get("can_manage_canvas") && isCurrentWeek) { %>
+    <a href="#" class="edit"><%= canvas_item.get("title") %></a>
+  <% } else { %>
+    <%= canvas_item.get("title") %>
+  <% } %>
+</div>
+<% if ((description = canvas_item.get("description")) && (description.length > 0)) { %>
+  <img class="description" title="<%= description %>"/>
+<% } %>
+<% if (canvas_item.get("status") == "valid") { %>
+  <img class="valid"/>
+<% } else if (canvas_item.get("status") == "invalid") { %>
+  <img class="invalid"/>
+<% } %>

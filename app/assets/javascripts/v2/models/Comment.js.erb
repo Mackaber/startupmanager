@@ -1,0 +1,67 @@
+lll.models.Comment = Backbone.Model.extend({
+  
+  validation: {
+    body: {
+      required: true,
+      minLength: 1
+    }
+  },
+  
+  defaults: {
+    type: "comment"
+  },
+  
+  url: function() {
+    return "/v1/comments" + (this.isNew() ? "" : ("/" + this.id)) + ".json";
+  },
+  
+  toString: function() {
+    var self = this;
+    return self.get("body");
+  },
+  
+  parse: function(response) {
+    var attrs = _.clone(response);
+    if (attrs.created_at) {
+      attrs.created_at = Date.parse(attrs.created_at);
+    }
+    attrs = Backbone.Model.prototype.parse.call(this, attrs);
+    // this._changed = true;
+    return attrs;
+  },
+  
+  toJSON: function() {
+    var attrs = _.clone(this.attributes);
+    if (attrs.created_at) {
+      attrs.created_at = attrs.created_at.toISOString();      
+    }
+    return attrs;
+  },
+  
+  member: function() {
+    return this.get("member_id")? lll.models.members.get(this.get("member_id")) : null;
+  },
+  
+  blog_post: function() {
+    return this.get("blog_post_id") ? lll.models.blogPosts.get(this.get("blog_post_id")) : null;
+  },
+  
+  hypothesis: function() {
+    return this.get("hypothesis_id") ? lll.models.hypotheses.get(this.get("hypothesis_id")) : null;
+  },
+  
+  project: function() {
+    return this.get("blog_post_id") ? this.blog_post().project() : this.hypothesis().project();
+  }  
+  
+});
+
+lll.models.comments = new (Backbone.Collection.extend({   
+  
+  model: lll.models.Comment,
+  
+  comparator: function(c) { 
+    return c.id;
+  }
+  
+}))();

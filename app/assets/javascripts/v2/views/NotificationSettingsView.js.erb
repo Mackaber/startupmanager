@@ -1,0 +1,96 @@
+lll.views.NotificationSettingsView = Backbone.View.extend({
+  
+  events: {
+    "click .all": "all",
+    "click .none": "none",
+    "change input[type='checkbox']": "check"
+  },
+  
+  template: null,
+  
+  initialize: function() {
+    var self = this;
+    
+    _.bindAll(self, "destroy", "render", "all", "none", "check");
+    
+    self.collection = new (Backbone.Subset.extend({
+      parent: function () {
+        return lll.models.members;
+      },
+      sieve: function (member) {
+        return member.get("user_id") == self.model.id;
+      }
+    }))();
+    
+    self.collection.on("reset", self.render);
+  },
+  
+  onDestroy: function() {
+    var self = this;
+    self.collection.off("reset", self.render);
+  },
+
+  render: function() {
+    var self = this;
+
+    $(self.el).empty();
+
+    templateLoader.loadRemoteTemplate("<%= asset_path 'v2/NotificationSettings.html' %>", function(data) {
+      if (!self.template) {
+        self.template = _.template(data);
+      }
+      
+      $(self.el).append(self.template({
+        members: self.collection
+      }));
+      
+      self.$("> h1").after(new lll.views.AlertView().render().el);
+                      
+      self._rendered = true;
+    });
+    
+    return self;
+  },
+  
+  all: function(e) {
+    var self = this;
+    var link = $(e.currentTarget);
+    self.$("input[type='checkbox'][data-model-attribute='" + link.attr("data-model-attribute") + "']").each(function(i, v) {
+      $(v).prop("checked", true);
+      $(v).change();
+    });
+    return false;
+  },
+  
+  none: function(e) {
+    var self = this;
+    var link = $(e.currentTarget);
+    self.$("input[type='checkbox'][data-model-attribute='" + link.attr("data-model-attribute") + "']").each(function(i, v) {
+      $(v).prop("checked", false);
+      $(v).change();
+    });
+    return false;
+  },
+  
+  check: function(e) {
+    var self = this;
+    var box = $(e.currentTarget);
+    var member = self.collection.get(parseInt(box.closest("tr").attr("data-model-id")));
+    var attr = {};
+    attr[box.attr("data-model-attribute")] = box.prop("checked");
+    member.save(attr, {
+      success: function(model, response) {
+        lll.views.info("Email preferences saved");
+      },
+      error: function(model, response) {
+        if (response.readyState == 0 || response.status == 0) {
+          // ajax call cancelled
+        }
+        else {
+          lll.views.error("Error saving email preferences");
+        }                  
+      }
+    });    
+    return true;
+  }
+});

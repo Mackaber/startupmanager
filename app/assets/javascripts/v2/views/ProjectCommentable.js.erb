@@ -1,0 +1,132 @@
+lll.views.ProjectCommentable = {
+  
+  initializeComments: function(comment_initializer, comment_selector) {
+    var self = this;
+    
+    self.comment_initializer = _.extend(
+      {
+        member_id: self.model.project().currentMember().id
+      },
+      comment_initializer
+    );
+    self.comment_selector = comment_selector;
+    
+    _.bindAll(self, "destroyComments", "resetComments", "addComment", "removeComment", "renderComment");
+    
+    self.comments = new (Backbone.Subset.extend({
+      parent: function () {
+        return lll.models.comments;
+      },
+      sieve: function (comment) {
+        return (comment.get(self.model.get("type") + "_id") == self.model.id);
+      },
+      comparator: function(comment) {
+        return (comment.get("created_at").getTime());
+      }
+    }))();
+    self.comments.liveupdate_keys = self.model.get("type") + "_id";
+    
+    self.comments.on("reset", self.resetComments);
+    self.comments.trigger("reset");
+    self.comments.on("add", self.addComment);
+    self.comments.on("remove", self.removeComment);    
+  },
+  
+  destroyComments: function() {
+    var self = this;
+    self.comments.off("reset", self.resetComments);
+    self.comments.off("add", self.addComment);
+    self.comments.off("remove", self.removeComment);        
+  },
+  
+  resetComments: function() {
+    var self = this;
+    self._projectCommentViews = {};
+    self.comments.each(self.addComment);
+  },
+  
+  addComment: function(model) {
+    var self = this;
+    //console.log(model + " added to " + self.model);
+    var v = new lll.views.ProjectCommentView({
+      model: model
+    });
+    self._projectCommentViews[model.cid] = v;
+        
+    var previousItem = $("#" + model.get("type") + "_" + model.id);
+    if (self._rendered) {
+      v.model.trigger("change");
+      self.renderComment(v);      
+    }
+    if (previousItem.length > 0) {
+      // workaround for the fact that jquery sortable ALSO moves the DOM element
+      previousItem.remove();
+    }    
+  },
+
+  removeComment: function(model) {
+    var self = this;
+    // console.log(model + " removed from " + self.model);
+    var v = self._projectCommentViews[model.cid];
+    if (v) {
+      delete self._projectCommentViews[model.cid];
+      v.destroy();
+    }
+  },
+  
+  renderComments: function() {
+    var self = this;
+    
+    self.$(self.comment_selector).html("<ol></ol>");
+    
+    self.comments.each(function(model) {
+      var view;
+      view = self._projectCommentViews[model.cid];
+      view.model.trigger("change");
+      self.renderComment(view);
+    });
+    
+    if (self.model.project().currentMember().get("can_comment")) {
+      var newComment;
+      var newCommentForm;
+
+      var saveHandler = function() {
+        newComment.set({created_at: new Date()});
+        self.comments.add(newComment);
+        newCommentForm.remove();
+        createNewComment();
+        self.model.trigger("change");
+      };
+    
+      var createNewComment = function() {
+        newComment = new lll.models.Comment(self.comment_initializer);
+        newCommentForm = new lll.views.EditProjectCommentView({
+          model: newComment,
+          create: _.bind(saveHandler, self),      // FIXME: need an "off" for these
+          error: _.bind(self.comments.remove, self.comments)
+        });
+        self.$(self.comment_selector).append(newCommentForm.render().el);    
+      };
+      createNewComment();
+    }
+  },
+  
+  renderComment: function(view) {
+    var self = this;
+    var modelPosition = parseInt(view.model.get("created_at").getTime());
+    var first = _.find(
+      self.$(self.comment_selector).find("> ol > li"),
+      function(e) { 
+        return ((parseInt($(e).attr("data-position")) >= modelPosition) && ($(e).data));
+      }
+    );
+    if (first) {
+      $(first).before(view.el);
+    }
+    else {
+      self.$(self.comment_selector).find("> ol").append(view.el);
+    }
+    view.delegateEvents();        
+  }
+  
+}

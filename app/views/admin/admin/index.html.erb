@@ -1,0 +1,8 @@
+<h1>Stats</h1>
+  
+<ul>
+  <li><%= link_to("#{Organization.count} organizations", admin_organizations_path) %></li>
+  <li><%= link_to("#{Project.count} projects", admin_projects_path) %></li>
+  <li><%= link_to("#{Signup.count} signups", admin_signups_path) %>
+  <li><%= link_to("#{User.count} users", admin_users_path) %></li>
+</ul>

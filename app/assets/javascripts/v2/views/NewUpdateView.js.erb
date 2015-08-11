@@ -1,0 +1,98 @@
+lll.views.NewUpdateView = Backbone.View.extend({
+  
+  events: {
+    "focus input#title": "expand",
+    "click .save": "save",
+    "click .cancel": "cancel"
+  },
+  
+  initialize: function() {
+    var self = this;
+    
+    _.bindAll(self, "destroy", "render", "save", "cancel", "expand");
+    
+    Backbone.Validation.bind(self);   
+  },
+  
+  onDestroy: function() {
+    var self = this;
+    self.$("textarea").ckeditorGet().destroy();
+    Backbone.Validation.unbind(self);
+  },
+  
+  render: function() {
+    var self = this;
+    templateLoader.loadRemoteTemplate("<%= asset_path 'v2/NewUpdate.html' %>", function(data) {
+      if (!self.template) {
+        self.template = _.template(data);
+      }
+      
+      $(self.el).html(self.template({
+        blog_post: self.model
+      }));
+      
+      setTimeout(function() {
+        self.$("textarea").ckeditor();
+      }, 250);
+      
+      self.$(".expanded").hide();      
+    });
+    return self;
+  },
+  
+  save: function() {
+    var self = this;
+    self.$("div.error").removeClass("error");
+    self.$("span.error").empty();
+    var attrs = {
+      title: self.$("#title").val(),
+      description: self.$("#description").val(),
+      published_at: new Date(),
+      // attrs.urgent: self.$("#urgent").prop("checked"),
+      the_ask: self.$("#the_ask").val()
+    }
+    self.model.set(attrs);
+    if (self.model.isValid()) {
+      lll.views.track("update", "add");
+      self.model.save(self.model.attributes, { 
+        wait: true,
+        success: function(model) {
+          if (self.options.create) {
+            self.options.create(model);
+          }          
+        },
+        error: function(model, response) {
+          if (response.readyState == 0 || response.status == 0) {
+            // ajax call cancelled
+          }
+          else {
+            lll.views.error("error saving update: " + response.responseText);
+            if (self.options.error) {
+              self.options.error(model, response);
+            }
+          }          
+        }
+      });
+    }
+    else {
+      self.$(".invalid").each(function() {
+        $(this).closest("div").addClass("error");
+        $(this).closest("div").find("span.error").text($(this).attr("data-error"));
+      });
+    }
+    return false;
+  },
+  
+  cancel: function() {
+    var self = this;
+    self.$(".expanded").hide();
+    self.model.clear();
+    return false;
+  },
+  
+  expand: function() {
+    var self = this;
+    self.$(".expanded").slideDown("fast");
+  }
+  
+});

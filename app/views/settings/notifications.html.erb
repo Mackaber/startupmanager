@@ -1,0 +1,16 @@
+<% title("LeanLaunchLab") %>
+<% body_class("notification-settings") %>
+
+<% content_for(:scripts) do %>
+	<script type="text/javascript">
+  //<![CDATA[
+    $(function() {            
+      var view = new lll.views.NotificationSettingsView({
+        el: $("#main")[0],
+        model: lll.models.User.current
+      });
+      view.render();
+    });
+  //]]>
+  </script>
+<% end %>

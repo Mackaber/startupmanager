@@ -1,0 +1,97 @@
+<h1>
+  Settings
+</h1>
+<ul class="toplink">
+  <li>
+    <a href="/settings/profile" class="selected">Profile</a>
+  </li>
+  <li>
+    <a href="/settings/notifications">Email Preferences</a>
+  </li>
+</ul><br class="spacer">
+<div class="body-wrapper">
+  <div class="box-wrapper">
+    <h3>
+      UPDATE YOUR PROFILE
+    </h3>
+    <div class="info-bar">
+      <img class="basic" alt="">BASIC INFO
+    </div>
+    <div class="form-body">
+      <div class="name-email">
+        <form class="form">
+          <p class="row">
+            <label for="name">Name</label>
+            <input name="name" id="name" type="text" value="<%= user.get('name') %>" />
+            <span class="help-block error"></span>
+          </p>
+          <p class="row">
+            <label for="email">Email</label>
+            <input name="email" id="email" type="text" value="<%= user.get('email') %>" />
+            <span class="help-block error"></span>
+          </p>
+          <p class="row">
+            <label for="time_zone">Time Zone</label>
+            <select name="time_zone" id="time_zone"></select>
+            <span class="help-block error"></span>
+          </p>
+          <p class="row">
+            <label for="home_page">Default Page</label>
+            <select name="home_page" id="home_page">
+              <option value="/projects">Dashboard</option>
+              <option value="/projects/last_canvas">Last viewed canvas</option>
+              <option value="/projects/last">Last viewed plan</option>
+            </select>
+            <span class="help-block error"></span>
+          </p>
+          <p class="row">
+            <button class="btn save">save</button>
+          </p>
+        </form>
+      </div>
+    </div>
+    <!--
+    <div class="info-bar">
+      <img class="avatar" alt="">PROFILE PICTURE
+    </div>
+    <div class="form-body">
+      <div class="upload" id="upload">
+        <div class="pending-list"></div>
+        <button class="upload-bttn browse-upload btn">Browse</button>
+        <div class="drag">or drag and drop files here</div>
+      </div>
+      <div class="upload-img">
+        <img src="<%= user.get('photo_url') %>" alt=""/>
+      </div>
+    </div>
+    -->
+    <div class="info-bar">
+      <img class="password" alt="">CHANGE PASSWORD
+    </div>
+    <div class="form-body last">
+      <div class="name-email">
+        <form class="form password">
+          <p class="row">
+            <label for="current_password">Current Password</label> 
+            <input name="current_password" id="current_password" type="password" autocomplete="off" />
+            <span class="help-block error"></span>
+          </p>
+          <p class="row">
+            <label for="password">New Password</label> 
+            <input name="password" id="password" type="password" autocomplete="off" />
+            <span class="help-block error"></span>
+          </p>
+          <p class="row">
+            <label for="password_confirmation">New Password Again</label> 
+            <input name="password_confirmation" id="password_confirmation" type="password" autocomplete="off" />
+            <span class="help-block error"></span>
+          </p>
+          <p class="row">
+            <button class="btn save">save</button>
+          </p>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+

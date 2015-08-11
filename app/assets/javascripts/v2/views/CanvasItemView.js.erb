@@ -1,0 +1,70 @@
+lll.views.CanvasItemView = Backbone.View.extend({
+  
+  template: null,
+  
+  initialize: function() {
+    var self = this;
+    
+    _.bindAll(self, "destroy", "render", "position");
+    
+    Backbone.Validation.bind(self);
+    
+    self.model.on("change", self.render);
+  },
+  
+  onDestroy: function() {
+    var self = this;
+    Backbone.Validation.unbind(self);
+    self.model.off("change", self.render);
+  },
+  
+  render: function() {
+    var self = this;
+    $(self.el).empty();
+    $(self.el).attr("id", self.model.get("type") + "_" + self.model.id);
+    $(self.el).attr("data-model-id", self.model.id);
+    $(self.el).addClass("canvas_item");
+    $(self.el).removeClass("red");
+    $(self.el).removeClass("yellow");
+    $(self.el).removeClass("blue");
+    $(self.el).addClass(self.model.get("display_color"));
+    if (self.model.project().get("canvas_highlight_new") && self.model.original().get("created_at").between(self.options.container.startDate, self.options.container.endDate)) {
+      $(self.el).addClass("current");      
+    }
+    else {
+      $(self.el).removeClass("current");    
+    }
+    templateLoader.loadRemoteTemplate("<%= asset_path 'v2/CanvasItem.html' %>", function(data) {
+      if (!self.template) {
+        self.template = _.template(data);
+      }
+      
+      $(self.el).append(self.template({
+        canvas_item: self.model,
+        isCurrentWeek: self.options.container.isCurrentWeek(),
+        member: self.model.project().currentMember()
+      }));
+      
+      self.$("img.description").attr("src", "<%= asset_path 'v2/file.png' %>");
+      self.$("img.valid").attr("src", "<%= asset_path 'v2/right.png' %>");
+      self.$("img.invalid").attr("src", "<%= asset_path 'v2/cross.png' %>");
+    
+      $(self.el).css("z-index", self.model.get("z"));
+      $(self.el).data("view", self);          
+      self._rendered = true;
+    });    
+    return self;
+  },
+  
+  position: function() {
+    var self = this;
+    var offset = $(".box-area-wrapper").offset();
+    if (offset == null) {
+      setTimeout(self.position, 100);
+    }
+    else {
+      $(self.el).offset({left: self.model.get("x") + offset.left, top: self.model.get("y") + offset.top});        
+    }
+  }
+    
+});

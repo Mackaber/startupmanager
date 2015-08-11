@@ -1,0 +1,145 @@
+lll.views.ProjectListView = Backbone.View.extend({
+  
+  events: {
+    "click .all-projects": "allProjects",
+    "click a.organization": "selectOrganization",
+    "click .project": "selectProject",
+    "click .canvas": "canvas"
+  },
+  
+  template: null,
+  
+  initialize: function() {
+    var self = this;
+    
+    _.bindAll(self, "destroy", "render", "itemTypesChanged", "allProjects", "selectOrganization", "selectProject", "filter");
+    
+    self.collection.on("reset", self.render);   
+    lll.models.hypotheses.on("add", self.filter);
+    lll.models.blogPosts.on("add", self.filter);     
+    lll.views.on("item-types-changed", self.itemTypesChanged);
+  },
+  
+  onDestroy: function() {
+    var self = this;
+    self.collection.off("reset", self.render);
+    lll.models.hypotheses.off("add", self.filter);
+    lll.models.blogPosts.off("add", self.filter);     
+    lll.views.off("item-types-changed", self.itemTypesChanged);
+  },
+  
+  itemTypesChanged: function(itemTypes) {
+    var self = this;
+    self.itemTypes = itemTypes;
+    self.filter();
+  },
+  
+  render: function() {
+    var self = this;
+
+    $(self.el).empty();
+    
+    templateLoader.loadRemoteTemplate("<%= asset_path 'v2/ProjectList.html' %>", function(data) {
+      if (!self.template) {
+        self.template = _.template(data);
+      }
+      
+      var weekAgo = new Date();
+      weekAgo.addDays(-7);
+      
+      $(self.el).append(self.template({
+        weekAgo: weekAgo,
+        organizations: lll.models.User.current.organizationMembers().map(function(x) { return x.organization() }),
+        projects: self.collection
+      }));      
+      
+      $(self.el).data("view", self);
+
+      setTimeout(self.allProjects, 100);
+      
+      self._rendered = true;
+    });
+    return self;
+  },
+  
+  allProjects: function() {
+    var self = this;
+    lll.views.trigger("project-changed", null);
+    self.$(".all-projects").addClass("active");
+    self.$(".projest-label").removeClass("active");
+    self.$(".project").removeClass("active");
+    return false;
+  },
+  
+  selectOrganization: function(e) {
+    var self = this;
+    var organization_id = parseInt($(e.currentTarget).attr("data-model-id"));
+    lll.views.trigger("organization-changed", organization_id);
+    self.$(".all-projects").removeClass("active");
+    self.$(".projest-label").removeClass("active");
+    self.$(".project").removeClass("active");
+    $(e.currentTarget).parent(".projest-label").addClass("active");
+    return false;
+  },
+  
+  selectProject: function(e) {
+    var self = this;
+    var project_id = parseInt($(e.currentTarget).attr("data-model-id"));
+    lll.views.trigger("project-changed", project_id);
+    self.$(".all-projects").removeClass("active");
+    self.$(".projest-label").removeClass("active");
+    self.$(".project").removeClass("active");
+    $(e.currentTarget).addClass("active");
+    return false;
+  },
+  
+  canvas: function(e) {
+    var self = this;
+    window.location.href = $(e.currentTarget).attr("href");
+    return false;
+  },
+  
+  filter: function() {
+    var self = this;
+    setTimeout(function() { 
+      var total = 0;
+      var organizationCount = {};
+      self.collection.each(function(project) {
+        var val = 0;
+        var blog_posts = project.blogPosts();
+        if (self.itemTypes == null || self.itemTypes.length == 0 || _.include(self.itemTypes, "update")) {
+          val += blog_posts.filter(function(blog_post) {
+            return blog_post.get("post_type") != "interview" && blog_post.get("published_at") > lll.models.User.current.get("last_sign_in_at");
+          }).length;
+        }
+        if (self.itemTypes == null || self.itemTypes.length == 0 || _.include(self.itemTypes, "interview")) {
+          val += blog_posts.filter(function(blog_post) {
+            return blog_post.get("post_type") == "interview" && blog_post.get("published_at") > lll.models.User.current.get("last_sign_in_at");
+          }).length;
+        }
+        if (self.itemTypes == null || self.itemTypes.length == 0 || _.include(self.itemTypes, "hypothesis")) {
+          val += project.hypotheses().filter(function(x) { return x.get("status") != "started" && ((x.get("created_at") > lll.models.User.current.get("last_sign_in_at")) || (x.get("completed_at") && x.get("completed_at") > lll.models.User.current.get("last_sign_in_at"))) }).length;
+        }
+        if (self.itemTypes == null || self.itemTypes.length == 0 || _.include(self.itemTypes, "hypothesis-in-progress")) {
+          val += project.hypotheses().filter(function(x) { return x.get("status") == "started" && ((x.get("created_at") > lll.models.User.current.get("last_sign_in_at")) || (x.get("completed_at") && x.get("completed_at") > lll.models.User.current.get("last_sign_in_at"))) }).length;
+        }
+        var organization_id = project.get("organization_id");
+        if (organizationCount[organization_id]) {
+          organizationCount[organization_id] += val;
+        }
+        else {
+          organizationCount[organization_id] = val;
+        }
+        total += val;
+        self.$("li[data-model-id='" + project.id + "'] a.updates-count span").html(val > 0 ? (val + " new") : "");
+      });
+
+      // FIXME without these contortions the width of the span is broken on webkit
+      self.$(".projects-sidebar .all-projects span").hide();
+      self.$(".projects-sidebar .all-projects span").html(total > 0 ? (total + " new") : "");
+      setTimeout(function() {
+        self.$(".projects-sidebar .all-projects span").show();
+      }, 0);
+    }, 0);
+  }
+});

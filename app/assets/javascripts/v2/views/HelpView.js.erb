@@ -1,0 +1,75 @@
+lll.views.HelpView = Backbone.View.extend({
+  
+  events: {
+    "click a.play": "play"
+  },
+  
+  template: null,
+  
+  initialize: function() {
+    var self = this;
+    
+    _.bindAll(self, "destroy", "render", "play");    
+  },
+  
+  render: function() {
+    var self = this;
+    
+    $(self.el).empty();
+    
+    $(self.el).append(new lll.views.AlertView().render().el);
+
+    templateLoader.loadRemoteTemplate("<%= asset_path 'v2/Help.html' %>", function(data) {
+      if (!self.template) {
+        self.template = _.template(data);
+      }
+      
+      $(self.el).append(self.template({
+        videos: [
+          ["<%= asset_path 'v2/intro-to-leanlaunchlab.jpg' %>", "http://player.vimeo.com/video/36984504?autoplay=1"],
+          ["<%= asset_path 'v2/intro-to-canvas.jpg' %>", "http://player.vimeo.com/video/34890292?autoplay=1"],
+          ["<%= asset_path 'v2/intro-to-Plan-and-Journal.jpg' %>", "http://player.vimeo.com/video/34891064?autoplay=1"],
+          ["<%= asset_path 'v2/intro-to-Plan-and-Journal.jpg' %>", "http://player.vimeo.com/video/34891566?autoplay=1"],
+          ["<%= asset_path 'v2/intro-to-dashboard.jpg' %>", "http://player.vimeo.com/video/34891791?autoplay=1"],
+          ["<%= asset_path 'v2/adding-members-to-a-project.jpg' %>", "http://player.vimeo.com/video/34892146?autoplay=1"]
+        ]
+      }));      
+      
+      self.$("img.videoIcon").attr("src", "<%= asset_path 'v2/help-video-icon.gif' %>");
+      self.$("img.faq").attr("src", "<%= asset_path 'v2/help-faq-icon.gif' %>");
+      self.$("img.top").attr("src", "<%= asset_path 'v2/help-top-bttn.gif' %>");
+      
+      self.$("ul.faqs a").each(function(i, e) {
+        $(e).attr("href", "#a" + i);
+      });
+      self.$(".answer-box strong a[name]").each(function(i, e) {
+        $(e).attr("name", "a" + i);
+      });
+      
+      if (self.options.autoplay) {
+        setTimeout(function() {
+          self.$(".play." + self.options.autoplay).click();
+        }, 250);
+      }
+      
+      $(self.el).data("view", self); 
+    });
+    return self;
+  },
+  
+  play: function(e) {
+    var link = $(e.currentTarget);
+    var url = link.attr("href");
+    var title = link.next("p").text();
+    
+    $('<div><iframe width="853" height="505" src="' + url + '" frameborder="0" allowfullscreen></iframe></div>').dialog({
+      title: title,
+      width: 881,
+      height: 575,
+      zIndex: 10001,
+      close: function(event, ui) { $(this).dialog("destroy").remove() }
+    });
+    
+    return false;
+  }
+});

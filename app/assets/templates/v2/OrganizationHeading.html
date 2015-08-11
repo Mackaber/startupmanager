@@ -1,0 +1,9 @@
+<h1 class="project"><a href="#" class="project">ORG: <%= organization ? organization.get("name") : "Select an Org" %></a></h1>
+<% if (!organization) { %>
+  <a href="#" title="An organization is essentially an account.  All billing occurs at the organization level.  An organization can have one or more projects.  Startups and other small companies typically have only one project under their organization, usually having the same name.  Larger organizations such as universities, accelerators, or large enterprises may have multiple projects underneath their organization.">What is an organization?</a>
+<% } %>
+<div class="project-list">
+  <ul>           
+    <!-- <li class="first"><a href="#" class="new-project">(New Organization)</a></li> -->
+  </ul>
+</div>  

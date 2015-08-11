@@ -1,0 +1,814 @@
+//= require ./HypothesisContainer
+//= require ./ProjectCommentable
+
+lll.views.HypothesisView = Backbone.View.extend(lll.views.HypothesisContainer).extend(lll.views.ProjectCommentable).extend({
+  
+  events: function() {
+    // including model ID so as not to match nested hypotheses
+    var self = this;
+    var e = {};
+    e["click #hypothesis-heading-" + self.model.id + " .collapsed .expand, #hypothesis-heading-" + self.model.id + " .expanded .expand"] = "expand";
+    e["click #hypothesis-heading-" + self.model.id + " a.expand-experiment"] = "expandExperiment";
+    e["click #hypothesis-heading-" + self.model.id + "  a.expand-metric"] = "expandMetric";
+    e["click #hypothesis-heading-" + self.model.id + " a.expand-task"] = "expandTask";
+    e["click #hypothesis-heading-" + self.model.id + "  a.expand-comments"] = "expandComments";
+    e["click #hypothesis-heading-" + self.model.id + "  a.expand-attachments"] = "expandAttachments";
+    e["click #hypothesis-heading-" + self.model.id + " .manage .delete"] = "deleteIt";
+    e["click #hypothesis-heading-" + self.model.id + " .reason a"] = "promptReason";
+    e["click #hypothesis-heading-" + self.model.id + " .start"] = "start";
+    e["click #hypothesis-heading-" + self.model.id + " .validate"] = "valid";
+    e["click #hypothesis-heading-" + self.model.id + " .invalidate"] = "invalid";
+    e["click #hypothesis-heading-" + self.model.id + " .unknown"] = "unknown";
+    e["change #hypothesis-heading-" + self.model.id + " select#status"] = "status";
+    e["click #hypothesis-heading-" + self.model.id + " .title li"] = "editTitle";
+    e["click #hypothesis-heading-" + self.model.id + " .details li"] = "editDescription";
+    e["click #hypothesis-heading-" + self.model.id + " .details a.delete"] = "deleteDescription";
+    e["change #hypothesis-heading-" + self.model.id + " input[name='completed_at']"] = "updateCompletedAt";
+    return e;
+  },
+  
+  template: null,
+
+  initialize: function() {
+    var self = this;    
+    
+    _.bindAll(self, "destroy", "update", "render", "renderItem", "expand", "expandExperiment", "expandMetric", "expandTask", "expandComments", "expandAttachments", "deleteIt", "promptReason", "start", "valid", "invalid", "unknown", "status", "editTitle", "editDescription", "save", "updateCompletedAt");
+    
+    Backbone.Validation.bind(self);
+
+    self.model.on("change", self.update);
+    
+    setTimeout(function() {
+      lll.views.router.route("hypotheses/" + self.model.id, "hypothesis", self.expand);
+    }, 500);
+    
+    self.collection = new (Backbone.Subset.extend({
+      parent: function () {
+        return lll.models.hypotheses;
+      },
+      sieve: function (hypothesis) {
+        return (hypothesis.get("hypothesis_id") && (hypothesis.get("hypothesis_id") == self.model.id));
+      }
+    }))();
+    self.collection.liveupdate_keys = "all";
+  
+    lll.views.HypothesisContainer.initialize.apply(self, arguments);
+    
+    self.experiments = new (Backbone.Subset.extend({
+      parent: function () {
+        return lll.models.experiments;
+      },
+      sieve: function (experiment) {
+        return (experiment.get("hypothesis_id") == self.model.id);
+      },
+      comparator: function(experiment) { return experiment.get("created_at").getTime(); }
+    }))();
+    
+    self.experiments.on("add", self.update, self);
+    self.experiments.on("remove", self.update, self);
+
+    self.questions = new (Backbone.Subset.extend({
+      parent: function () {
+        return lll.models.questions;
+      },
+      sieve: function (question) {
+        return (question.get("hypothesis_id") == self.model.id);
+      },
+      comparator: function(question) { return question.get("created_at").getTime(); }      
+    }))();
+
+    self.tasks = new (Backbone.Subset.extend({
+      parent: function () {
+        return lll.models.tasks;
+      },
+      sieve: function (task) {
+        return (task.get("hypothesis_id") == self.model.id);
+      },
+      comparator: function(task) { return task.get("created_at").getTime(); }
+    }))();
+    
+    self.experimentsView = new lll.views.ListView({
+      collection: self.experiments,
+      heading: "<h4>Experiments</h4>",
+      placeholder: "Enter Experiment",
+      initializer: {hypothesis_id: self.model.id, project_id: self.model.get("project_id")},
+      checkable: self.model.project().currentMember().get("can_manage_hypotheses"),
+      manage: self.model.project().currentMember().get("can_manage_hypotheses"),
+      saveNew: true
+    });
+    
+    self.questionsView = new lll.views.ListView({
+      collection: self.questions,
+      heading: "<h4>Metrics</h4>",
+      placeholder: "Enter Metric",
+      initializer: {hypothesis_id: self.model.id, project_id: self.model.get("project_id")},
+      manage: self.model.project().currentMember().get("can_manage_hypotheses"),
+      saveNew: true
+    });
+
+    self.tasksView = new lll.views.ListView({
+      collection: self.tasks,
+      heading: "<h4>Tasks</h4>",
+      placeholder: "Enter Task",
+      initializer: {hypothesis_id: self.model.id, project_id: self.model.get("project_id")},
+      checkable: self.model.project().currentMember().get("can_manage_hypotheses"),
+      manage: self.model.project().currentMember().get("can_manage_hypotheses"),
+      saveNew: true
+    });    
+    
+    self.initializeComments({hypothesis_id: self.model.id}, "> .hypothesis-heading > .expanded > .expanded-content > .steps > .comments");
+    self.model.comments.on("add", self.update, self);
+    self.model.comments.on("remove", self.update, self);
+
+    self.model.attachments.on("add", self.update, self);
+    self.model.attachments.on("remove", self.update, self);
+
+    self.expanded = false;
+  },
+  
+  onDestroy: function() {
+    var self = this;
+    Backbone.Validation.unbind(self);
+    self.model.off("change", self.update);
+    self.destroyComments();
+    self.model.comments.off("add", self.update, self);
+    self.model.comments.off("remove", self.update, self);    
+    self.model.attachments.off("add", self.update, self);
+    self.model.attachments.off("remove", self.update, self);
+    self.experiments.off(null, null, self);
+    lll.views.HypothesisContainer.onDestroy.apply(self, arguments);
+  },
+  
+  update: function() {
+    var self = this;
+    
+    $(self.el).attr("data-position", _.include(["valid", "invalid", "unknown", "completed"], self.model.get("status")) ? (self.model.get("completed_at") || new Date()).getTime() : self.model.get("position"));
+        
+    /* title */
+    var e = self.$("> .hypothesis-heading > .collapsed .hypothesis-title a");
+    e.empty();
+    if (self.model.get("canvas_box")) {
+      e.append("<img class='canvas' alt=''/><span>" + self.model.get("canvas_box") + "</span>&nbsp;");
+    }
+    e.append(_.escapeHTML(self.model.get("title")));
+  
+    var e = self.$("> .hypothesis-heading > .expanded .hypothesis-title a");
+    e.empty();
+    if (self.model.get("canvas_box")) {
+      e.append("<img class='canvas' alt=''/><span>" + self.model.get("canvas_box") + "</span>");
+    }
+    else {
+      e.append("&nbsp;");
+    }
+    
+    if (!self._editingTitle) {
+      var e = self.$("> .hypothesis-heading > .expanded ul.title li");
+      e.empty();
+      e.append(_.escapeHTML(self.model.get("title") || ""));
+      e.append("&nbsp;<span class='edit'><a href='#' class='edit'><img class='edit'></a></span>");
+    }
+    
+    /* description */
+    if (!self._editingDescription) {
+      var e = self.$(".expanded .description li");
+      e.empty();
+      e.append(_.escapeHTML(self.model.get("description") || ""));
+      e.append("&nbsp;<span class='edit'><a href='#' class='edit'><img class='edit'></a></span><span class='delete'><a href='#' class='delete'><img class='delete'></a></span>");      
+    }
+    
+    /* status */
+    e = self.$("> .hypothesis-heading");
+    e.removeClass("started valid invalid unknown");
+    e.addClass(self.model.get("status"));
+    self.$("> .hypothesis-heading > .expanded select#status option").removeAttr("selected");
+    if (self.model.get("status")) {
+      self.$("> .hypothesis-heading > .expanded select#status option[value='" + self.model.get("status") + "']").attr("selected", "selected");
+    } else {
+      self.$("> .hypothesis-heading > .expanded select#status option[value='']").attr("selected", "selected");
+    }
+    
+    e = self.$("> .hypothesis-heading > .collapsed .right");
+    if (self.model.get("status") == "") {
+      e.html("<button class='btn small start'>START</button>");
+    } else if (self.model.get("status") == "started") {
+      var s = ""
+      s += "<button class='btn small validate'>VALIDATE</button>";
+      s += "<button class='btn small invalidate'>INVALIDATE</button>";
+      s += "<button class='btn small unknown'>UNKNOWN</button>";
+      e.html(s);
+    } else if (self.model.get("status") == "valid") {
+      var s = "";
+      s += "<span class='label validated'>VALIDATED";
+      if (self.model.get("completed_at")) {
+        s += "<br/>" + self.model.get("completed_at").toString("MMM d, yyyy");
+      }
+      s += "</span>";
+      e.html(s);
+    } else if (self.model.get("status") == "invalid") {
+      var s = "";
+      s += "<span class='label invalid'>INVALIDATED";
+      if (self.model.get("completed_at")) {
+        s += "<br/>" + self.model.get("completed_at").toString("MMM d, yyyy");
+      }
+      s += "</span>";
+      e.html(s);
+    } else if (self.model.get("status") == "unknown") {
+      s = "";
+      s += "<span class='label unknown'>UNKNOWN";
+      if (self.model.get("completed_at")) {
+        s += "<br/>" + self.model.get("completed_at").toString("MMM d, yyyy");
+      }
+      s += "</span>";
+      e.html(s);
+    }
+    
+    /* completed reason */
+    if (self.model.get("completed_reason")) {
+      self.$("> .hypothesis-heading > .collapsed .reason").html(_.escapeHTML(self.model.get("completed_reason")));
+    }
+    else {
+      self.$("> .hypothesis-heading > .collapsed .reason").html("<a href='#' class='prompt-reason'>Describe how you know this hypothesis is " + self.model.get('status') + "</a>");
+    }    
+    
+    /* experiments */
+    var e = self.$("> .hypothesis-heading > .collapsed .experiments");
+    e.empty();
+    if (self.experiments.length == 0) {
+      e.html("<div><img class='experiment'/> <a href='#' class='expand-experiment'>Define experiments to test this</a></div>");
+    } else if (self.experiments.length == 1) {
+      e.html("<div><img class='experiment'/> " + _.escapeHTML(self.experiments.at(0).get('title')) + "</div>");
+    } else {
+      s = "<div><img class='experiment'/> ";
+      s += self.experiments.length + " Experiments";
+      s += " <span class='show'><a href='#' class='show-experiments' title='";
+      s += self.experiments.map(function(e) { return _.escapeHTML(e.get('title')) }).join('<br/>');
+      s += "'>Show</a></span>";      
+      s += "</div>";
+      e.html(s);
+    }    
+    self.experiments.each(function(experiment) { 
+      experiment.off("change", self.update, self);
+      experiment.on("change", self.update, self);
+    });
+    self.delegateEvents();
+    
+    /* metrics */
+    var e = self.$("> .hypothesis-heading > .collapsed .questions");
+    e.empty();
+    if (self.questions.length == 0) {
+      e.html("<div><img class='metric'/> <a href='#' class='expand-metric'>Define metrics you need to track</a></div>");
+    } else if (self.questions.length == 1) {
+      e.html("<div><img class='metric'/> " + _.escapeHTML(self.questions.at(0).get('title')) + "</div>");
+    } else {
+      s = "<div><img class='metric'/> ";
+      s += self.questions.length + " Metrics";
+      s += " <span class='show'><a href='#' class='show-questions' title='";
+      s += self.questions.map(function(e) { return _.escapeHTML(e.get('title')) }).join('<br/>');
+      s += "'>Show</a></span>";      
+      s += "</div>";
+      e.html(s);
+    }    
+    self.questions.each(function(question) { 
+      question.off("change", self.update, self);
+      question.on("change", self.update, self);
+    });
+    
+    /* tasks */
+    var e = self.$("> .hypothesis-heading > .collapsed .tasks");
+    e.empty();
+    if (self.tasks.length == 0) {
+      e.html("<div><img class='task'/> <a href='#' class='expand-task'>Create a checklist</a></div>");
+    } else if (self.tasks.length == 1) {
+      e.html("<div><img class='task'/> " + _.escapeHTML(self.tasks.at(0).get('title')) + "</div>");
+    } else {
+      var s = "<div><img class='task'/> ";
+      s += self.tasks.length + " Tasks";
+      s += " <span class='show'><a href='#' class='show-tasks' title='";
+      s += self.tasks.map(function(e) { return _.escapeHTML(e.get('title')) }).join('<br/>');
+      s += "'>Show</a></span>";      
+      s += "</div>";
+      e.html(s);
+    }    
+    self.tasks.each(function(task) { 
+      task.off("change", self.update, self);
+      task.on("change", self.update, self);
+    });
+       
+    /* comments */
+    self.$("> .hypothesis-heading > .collapsed .comments").empty();
+    if (self.model.comments.length > 0) {
+      var s = "";
+      s += "<span class='comment' title='";
+      s += self.model.comments.map(function(c) { return _.escapeHTML(c.member().user().get("name")) + "<br/>" + c.get("created_at").toString("ddd MMM d, yyyy") + " at " + c.get("created_at").toString("h:mmtt").toLowerCase() + "<br/>" + _.escapeHTML(c.get('body')) + "<br/>"}).join("<br/>");
+      s += "'><a href='#' class='expand-comments'>";
+      s += self.model.comments.length + " comment" + (self.model.comments.length > 1 ? "s" : "");
+      s += "</a></span>";      
+      self.$("> .hypothesis-heading > .collapsed .comments").html(s);
+      self.model.comments.each(function(comment) { 
+        comment.off("change", self.update, self);
+        comment.on("change", self.update, self);
+      });
+    }
+    
+    /* attachments */
+    self.$("> .hypothesis-heading > .collapsed .attachments").empty();
+    if (self.model.attachments.length > 0) {
+      var s = "";
+      s += "<span class='attach' title='";
+      s += self.model.attachments.map(function(a) { return _.escapeHTML(a.get("name")) }).join("<br/>");
+      s += "'><a href='#' class='expand-attachments'>" + self.model.attachments.length + "</a></span>";
+      self.$("> .hypothesis-heading > .collapsed .attachments").html(s);
+      self.model.attachments.each(function(attachment) { 
+        attachment.off("change", self.update, self);
+        attachment.on("change", self.update, self);
+      });
+    }
+    
+    self.delegateEvents();        
+  },
+  
+  render: function() {
+    var self = this;
+    $(self.el).addClass(this.model.get("type"));
+    $(self.el).attr("data-model-type", this.model.get("type"));
+    $(self.el).attr("id", self.model.get("type") + "_" + self.model.id);
+    $(self.el).attr("data-model-id", self.model.id);
+    $(self.el).data("view", self);
+    $(self.el).data("model", self.model);     
+    templateLoader.loadRemoteTemplate("<%= asset_path 'v2/Hypothesis.html' %>", function(data) {
+      if (!self.template) {
+        self.template = _.template(data);
+      }
+      
+      $(self.el).html(self.template({
+        hypothesis: self.model
+      }));
+      
+      if (self.expanded) {
+        self.$("> .hypothesis-heading .collapsed").hide();        
+      }
+      else {
+        self.$("> .hypothesis-heading .expanded").hide();
+      }
+      
+      if (!self.model.project().currentMember().get("can_manage_hypotheses")) {
+        self.$("> .hypothesis-heading button.expand, > .hypothesis-heading .delete, > .hypothesis-heading .start, > .hypothesis-heading .validate, > .hypothesis-heading .invalidate, > .hypothesis-heading .unknown, > .hypothesis-heading span.edit, > .hypothesis-heading span.delete").remove();
+        self.$("> .hypothesis-heading select#status").attr("disabled", "disabled");
+      }
+            
+      lll.views.HypothesisContainer.render.apply(self, arguments);
+            
+      self.$("> .hypothesis-heading .steps.questions").append(self.questionsView.render().el);
+      self.$("> .hypothesis-heading .steps.experiments").append(self.experimentsView.render().el);
+      self.$("> .hypothesis-heading .steps.tasks").append(self.tasksView.render().el);
+      
+      new lll.views.ProjectAttachmentsView({
+        model: self.model,
+        el: self.$("> .hypothesis-heading > .expanded .attachments"),
+        can_manage: self.model.project().currentMember().get("can_manage_hypotheses")
+      }).render();
+      
+      if (self.model.project().currentMember().get("can_manage_hypotheses")) {
+        new lll.views.ProjectUploaderView({
+          model: self.model,
+          el: self.$("> .hypothesis-heading .upload")
+        }).render();
+      }      
+      
+      self.renderComments();
+      
+      new lll.views.ProjectPermalinkView({
+        model: self.model,
+        el: self.$("> .hypothesis-heading .permalink"),
+        trigger: self.expand
+      }).render();
+      
+      if (self.expanded && self.focusOn) {
+        self.$(self.focusOn).focus();
+        self.focusOn = null;
+      }
+      
+      $(self.el).data("model", self.model);
+      
+      self.$("input.date").datepicker({
+        dateFormat: 'yy-mm-dd',
+        showOn: 'both',
+        buttonImage: "<%= asset_path 'v2/calendar.gif' %>",
+        buttonImageOnly: true
+      });
+      
+      self.update();
+      
+      self._rendered = true;
+    });
+    return self;
+  },
+  
+  renderItem: function(view) {
+    var self = this;
+    var modelPosition = parseInt(view.model.get("position"));
+    var first = _.find(
+      self.$("> ol > li"),
+      function(e) { 
+        return (parseInt($(e).attr("data-position")) >= modelPosition);
+      }
+    );
+    if (first) {
+      $(first).before(view.el);
+    }
+    else {
+      self.$("> ol").append(view.el);
+    }
+    view.delegateEvents();
+  },
+  
+  expand: function() {
+    var self = this;
+    self.expanded = !self.expanded;
+    self.$("> .hypothesis-heading .collapsed").toggle();
+    self.$("> .hypothesis-heading .expanded").toggle();
+    return false;
+  },
+  
+  expandExperiment: function() {
+    var self = this;
+    self.expand();
+    self.$("> .hypothesis-heading .steps.experiments input").focus();
+    return false;
+  },
+  
+  expandMetric: function() {
+    var self = this;
+    self.expand();
+    self.$("> .hypothesis-heading .steps.questions input").focus();
+    return false;
+  },
+  
+  expandTask: function() {
+    var self = this;
+    self.expand();
+    self.$("> .hypothesis-heading .steps.tasks input").focus();
+    return false;
+  },
+
+  expandComments: function() {
+    var self = this;
+    self.expand();
+    self.$("> .hypothesis-heading form.comment textarea").focus();
+    return false;
+  },
+  
+  expandAttachments: function() {
+    var self = this;
+    self.expand();
+    return false;
+  },
+  
+  deleteIt: function() {
+    var self = this;
+    if (confirm("Are you sure?")) {
+      self.model.destroy({
+        success: function(model, response) {
+          lll.views.track("hypothesis", "delete");
+        }
+      });      
+    }
+    return false;
+  },
+  
+  start: function() {
+    var self = this;
+    self.model.save({status: "started", position: null}, {
+      wait: true,
+      success: function(model, response) {
+        lll.models.loadData(response);
+      },
+      error: function(model, response) {
+        if (response.readyState == 0 || response.status == 0) {
+          // ajax call cancelled
+        }
+        else {
+          alert("error saving " + model + ": " + response.responseText);
+        }
+      }
+    });
+    return false;
+  },
+  
+  promptReason: function(label) {
+    if ($.type(label) != "string") {
+      label = $(label.currentTarget).closest(".hypothesis").data("model").get("status");
+    }
+    
+    var self = this;
+    $("<div><textarea data-maxsize='140' data-output='reason-length'></textarea><div class='help-block'><span id='reason-length'></span>/140 chars</div><div><button class='btn primary confirm'>Submit</button> <button class='btn cancel'>Not Now</button></div></div>").dialog({
+      title: "Briefly describe how you know this hypothesis is " + label,
+      dialogClass: "completed-reason",
+      width: 320,
+      modal: true,
+      open: function() {
+        var dialog = $(this);
+        dialog.find(".confirm").click(function() { 
+          var reason = dialog.find("textarea").val();
+          self.model.set({completed_reason: reason});
+          self.model.save(self.model.attributes);
+          dialog.dialog("close");
+        });
+        dialog.find(".cancel").click(function() { 
+          dialog.dialog("close");
+        });
+      },
+      close: function() {
+        $(this).dialog("destroy").remove();
+      }
+    });
+  },
+  
+  valid: function() {
+    var self = this;
+    self.model.save({status: "valid", position: null}, {
+      wait: true,
+      success: function(model, response) {
+        lll.models.loadData(response);
+        self.promptReason("valid");
+      },
+      error: function(model, response) {
+        if (response.readyState == 0 || response.status == 0) {
+          // ajax call cancelled
+        }
+        else {
+          alert("error saving " + model + ": " + response.responseText);
+        }
+      }
+    });
+    return false;
+  },
+
+  invalid: function() {
+    var self = this;
+    self.model.save({status: "invalid", position: null}, {
+      wait: true,
+      success: function(model, response) {
+        lll.models.loadData(response);
+        self.promptReason("invalid");
+      },
+      error: function(model, response) {
+        if (response.readyState == 0 || response.status == 0) {
+          // ajax call cancelled
+        }
+        else {
+          alert("error saving " + model + ": " + response.responseText);
+        }
+      }
+    });
+    return false;
+  },
+
+  unknown: function() {
+    var self = this;
+    self.model.save({status: "unknown", position: null}, {
+      wait: true,
+      success: function(model, response) {
+        lll.models.loadData(response);
+        self.promptReason("unknown");
+      },
+      error: function(model, response) {
+        if (response.readyState == 0 || response.status == 0) {
+          // ajax call cancelled
+        }
+        else {
+          alert("error saving " + model + ": " + response.responseText);
+        }
+      }
+    });
+    return false;
+  },
+
+  status: function() {
+    var self = this;
+    self.model.save({status: self.$("> .hypothesis-heading select#status").val(), position: null}, {
+      wait: true,
+      success: function(model, response) {
+        lll.models.loadData(response);
+      },
+      error: function(model, response) {
+        if (response.readyState == 0 || response.status == 0) {
+          // ajax call cancelled
+        }
+        else {
+          alert("error saving " + model + ": " + response.responseText);
+        }
+      }
+    });
+    return false;
+  },
+  
+  editTitle: function(e) {
+    var self = this;
+    if (self.model.project().currentMember().get("can_manage_hypotheses")) {
+      var item = $(e.currentTarget).closest("li");
+      if (item.find("div.edit").length > 0) {
+        return true;
+      }
+      var editView = new lll.views.EditListItemView({
+        className: "edit",
+        value: self.model.get("title") || ""
+      });
+      self._editingTitle = true;
+      item.html(editView.render().el);
+      editView.on("ok", function(value) {
+        self._editingTitle = false;
+        if (self.model.get("title") == value) {
+          self.model.trigger("change");
+        } 
+        else {
+          self.model.save({title: value}, {
+            error: function(model, response) {
+              if (response.readyState == 0 || response.status == 0) {
+                // ajax call cancelled
+              }
+              else {
+                lll.views.error("error saving hypothesis: " + response.responseText);
+                if (self.options.error) {
+                  self.options.error(model, response);
+                }
+              }          
+            }
+          });
+        }
+        editView.destroy();
+      });
+      editView.on("cancel", function(value) {
+        self._editingTitle = false;
+        editView.destroy();
+        self.update();
+      });
+    }
+    return false;
+  },
+  
+  editDescription: function(e) {
+    var self = this;
+    if (self.model.project().currentMember().get("can_manage_hypotheses")) {
+      var item = $(e.currentTarget).closest("li");
+      if (item.find("div.edit").length > 0) {
+        return true;
+      }
+      var editView = new lll.views.EditListItemView({
+        className: "edit",
+        value: self.model.get("description") || "",
+        textarea: true
+      });
+      self._editingDescription = true;
+      item.html(editView.render().el);
+      editView.on("ok", function(value) {
+        self._editingDescription = false;
+        if (self.model.get("description") == value) {
+          self.model.trigger("change");
+        }
+        else {
+          self.model.save({description: value}, {
+            error: function(model, response) {
+              if (response.readyState == 0 || response.status == 0) {
+                // ajax call cancelled
+              }
+              else {
+                lll.views.error("error saving hypothesis: " + response.responseText);
+                if (self.options.error) {
+                  self.options.error(model, response);
+                }
+              }          
+            }
+          });          
+        }
+        editView.destroy();
+      });
+      editView.on("cancel", function(value) {
+        self._editingDescription = false;
+        editView.destroy();
+        self.update();
+      });
+    }
+    return false;
+  },
+  
+  deleteDescription: function(e) {
+    var self = this;
+    if (confirm("Are you sure?")) {
+      self.model.save({description: null}, {
+        error: function(model, response) {
+          if (response.readyState == 0 || response.status == 0) {
+            // ajax call cancelled
+          }
+          else {
+            lll.views.error("error saving hypothesis: " + response.responseText);
+            if (self.options.error) {
+              self.options.error(model, response);
+            }
+          }          
+        }
+      });
+    }
+    return false;
+  },
+  
+  save: function(model) {
+    var self = this;
+    self.questionsView.addPending();
+    self.experimentsView.addPending();
+    self.tasksView.addPending();    
+    var attrs = {
+      questions_attributes: self.questionsView.collection.map(function(q) { 
+        return {
+          id: q.id, 
+          title: q.get("title"), 
+          position: self.questionsView.collection.indexOf(q)+1 
+        }
+      }),
+      experiments_attributes: self.experimentsView.collection.map(function(q) { 
+        return {
+          id: q.id, 
+          title: q.get("title"), 
+          position: self.experimentsView.collection.indexOf(q)+1,
+          completed_at: q.get("completed_at")
+        }
+      }),
+      tasks_attributes: self.tasksView.collection.map(function(q) { 
+        return {
+          id: q.id, 
+          title: q.get("title"), 
+          position: self.tasksView.collection.indexOf(q)+1,
+          completed_at: q.get("completed_at")
+        }
+      })
+    };
+        
+    self.model.set(attrs);    
+    if (self.model.isValid()) {
+      if (self.model.isNew()) {
+        if (self.options.create) {
+          self.options.create(self.model);
+        }
+      }
+      else {
+        if (self.options.update) {
+          self.options.update(self.model);
+        }
+      }
+      lll.views.track("hypothesis", self.model.isNew() ? "add" : "edit");
+      self.model.save(self.model.attributes, {
+        wait: true,
+        success: function(model, response) {
+          r = {
+            hypotheses: response.hypotheses || [],
+            experiments: response.experiments || [],
+            questions: response.questions || [],
+            tasks: response.tasks || []
+          };
+          lll.models.loadData(r);
+        },
+        error: function(model, response) {
+          if (response.readyState == 0 || response.status == 0) {
+            // ajax call cancelled
+          }
+          else {
+            lll.views.error("error saving hypothesis: " + response.responseText);
+            if (self.options.error) {
+              self.options.error(model, response);
+            }
+          }          
+        }
+      });
+    }
+    else {
+      self.$("> .hypothesis-heading .invalid").each(function() {
+        $(this).closest(".clearfix").addClass("error");
+        $(this).closest(".clearfix").find("span.error").text($(this).attr("data-error"));
+      });
+    }
+    return false;
+  },
+  
+  updateCompletedAt: function() {
+    var self = this;
+    self.model.set({completed_at: Date.parse(self.$("> .hypothesis-heading input[name='completed_at']").val())});
+    self.model.save(self.model.attributes, {
+      success: function(model) {
+        self.model.project().trigger("change");
+      },
+      error: function(model, response) {
+        if (response.readyState == 0 || response.status == 0) {
+          // ajax call cancelled
+        }
+        else {
+          lll.views.error("error saving hypothesis: " + response.responseText);
+          if (self.options.error) {
+            self.options.error(model, response);
+          }
+        }          
+      }
+    });
+    return true;
+  }
+  
+});

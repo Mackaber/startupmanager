@@ -1,0 +1,146 @@
+lll.views.OrganizationMemberView = Backbone.View.extend({
+  
+  events: {
+    "click .delete": "deleteIt",
+    "change #level": "update"
+  },
+  
+  template: null,
+  
+  initialize: function() {
+    var self = this;
+    
+    _.bindAll(self, "destroy", "make", "render", "deleteIt", "update");
+    
+    Backbone.Validation.bind(self);
+    
+    self.model.on("change", self.render);
+  },
+  
+  onDestroy: function() {
+    var self = this;
+    self.model.off("change", self.render);
+    Backbone.Validation.unbind(self);
+  },
+  
+  make: function() {
+    var el = $("<div class='member-listing " + this.model.get("type") + "' data-model-type='" + this.model.get("type") + "'></div>");
+    return el;
+  },
+
+  render: function() {
+    var self = this;
+    $(self.el).attr("id", self.model.get("type") + "_" + self.model.id);
+    $(self.el).attr("data-model-id", self.model.id);
+    $(self.el).data("model", self.model);
+    templateLoader.loadRemoteTemplate("<%= asset_path 'v2/OrganizationMember.html' %>", function(data) {
+      if (!self.template) {
+        self.template = _.template(data);
+      }
+      
+      var currentMember = self.model.organization().currentMember();
+      
+      $(self.el).empty();
+      $(self.el).append(self.template({
+        member: self.model,
+        read_only: !(currentMember.get("level") == "Admin")
+      }));
+      
+      if (self.model == currentMember || !(currentMember.get("level") == "Admin")) {
+        self.$(".member-listing-perm select").remove();
+        
+        if (!(self.model == currentMember)) {
+          self.$("a.delete").remove();
+        }
+      }
+      else {
+        _.each(self.options.levels, function(level) {
+          self.$("select#level").append("<option value='" + level + "' " + (self.model.get("level") == level ? " selected='selected'" : "") + ">" + level + "</option>");
+        });
+        
+        self.$(".member-listing-perm span").remove();
+      }
+      
+      self._rendered = true;
+    });
+    return self;
+  },
+  
+  deleteIt: function() {
+    var self = this;
+    var admin_projects = self.model.organization().projects().select(function(project) { 
+      return project.members().find(function(member) { 
+        return member.get("active") && (member.user().id == self.model.user().id) && (member.get("level") == "Owner");
+      });
+    });
+    if (admin_projects.length > 0) {
+      alert("This user is currently an Owner of project(s): " + _.map(admin_projects, function(project) { return project.get("name") }).join(", ") + ".  Please remove them from these projects first.");
+    }
+    else if (self.model.get("level") == "Admin" && self.model.organization().organizationMembers().select(function(member) { return member.get("level") == "Admin" }).length == 1) {
+      alert("Sorry, you're currently the only Admin on this organization so you cannot remove yourself. If you'd like to leave this organization, please give another member Admin permissions, then try to remove yourself again.");
+    }
+    else {
+      msg = (self.model.id == self.model.organization().currentMember().id) ? "Are you sure you'd like to leave this organization?" : ("Are you sure you'd like to remove " + self.model.user().get("name") + "?");
+      if (confirm(msg)) {
+        self.model.destroy({
+          wait: true,
+          success: function(model, response) {
+            lll.models.loadData(response);
+            self.model.organization().trigger("change");
+          }
+        });
+        if (self.model.id == self.model.organization().currentMember().id) {
+          window.location.href = "/";
+        }
+        else {
+          lll.views.info(self.model.user().get("name") + " was removed successfully");
+        }
+      }
+    }
+    return false;
+  },
+  
+  update: function() {
+    var self = this;
+    self.$("div.error").removeClass("error");
+    self.$("span.error").empty();
+    self.model.set({
+      level: self.$("#level").val()
+    });
+    if (self.model.isValid()) {
+      if (self.model.isNew()) {
+        if (self.options.create) {
+          self.options.create(self.model);
+        }
+      }
+      else {
+        if (self.options.update) {
+          self.options.update(self.model);
+        }
+      }
+      self.model.save(self.model.attributes, { 
+        error: function(model, response) {
+          if (response.readyState == 0 || response.status == 0) {
+            // ajax call cancelled
+          }
+          else {
+            lll.views.error("error saving organization member: " + response.responseText);
+            if (self.options.error) {
+              self.options.error(model, response);
+            }
+          }          
+        }
+      });
+      $(self.el).dialog("close");
+    }
+    else {
+      self.$(".invalid").each(function() {
+        $(this).closest("div").addClass("error");
+        $(this).closest("div").find("span.error").text($(this).attr("data-error"));
+      });
+    }
+    return false;
+    
+  }
+  
+});

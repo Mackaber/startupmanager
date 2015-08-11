@@ -1,0 +1,47 @@
+lll.views.EditListItemView = Backbone.View.extend({
+  
+  events: {
+    "keypress input": "keypress",
+    "click button.ok": "ok",
+    "click button.cancel": "cancel"
+  },
+  
+  initialize: function() {
+    var self = this;    
+    _.bindAll(self, "destroy", "render", "keypress", "ok", "cancel");
+  },
+  
+  render: function() {
+    var self = this;
+    var eid = _.uniqueId("err");
+    var input = self.options.textarea ? ("<textarea>" + self.options.value + "</textarea>") : ("<input type='text' autocomplete='off' data-maxsize='255' data-output='" + eid + "' value='" + self.options.value + "'/>");
+    $(self.el).html(input + "<button class='btn small success ok'>ok</button><button class='btn small cancel'>cancel</button>" + (self.options.textarea ? "" : ("<div class='help-block'><span id='" + eid + "'></span>/255 chars</div>")));
+    setTimeout(function() { 
+      SetEnd(self.$("input, textarea").first()[0]) 
+    }, 0);
+    return self;
+  },
+  
+  keypress: function (e) {  
+    var self = this;
+    if (!self.options.textarea && ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13))) {
+      self.ok();
+      return false;  
+    } else {  
+      return true;  
+    }    
+  },
+  
+  ok: function() {
+    var self = this;
+    self.trigger("ok", self.$("input, textarea").first().val());
+    return false;
+  },
+  
+  cancel: function() {
+    var self = this;
+    self.trigger("cancel", self.options.value);
+    return false;
+  }
+  
+});

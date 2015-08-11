@@ -1,0 +1,60 @@
+lll.views.OrganizationMemberPaymentView = Backbone.View.extend({
+  
+  initialize: function() {
+    var self = this;
+    
+    _.bindAll(self, "destroy", "render");
+    
+    self.model.on("change", self.render);
+    
+    self.editCreditCardView = new lll.views.EditCreditCardView({
+      model: self.model
+    }).render();
+
+    self._initialized = true;
+  },
+  
+  onDestroy: function() {
+    var self = this;
+    self.model.off("change", self.render);
+  },
+
+  render: function() {
+    var self = this;
+    
+    if (self.model.get("payment_code") == null) {
+      window.location.href = "/";
+    }
+    
+    $(self.el).empty();
+    
+    $(self.el).append(new lll.views.OrganizationHeadingView({
+      model: self.model.organization(),
+      url_attribute: "settings_url"
+    }).render().el);
+    
+    $(self.el).append(new lll.views.AlertView().render().el);
+
+    $(self.el).append(new lll.views.OrganizationTabsView({
+      model: self.model.organization(),
+      selected: "settings"
+    }).render().el);
+    
+    templateLoader.loadRemoteTemplate("<%= asset_path 'v2/OrganizationMemberPayment.html' %>", function(data) {
+      if (!self.template) {
+        self.template = _.template(data);
+      }
+      
+      $(self.el).append(self.template({
+        organizationMember: self.model
+      }));
+      
+      self.$(".cc").html(self.editCreditCardView.el);
+
+      self.delegateEvents();
+      self._rendered = true;
+    });
+    return self;
+  }
+  
+}); 

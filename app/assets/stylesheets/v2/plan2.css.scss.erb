@@ -1,0 +1,737 @@
+body#project-plan
+{
+  .top-buttons
+  {
+    .goals
+    {
+      float: right;
+      
+      div
+      {
+        display: inline;
+        margin-right: 15px;
+        padding: 1px 0 1px 20px;
+        background: url(<%= asset_path 'v2/project-goal.png' %>) no-repeat;
+        
+        &.completed
+        {
+          background: url(<%= asset_path 'v2/project-goal-completed.png' %>) no-repeat;
+          
+          a
+          {
+            color: #999;
+          }
+        }
+      }
+    }
+  }
+  
+  input.permalink
+  {
+    background-color: white;
+  }
+  
+  ol
+  {
+    list-style: none;
+    margin: 0;    
+  }
+  
+  ul.hov
+  {
+    list-style: decimal inside;
+    
+    li
+    {
+      display: list-item;
+      
+      div.edit
+      {
+        display: inline;
+        
+        input
+        {
+          color: black;
+          font-weight: normal;
+          width: 65%;
+        }
+        
+        textarea
+        {
+          color: black;
+          font-weight: normal;
+          width: 95%;
+          height: 75px;
+        }
+      }
+    }
+    
+    &.title
+    {
+      li
+      {
+        font-size: 14px;
+      }
+    }
+    
+    &.details
+    {
+      li
+      {
+        font-weight: normal;
+      }
+    }
+    
+    &.details, &.title
+    {
+      list-style: none;
+    }
+  }
+  
+  .left-sidebar > ol > li.hypothesis > div, .left-sidebar > div.hypothesis > div
+  {
+    margin-left: 0;
+  }
+
+  .collapsed
+  {
+    a
+    {
+      color: #5882FA;
+    }
+    
+    .experiment-title a.expand,
+    .hypothesis-title a.expand,
+    .task-title a.expand
+    {
+      padding-left: 13px;
+      background:url(<%= asset_path 'v2/tringle-icon.png' %>) no-repeat 0 3px;
+
+      &:hover
+      {
+        text-decoration: none;
+        background-position:0 -539px;
+      }
+    }
+
+    .date
+    {
+      float: right;
+    }
+    
+    .comments
+    {
+      display: inline;
+    }
+    
+    .attachments
+    {
+      display: inline;
+    }
+  }
+
+  .expanded
+  {
+    .hypothesis-title,
+    .experiment-title,
+    .task-title
+    {
+      clear: both;
+      a.expand
+      {
+        width: 65%;
+        font-style: italic;
+        background:url(<%= asset_path 'v2/tringle-expand.png' %>) no-repeat 0 3px;
+
+        &:hover
+        {
+          background-position:0 -39px;
+        }
+      }        
+    }
+    
+    span.date
+    {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font: normal 10px Arial, Helvetica, sans-serif;
+      color: #AAAAA9;
+      text-transform: uppercase;
+    }
+    
+    .status {
+      font-size: 12px;
+      color: #999999;
+      padding: 0;
+      margin: 0 0 5px 15px;
+    }
+    
+    .status strong {
+      color: #3f3f3f;
+    }
+    
+    .steps
+    {
+      border-top: 1px dotted;
+    }
+    
+    .experiments,
+    .questions, 
+    .tasks
+    {
+      ul li
+      {
+        font-weight: bold;
+      }
+    }
+  }
+
+  .task-heading,
+  .hypothesis-heading,
+  .experiment-heading
+  {
+    background-color: #EFEFEF;
+    border-color: #CFCFCF;
+    border-width: 1px 1px 1px 4px;
+  }
+  
+  .task-heading ul.hov li:hover,
+  .hypothesis-heading ul.hov li:hover,
+  .experiment-heading ul.hov li:hover
+  {
+    background-color: #EFEFEF;
+    border-color: #CFCFCF;
+  }
+  
+  .task-heading:hover,
+  .hypothesis-heading:hover,
+  .experiment-heading:hover
+  {
+    background-color: #DEDEDE;
+    border-color: #C1C1C1;
+  }
+
+  .task-heading.started,
+  .hypothesis-heading.started,
+  .experiment-heading.started,
+  .task-heading.started ul.hov li:hover,
+  .hypothesis-heading.started ul.hov li:hover,
+  .experiment-heading.started ul.hov li:hover,
+  .task-heading.started .expand-task,
+  .hypothesis-heading.started .expand-hypothesis,
+  .experiment-heading.started .expand-experiment    
+  {
+    background-color: #FFFFDA;
+    border-color: #EDEDA0;
+  }    
+
+  .task-heading.started:hover,
+  .hypothesis-heading.started:hover,
+  .experiment-heading.started:hover
+  {
+    background-color:#F4F4C8;
+    border-color: #E2E289;
+  }
+
+  .task-heading.completed,
+  .experiment-heading.completed,
+  .hypothesis-heading.valid,
+  .task-heading.completed ul.hov li:hover,
+  .experiment-heading.completed ul.hov li:hover,
+  .hypothesis-heading.valid ul.hov li:hover,
+  .task-heading.completed .expand-task,
+  .experiment-heading.completed .expand-experiment,
+  .hypothesis-heading.valid .expand-hypothesis
+  {
+    background-color: #EDF8DA;
+    border-color: #C1DB93;
+  }
+
+  .task-heading.completed:hover,
+  .experiment-heading.completed:hover,
+  .hypothesis-heading.valid:hover
+  {
+    background-color:#E0F1C3;
+    border-color: #B2CF7E;
+  }
+
+  .hypothesis-heading.invalid,
+  .hypothesis-heading.invalid ul.hov li:hover,
+  .hypothesis-heading.invalid .expand-hypothesis
+  {  
+    background-color: #FAEAE8;
+    border-color: #FF9999;
+  }
+
+  .hypothesis-heading.invalid:hover
+  {
+    background-color:#F1D9D7;
+    border-color: #D98C8C;
+  }
+  
+  .experiment > ol > li, .hypothesis > ol > li
+  {
+    background: url(<%= asset_path 'v2/arrow-left.gif' %>) 5px 13px no-repeat;
+    padding-left: 5px;
+    margin-left: 5px;
+  }
+  
+  ol.ui-sortable .heading
+  {
+    cursor: move;    
+  }
+  
+  .hypothesis .hypothesis-heading, 
+  .experiment .experiment-heading,
+  .task .task-heading
+  {
+    margin-bottom: 4px;
+    
+    .task-title a.expand
+    {
+      padding-left: 30px;
+    }
+
+    h3 button
+    {
+      margin-right: 3px;
+    }      
+  }
+  
+  .ui-sortable-placeholder {
+    height: 2px !important;
+    background-color: black !important;
+    visibility: visible !important;
+    padding-left: 0 !important;
+    margin-left: 28px !important;
+  }
+
+  .left-sidebar > ol > .ui-sortable-placeholder {
+    margin-left: 0 !important;
+  }
+  
+  .plan span.name
+  {
+    font:normal 11px/15px Verdana, Arial, Helvetica, sans-serif;
+    color:#999999;
+    margin-bottom:2px;
+    margin-right:7px;
+    text-decoration:none;
+    padding: 0 0 0 10px;
+    
+    a
+    {
+      padding: 0;
+    }
+  } /* ol */
+             
+  .expanded
+  {    
+    .manage
+    {
+      float: right;
+      
+      button
+      {
+        margin-right: 3px;
+      }
+    }    
+    
+    input.date
+    {
+      width: 100px;
+      font-weight: normal;
+    }
+
+    h3
+    {
+      a
+      {
+        border-bottom: gray thin dotted;
+        padding-bottom: 5px;
+        margin-bottom: 5px;
+        width: 100%;
+      }
+    }
+  
+    h4
+    {
+      color: #999;
+      font-size: inherit;
+      line-height: inherit;
+      margin-top: 10px;
+      margin-bottom: 5px;
+    
+      a
+      {
+        color: inherit;
+      }
+    }
+    
+    .comments
+    {
+      ol
+      {
+        list-style: none;
+        margin: 0;
+        
+        li
+        {
+          .avatar
+          {
+            float: left;
+            margin-right: 5px;
+          }
+          
+          .body
+          {
+            clear: left;
+            color: black; 
+          }
+
+          .content 
+          {
+            width: 90%;
+            float: left;
+          } 
+
+          .member 
+          {
+            float: left;
+            margin-right: 1em;
+          }
+
+          .created_at 
+          {
+            float: left;
+          }
+          
+          .manage
+          {
+            float: none;
+            margin-left: 1em;
+          }
+        } /* li */                   
+      } /* ol */
+
+    } /* .comments */    
+
+  } /* .expanded */
+
+  form.comment
+  {    
+    textarea#body
+    {
+      width: 95%;
+      height: 50px;
+    }
+  } /* form.comment */
+  
+  form.experiment, form.hypothesis, form.blog_post, form.task
+  {
+    div
+    {
+      margin: 0;
+    }
+    
+    .start_date, .end_date, .assigned_to, .due_date
+    {
+      display: inline-block;
+      margin-right: 1em;
+    }
+    
+    textarea
+    {
+      height: 286px;
+    }
+    
+    .urgent
+    {
+      label
+      {
+        display: inline;
+      }
+    }
+  }
+  
+  #drag-area
+  {
+    div
+    {
+      font:bold 16px/20px "trebuchet MS", Arial, serif;
+    }
+    
+    div.drag-head
+    {
+      margin-left: 0;
+    }    
+  }
+  
+  .left-sidebar > .update > .hypothesis-heading
+  {
+    cursor: default;
+    background-color: white;
+    border-color: #dcdbdb;
+    border-width: 1px;
+    
+    .askbar {
+      background-color:#f2f2f2;
+      padding:4px;
+      font:normal 12px/14px Arial, Helvetica, sans-serif;
+      color:#999999;
+      position:relative;
+      margin:8px 12px 0 12px;
+    }
+    .askbar span {
+      font-weight:bold;
+      color:#121212;
+    }
+  }
+  
+  p.left-text {
+    color:#999999;
+    font-size:11px;
+    line-height:normal;
+    float:left;
+    padding:0; margin:0;
+  } 
+  
+  .hypothesis
+  {
+    img.metric, img.experiment, img.task
+    {
+      margin-left: 1em;
+    }
+    
+    span.show {
+      line-height:11px;
+      display:inline-block;
+    }
+    span.show a {
+      color:#fff;
+      font-size:10px;
+      line-height:10px;
+      height:11px;
+      display:inline-block;
+      padding:0 3px;
+      text-decoration:none;
+      text-transform:lowercase;
+      background-color:#999999;
+      border:1px solid #888888;
+      -webkit-border-radius: 2px !important;
+      -moz-border-radius: 2px !important;
+      border-radius: 2px !important;
+      display:inline-block;
+      margin-left:4px;
+    }
+    span.show a:hover {
+      background-color:#807F7F;
+    }
+    
+  }
+  
+  ul.hov
+  {
+    li
+    {
+      &:hover
+      {
+        cursor: default;
+      }
+      
+      textarea
+      {
+        display: block;
+      }
+    }
+  }
+  
+  input
+  {
+    width: auto;
+
+    &[type='text']
+    {
+      width: 97.5%;
+    }
+  }
+  input, textarea
+  {
+    color: black;
+  }
+  
+  p.right-text a.how
+  {
+    color: #2E64FE;
+  }
+  
+  .hypothesis-wizard
+  {
+    font-size: 14px;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    
+    p
+    {
+      font-size: inherit;
+    }
+
+    .example
+    {
+      border-style: solid;
+      border-color: #ddd;
+      border-width: 1px 1px 1px 4px;
+      background-color: #eee;
+      padding: 20px 20px 10px 20px;
+      margin-bottom: 10px;
+      
+      strong
+      {
+        font-weight: normal;
+        text-decoration: underline;
+      }
+    }
+    
+    em
+    {
+      display: block;
+      font-size: 12px;
+    }
+    
+    ul
+    {
+      list-style: none;
+      margin: 0 0 10px 0;
+    }
+
+    h1, h2, h3
+    {
+      font-family: inherit;
+      color: black;
+      text-transform: none;
+      padding: 0;
+      line-height: normal;
+    }
+
+    h1
+    {
+      font-size: 16px;
+      margin: 20px 0 10px 0;      
+    }
+
+    h2
+    {
+      font-size: 14px;
+      font-style: italic;
+      font-weight: normal;
+      margin: 0;
+    }
+
+    h3
+    {
+      font-size: 14px;
+      font-style: normal;
+      font-weight: normal;
+      margin: 0;
+    }
+    
+    dl
+    {
+      margin: 0;
+      padding: 0;
+    }
+  }
+  
+  .hypothesis div
+  {
+    span.validated,
+    span.invalid,
+    span.unknown    
+    {
+      text-align: right;
+      background-position-y: 19%;
+    }
+  }
+  
+  .completed-reason
+  {
+    textarea
+    {
+      width: 98%;
+      height: 100px;
+      font-weight: normal;
+    }
+    
+    .help-block
+    {
+      text-align: right;
+    }
+  }
+  
+  .hypothesis-heading.valid
+  {
+    > .collapsed > .left > .reason
+    {
+      color: #5A8626;
+    }
+  }
+  
+  .hypothesis-heading.invalid
+  {
+    > .collapsed > .left > .reason
+    {
+      color: #CA1818;
+    }
+  }
+  
+  .hypothesis-heading.unknown
+  {
+    > .collapsed > .left > .reason
+    {
+      color: #737373;
+    }
+  }
+  
+  .hypothesis-heading.valid,
+  .hypothesis-heading.invalid,
+  .hypothesis-heading.unknown
+  {
+    > .collapsed > .right > span.label
+    {
+      top: 4px;
+    }
+  }
+  
+      
+  ul.hov li div.edit span { 
+    display:inline; 
+    position:relative;     
+    visibility:visible; 
+    margin-right: 0;
+    top: 0;
+    right: 0;
+  }
+  
+  ul.topul
+  {
+    .sort
+    {
+      color: white;
+      
+      a
+      {
+        font-weight: normal;
+        
+        &.selected
+        {
+          font-weight: bold;
+        }
+      }
+    }
+  }
+  
+} /* body#project */
+
+body#project-plan .intv-examples img {
+  position: relative;
+}

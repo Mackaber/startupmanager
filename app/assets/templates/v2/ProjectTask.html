@@ -1,0 +1,6 @@
+<% var member = task.member(); %>
+<% if (task.get("completed_at")) { %>
+  <a class="completed" href="#"></a><a href="#" class="title"><%= task.get("title") %><%= member ? (" (" + member.user().get("name") + ")") : "" %></a>
+<% } else { %>
+  <a class="verticle-dot" href="#"></a><a class="uncompleted" href="#"></a><a href="#" class="title"><%= task.get("title") %><%= member ? (" (" + member.user().get("name") + ")") : "" %></a>
+<% } %>

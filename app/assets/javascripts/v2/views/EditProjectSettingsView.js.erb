@@ -1,0 +1,145 @@
+lll.views.EditProjectSettingsView = Backbone.View.extend({
+  
+  events: {
+    "click .save": "save",
+    "click .cancel": "cancel",
+    "click .new-organization": "newOrganization"
+  },
+  
+  initialize: function() {
+    var self = this;
+    _.bindAll(self, "destroy", "make", "render", "save", "cancel", "newOrganization");    
+    Backbone.Validation.bind(self);    
+  },
+  
+  onDestroy: function() {    
+    var self = this;
+    $(self.el).dialog("close");
+    Backbone.Validation.unbind(self);
+  },
+  
+  make: function() {
+    var self = this;
+    var el = $("<div id='EditProjectSettingsView'></div>");
+    el.dialog({
+      autoOpen: false,
+      title: self.model.isNew() ? "New Project" : "Edit Project",
+      width: 600,
+      modal: true,
+      open: function(event, ui) {
+        $(this).find("input#name").focus();
+      },
+      close: function(event, ui) { 
+        // $(this).find("textarea").ckeditorGet().destroy();
+        $(this).dialog("destroy");
+      }
+    });
+    return el;
+  },
+  
+  render: function() {
+    var self = this;
+    templateLoader.loadRemoteTemplate("<%= asset_path 'v2/EditProjectSettings.html' %>", function(data) {
+      var organizations = _.map(
+        lll.models.User.current.organizationMembers().select(function(om) { return om.get("level") == "Admin" && om.organization().get("can_add_project") }),
+        function(om) { return om.organization() }
+      );
+      organizations.push(self.model.organization());
+      organizations = _.uniq(_.compact(organizations));
+      if (!self.template) {
+        self.template = _.template(data);
+      }
+      
+      $(self.el).html(self.template({
+        project: self.model,
+        organizations: organizations
+      }));
+      self.$("input#organization_name").hide();
+      $(self.el).dialog("open");
+    });
+    return self;
+  },
+  
+  save: function() {
+    var self = this;
+    self.$(".clearfix.error").removeClass("error");
+    self.$("span.error").empty();
+    var attrs = {
+      name: self.$('#name').val()      
+    }
+    var organization_id = self.$("#organization_id").val();
+    if (organization_id && organization_id.trim().length > 0) {
+      attrs.organization_id = organization_id;
+    }
+    else {
+      _.extend(attrs, {organization: {
+        name: self.$("#organization_name").val().trim(),
+        organization_type: "Other"
+      }});
+    }
+    self.model.set(attrs);
+    var organization = self.model.organization();
+    var organizationView = new Backbone.View({
+      model: organization,
+      el: $(self.el)
+    });
+    Backbone.Validation.bind(organizationView);      
+    organization.set(organization.attributes);
+    if (organization.isValid() && self.model.isValid()) {
+      var isNew = self.model.isNew();
+      lll.views.track("project", self.model.isNew() ? "add" : "edit");
+      self.model.save(self.model.attributes, { 
+        success: function(model, response) {
+          if (isNew) {
+            if (self.options.create) {
+              self.options.create(model, response);
+            }
+          }
+          else {
+            if (self.options.update) {
+              self.options.update(model);
+            }
+          }
+        },
+        error: function(model, response) {
+          if (response.readyState == 0 || response.status == 0) {
+            // ajax call cancelled
+          }
+          else {
+            lll.views.error("error saving project: " + response.responseText);
+            if (self.options.error) {
+              self.options.error(model, response);
+            }
+          }          
+        }
+      });
+      $(self.el).dialog("close");
+    }
+    else {
+      self.$(".invalid").each(function() {
+        $(this).closest(".clearfix").addClass("error");
+        $(this).closest(".clearfix").find("span.error").text($(this).attr("data-error"));
+      });
+    }
+    Backbone.Validation.unbind(organizationView);
+    organizationView.destroy();
+    return false;
+  },
+  
+  cancel: function() {
+    var self = this;
+    $(self.el).dialog("close");
+    return false;
+  },
+  
+  newOrganization: function() { 
+    var self = this;
+    self.$("#organization_id").remove();
+    self.$(".new-organization").remove();
+    self.$(".no-admin").remove();
+    self.$("input#organization_name").show();
+    self.$("input#organization_name").focus();
+    return false;
+  }
+  
+});

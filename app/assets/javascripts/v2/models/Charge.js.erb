@@ -1,0 +1,26 @@
+lll.models.Charge = Backbone.Model.extend({
+  
+  parse: function(response) {
+    var self = this;
+    var attrs = _.clone(response);
+
+    if (attrs.created_at) {
+      attrs.created_at = Date.parse(attrs.created_at);
+    }
+    
+    attrs = Backbone.Model.prototype.parse.call(self, attrs);
+    // this._changed = true;
+    return attrs;
+  }
+
+});
+
+lll.models.charges = new (Backbone.Collection.extend({
+
+  model: lll.models.Charge, 
+  
+  comparator: function(charge) {
+    return -charge.get("created_at").getTime();
+  }
+  
+}))();

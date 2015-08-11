@@ -1,0 +1,87 @@
+<p class="hypothesis-title">
+  <span class="cal">
+    <% if (hypothesis.get("status") == "") { %>
+      Created<br>
+      on <%= hypothesis.get("created_at").toString("MMM d, yyyy") %>
+    <% } else if (hypothesis.get("status") == "started") { %>
+      Started Testing<br>
+      on <%= hypothesis.get("completed_at").toString("MMM d, yyyy") %>
+    <% } else if (hypothesis.get("status") == "valid") { %>
+      Validated<br/>
+      on <%= hypothesis.get("completed_at").toString("MMM d, yyyy") %>
+    <% } else if (hypothesis.get("status") == "invalid") { %>
+      Invalidated<br/>
+      on <%= hypothesis.get("completed_at").toString("MMM d, yyyy") %>
+    <% } else if (hypothesis.get("status") == "unknown") { %>
+      Unknown<br/>
+      on <%= hypothesis.get("completed_at").toString("MMM d, yyyy") %>
+    <% } %> 
+  </span>
+  <a href="#">
+    <% if (is_new) { %>
+      <span class="new">New</span>
+    <% } %>
+    <% if (hypothesis.get("canvas_box")) { %>
+      <span><%= hypothesis.get("canvas_box") %> Hypothesis</span>
+    <% } %>
+    <%= hypothesis.get("title") %>
+  </a>
+</p>
+
+<p class="details">
+  in 
+  <a href="<%= hypothesis.project().get('plan_url') %>"><%= hypothesis.project().get("name") %></a>
+  <% if (hypothesis.member()) { %>
+    (<%= hypothesis.member().user().get("name") %>)
+  <% } %>
+</p>
+
+<% if (hypothesis.get("description")) { %>
+  <div class="description"><%- hypothesis.get("description") %></div>
+<% } %>
+
+<% if (hypothesis.experiments.length > 0) { %>
+  <h4 class="expriment">
+    Experiments
+  </h4>
+  <div class="pad20">
+    <p>
+      <% hypothesis.experiments.each(function(experiment, index) { %>
+        <%= index+1 %>. <%= experiment.get("title") %><br>
+      <% }); %>
+    </p>
+  </div>
+<% } %>
+
+<% if (hypothesis.questions.length > 0) { %>
+  <h4 class="key-met">
+    Key Metrics
+  </h4>
+  <div class="pad20">
+    <p>
+      <% hypothesis.questions.each(function(question, index) { %>
+        <%= index+1 %>. <%= question.get("title") %><br>
+      <% }); %>
+    </p>
+  </div>
+<% } %>
+
+<% if (hypothesis.tasks.length > 0) { %>
+  <h4 class="task">
+    Tasks
+  </h4>
+  <div class="pad20">
+    <p>
+      <% hypothesis.tasks.each(function(task, index) { %>
+        <%= index+1 %>. <%= task.get("title") %><br>
+      <% }); %>
+    </p>
+  </div>
+<% } %>
+
+<h4>Attachments</h4>
+<div class="attachments"></div>
+<div class="upload"></div>
+
+<h4>Comments</h4>
+<div class="comments"></div>

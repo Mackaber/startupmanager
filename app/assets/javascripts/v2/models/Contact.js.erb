@@ -1,0 +1,21 @@
+lll.models.Contact = Backbone.Model.extend({
+
+  validation: {
+    name: {
+      required: true,
+      minLength: 1
+    },
+    email: {
+      required: true,
+      minLength: 1,
+      pattern: "email"
+    },
+    message: {
+      required: true,
+      minLength: 1
+    }
+  },
+  
+  url: "/v1/contacts.json"
+  
+});

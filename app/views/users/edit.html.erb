@@ -1,0 +1,22 @@
+<% title("LeanLaunchLab - Change Password") %>
+<% body_class("login") %>
+
+<div class="body-wrapper">
+  <div class="login-header">
+    <%= image_tag("v2/login-icon.gif", :alt => "") %><%= @user.has_changed_password? ? "Change" : "Set" %> Password
+  </div>
+  <div class="login-body">
+    <%= form_for(@user, :url => update_current_user_path, :html => {:class => "settings-form"}) do |f| %>
+      <%= f.password_field :password, :placeholder => "New password" %>
+      <%= f.password_field :password_confirmation, :placeholder => "Confirm new password" %>
+      <div class="row terms-label" id="terms-agreement">
+        <label>&nbsp;</label>
+        I accept the
+        <%= link_to 'terms', terms_url, :target=>"_blank" %>
+        and
+        <%= link_to 'privacy', privacy_url, :target=>"_blank" %>
+      </div>
+      <button class="btn login">Change Password</button>
+    <% end %>    
+  </div>
+</div>

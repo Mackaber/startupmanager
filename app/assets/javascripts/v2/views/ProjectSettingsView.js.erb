@@ -1,0 +1,138 @@
+lll.views.ProjectSettingsView = Backbone.View.extend({
+  
+  events: {
+    "click .save": "save",
+    "click .new-organization": "newOrganization"
+  },
+  
+  template: null,
+  
+  initialize: function() {
+    var self = this;
+    
+    _.bindAll(self, "destroy", "render", "save", "newOrganization");
+    
+    Backbone.Validation.bind(self);
+        
+    self.model.on("change", self.render);          
+  },
+  
+  onDestroy: function() {
+    var self = this;
+    self.model.off("change", self.render);          
+    Backbone.Validation.unbind(self);
+  },
+
+  render: function() {
+    var self = this;
+
+    $(self.el).empty();
+
+    $(self.el).append(new lll.views.ProjectHeadingView({
+      model: self.model,
+      url_attribute: "settings_url"
+    }).render().el);
+
+    $(self.el).append(new lll.views.AlertView().render().el);
+    
+    $(self.el).append(new lll.views.ProjectTabsView({
+      model: self.model,
+      selected: "settings"
+    }).render().el);
+    
+    templateLoader.loadRemoteTemplate("<%= asset_path 'v2/ProjectSettings.html' %>", function(data) {
+      if (!self.template) {
+        self.template = _.template(data);
+      }
+      
+      var organizations = _.map(
+        lll.models.User.current.organizationMembers().select(function(om) { return om.get("level") == "Admin" && om.organization().get("can_add_project") }),
+        function(om) { return om.organization() }
+      );
+      organizations.push(self.model.organization());
+      organizations = _.uniq(organizations);
+      
+      $(self.el).append(self.template({
+        project: self.model,
+        organizations: organizations
+      }));
+      
+      self.$("input#organization_name").hide();
+      
+      self._rendered = true;
+    });
+    
+    return self;
+  },
+  
+  save: function() {
+    var self = this;
+    self.$("p.error").removeClass("error");
+    self.$("span.error").empty();
+    var attrs = {
+      name: self.$("#name").val(),
+      url: self.$("#url").val(),
+      pitch: self.$("#pitch").val(),
+    };
+    var organization_id = self.$("#organization_id").val();
+    if (organization_id && organization_id.trim().length > 0) {
+      attrs.organization_id = organization_id;
+    }
+    else {
+      _.extend(attrs, {organization: {
+        name: self.$("#organization_name").val().trim(),
+        organization_type: "Other"
+      }});
+    }
+    self.model.set(attrs);
+    if (self.model.isValid()) {
+      if (self.model.isNew()) {
+        if (self.options.create) {
+          self.options.create(self.model);
+        }
+      }
+      else {
+        if (self.options.update) {
+          self.options.update(self.model);
+        }
+      }
+      self.model.save({}, {
+        success: function(model, response) {
+          lll.models.loadData(response);
+          window.location.reload(); // FIXME
+          // lll.views.info("Updates saved");
+        },
+        error: function(model, response) {
+          if (response.readyState == 0 || response.status == 0) {
+            // ajax call cancelled
+          }
+          else {
+            lll.views.error("error saving project settings: " + response.responseText);
+            if (self.options.error) {
+              self.options.error(model, response);
+            }
+          }                  
+        }
+      });
+      $(self.el).dialog("close");
+    }
+    else {
+      self.$(".invalid").each(function() {
+        $(this).closest("p").addClass("error");
+        $(this).closest("p").find("span.error").text($(this).attr("data-error"));
+      });
+    }
+    return false;
+  },
+  
+  newOrganization: function() { 
+    var self = this;
+    self.$("#organization_id").remove();
+    self.$(".new-organization").remove();
+    self.$(".no-admin").remove();
+    self.$("input#organization_name").show();
+    self.$("input#organization_name").focus();
+    return false;
+  }
+
+});

@@ -1,0 +1,92 @@
+lll.views.EditCanvasSettingsView = Backbone.View.extend({
+  
+  events: {
+    "click .save": "save",
+    "click .cancel": "cancel"
+  },
+  
+  initialize: function() {
+    var self = this;
+    _.bindAll(self, "destroy", "render", "save", "cancel");    
+    Backbone.Validation.bind(self);
+  },
+  
+  onDestroy: function() {  
+    var self = this;
+    $(self.el).dialog("close");  
+    Backbone.Validation.unbind(self);
+  },
+  
+  make: function() {
+    var self = this;
+    var el = $("<div id='EditCanvasSettingsView'></div>");
+    el.dialog({
+      autoOpen: false,
+      title: "Canvas Settings",
+      width: 600,
+      modal: true,
+      open: function(event, ui) {        
+      },
+      close: function(event, ui) { 
+        $(this).dialog("destroy");
+      }
+    });
+    return el;
+  },
+  
+  render: function() {
+    var self = this;
+	  templateLoader.loadRemoteTemplate("<%= asset_path 'v2/EditCanvasSettings.html' %>", function(data) {
+      if (!self.template) {
+        self.template = _.template(data);
+      }
+      
+      $(self.el).html(self.template({
+	      project: self.model
+	    }));
+	    
+	    $(self.el).dialog("open");
+	  });
+	  return self;
+  },
+  
+  save: function() {
+    var self = this;
+    self.$(".clearfix.error").removeClass("error");
+    self.$("span.error").empty();
+    self.model.set({
+      canvas_startup_headers: self.$("input[name='canvas_startup_headers']:checked").val(),
+      canvas_include_plan_default: self.$("input#canvas_include_plan_default").prop("checked"),
+      canvas_highlight_new: self.$("input#canvas_highlight_new").prop("checked")
+    });
+    if (self.model.isValid()) {
+      self.model.save(self.model.attributes, {
+        error: function(model, response) {
+          if (response.readyState == 0 || response.status == 0) {
+            // ajax call cancelled
+          }
+          else {
+            lll.views.error("error saving canvas settings: " + response.responseText);
+            if (self.options.error) {
+              self.options.error(model, response);
+            }
+          }                  
+        }
+      });
+      $(self.el).dialog("close");
+    }
+    else {
+      self.$(".invalid").each(function() {
+        $(this).closest(".clearfix").addClass("error");
+        $(this).closest(".clearfix").find("span.error").text($(this).attr("data-error"));
+      });
+    }
+    return false;
+  },
+  
+  cancel: function() {
+    var self = this;
+    $(self.el).dialog("close");
+    return false;
+  }
+});

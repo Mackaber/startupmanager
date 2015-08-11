@@ -1,0 +1,20 @@
+<% title("LeanLaunchLab - #{@organization}") %>
+<% body_class("organization") %>
+
+<% content_for(:scripts) do %>
+ 	<%= javascript_include_tag("https://js.stripe.com/v1/") %>  
+ 	<script type="text/javascript">
+  //<![CDATA[
+    $(function() {      
+      Stripe.setPublishableKey("<%= STRIPE_PUBLISHABLE_KEY %>");
+      var organization = lll.models.organizations.get(<%= @organization.id %>);
+      var view = new lll.views.OrganizationMembersView({
+        el: $("#main")[0],
+        model: organization,
+        levels: <%= %w( Admin Normal ).to_json.html_safe %>
+      });
+      view.render();
+    });
+  //]]>
+  </script>
+<% end %>

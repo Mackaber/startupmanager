@@ -1,0 +1,144 @@
+lll.models.Hypothesis = Backbone.Model.extend({
+
+  defaults: {
+    type: "hypothesis"
+  },
+  
+  validation: {
+    title: {
+      required: true,
+      minLength: 1,
+      maxLength: 255
+    },
+    completed_reason: {
+      required: false,
+      minLength: 1,
+      maxLength: 140
+    }
+  },
+  
+  initialize: function() {
+    var self = this;
+    
+    self.on("change:status", function() {       // FIXME: should have an "off" for this
+      if (self.previous("id")) {
+        var status = self.get("status");
+        lll.views.track(self.get("type"), (!status || (status.length > 0)) ? status : "reset");
+      }
+    });
+    
+    self.comments = new (Backbone.Subset.extend({
+      parent: function() {
+        return lll.models.comments;
+      },
+      sieve: function(comment) {
+        return (comment.get("hypothesis_id") == self.id);
+      },
+      comparator: function(comment) {
+        return (comment.get("created_at").getTime());
+      }
+    }));
+    
+    self.attachments = new (Backbone.Subset.extend({
+      parent: function() {
+        return lll.models.attachments;
+      },
+      sieve: function(attachment) {
+        return (attachment.get("item_type") == "hypothesis" && attachment.get("item_id") == self.id);
+      },
+      comparator: function(attachment) {
+        return (attachment.get("name"));
+      }
+    }));    
+    
+    //setTimeout(function() {
+      self.experiments = new (Backbone.Subset.extend({
+        parent: function () {
+          return lll.models.experiments;
+        },
+        sieve: function (experiment) {
+          return (experiment.get("hypothesis_id") == self.id);
+        }
+      }))();
+      self.questions = new (Backbone.Subset.extend({
+        parent: function () {
+          return lll.models.questions;
+        },
+        sieve: function (question) {
+          return (question.get("hypothesis_id") == self.id);
+        }
+      }))();
+      self.tasks = new (Backbone.Subset.extend({
+        parent: function () {
+          return lll.models.tasks;
+        },
+        sieve: function (task) {
+          return (task.get("hypothesis_id") == self.id);
+        }
+      }))();
+    //}, 0);
+  },
+
+  toString: function() {
+    return this.get("title");
+  },
+
+  url: function() {
+    return "/v1/hypotheses" + (this.isNew() ? "" : ("/" + this.id)) + ".json";
+  },
+
+  parse: function(response) {
+    var self = this;
+    var attrs = _.clone(response);
+    
+    if (attrs.created_at) {
+      attrs.created_at = Date.parse(attrs.created_at);
+    }
+    
+    if (attrs.updated_at) {
+      attrs.updated_at = Date.parse(attrs.updated_at);
+    }
+    
+    if (attrs.completed_at) {
+      attrs.completed_at = Date.parse(attrs.completed_at);
+    }
+        
+    attrs = Backbone.Model.prototype.parse.call(this, attrs);
+    // this._changed = true;
+    return attrs;
+  },
+
+  toJSON: function() {
+    var attrs = _.clone(this.attributes);
+    if (attrs.created_at) {
+      attrs.created_at = attrs.created_at.toISOString();
+    }
+    if (attrs.updated_at) {
+      attrs.updated_at = attrs.updated_at.toISOString();
+    }
+    if (attrs.completed_at) {
+      attrs.completed_at = attrs.completed_at.toISOString();
+    }
+    return attrs;
+  },
+  
+  project: function() {
+    var self = this;
+    return lll.models.projects.get(self.get("project_id"));
+  },
+  
+  member: function() {
+    var self = this;
+    var mid = self.get("created_by_member_id");
+    return mid ? lll.models.members.get(mid) : null;
+  }
+  
+});
+
+lll.models.hypotheses = new (Backbone.Collection.extend({
+  
+  model: lll.models.Hypothesis,
+  
+  url: "/v1/hypotheses.json"
+  
+}))();

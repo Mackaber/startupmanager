@@ -1,0 +1,9 @@
+<%= @organization %> (<%= @organization.organization_members.count %> members, <%= @organization.projects.count %> projects)
+
+is billable but has no credit card on file
+
+Admins:
+
+<% @organization.organization_members.where(:level => "Admin").each do |organization_member| %>
+  <%= organization_member.user.email %>
+<% end %>

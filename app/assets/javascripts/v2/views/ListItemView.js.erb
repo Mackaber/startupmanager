@@ -1,0 +1,109 @@
+lll.views.ListItemView = Backbone.View.extend({
+  
+  events: {
+    "click input[type='checkbox']": "checkItem",
+    "click a.delete": "deleteItem",
+    "click": "editItem"
+  },
+  
+  initialize: function() {
+    var self = this;
+    
+    _.bindAll(self, "destroy", "render", "checkItem", "deleteItem", "editItem");
+
+    self.model.on("change", self.render)
+  },
+  
+  onDestroy: function() {
+    var self = this;
+    self.model.off("change", self.render)
+  },
+  
+  render: function() {
+    var self = this;
+    $(self.el).empty();
+    $(self.el).attr("id", self.model.get("type") + "_" + self.model.id);
+    $(self.el).attr("data-model-type", self.model.get("type"));
+    $(self.el).attr("data-model-id", self.model.id);
+    $(self.el).html(
+      (self.options.checkable ? ("<input type='checkbox'" + (self.model.get("completed_at") ? " checked='checked'" : "") + " /> ") : "") +
+      self.model.get("title") + 
+      (self.options.manage ? "<span><a href='#' class='edit'><img class='edit'></a></span><span class='delete'><a href='#' class='delete'><img class='delete'></a></span>" : "")
+    );
+    self.delegateEvents();    
+    $(self.el).data("value", self.model);
+    return self;
+  },
+  
+  deleteItem: function(e) {
+    var self = this;
+    if (confirm("Are you sure?")) {
+      self.model.destroy();
+      self.destroy();
+    }
+    return false;
+  },
+
+  checkItem: function(e) {
+    var self = this;
+    var val = ($(e.currentTarget).prop("checked")) ? (new Date()) : null;
+    self.model.save({completed_at: val}, {
+      wait: true,
+      success: function(model, response) {
+        lll.models.loadData(response);
+      },
+      error: function(model, response) {
+        if (response.readyState == 0 || response.status == 0) {
+          // ajax call cancelled
+        }
+        else {
+          alert("error saving " + item + ": " + response.responseText);
+        }
+      }
+    });
+    e.stopPropagation();
+    return true;
+  },
+  
+  editItem: function(e) {
+    var self = this;
+    if (self.options.manage) {
+      var item = $(e.currentTarget).closest("li");
+      if (item.find("div.edit").length > 0) {
+        return true;
+      }
+      var editView = new lll.views.EditListItemView({
+        className: "edit",
+        value: item.data("value").get("title")
+      });
+      item.html(editView.render().el);
+      editView.on("ok", function(value) {
+        editView.destroy();
+        if (self.options.addExplicit) {
+          item.data("value").set({title: value});
+        } else {
+          item.data("value").save({title: value}, {
+            success: function(model, response) {
+              lll.models.loadData(response);
+            },
+            error: function(model, response) {
+              if (response.readyState == 0 || response.status == 0) {
+                // ajax call cancelled
+              }
+              else {
+                alert("error saving " + item + ": " + response.responseText);
+              }
+            }
+          });
+        }
+        self.render();
+      });
+      editView.on("cancel", function(value) {
+        editView.destroy();
+        self.render();
+      });
+    }
+    return false;
+  }
+
+});

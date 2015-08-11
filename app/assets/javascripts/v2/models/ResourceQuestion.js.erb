@@ -1,0 +1,25 @@
+lll.models.ResourceQuestion = Backbone.Model.extend({
+
+  validation: {
+    name: {
+      required: true,
+      minLength: 1
+    },
+    email: {
+      required: true,
+      minLength: 1,
+      pattern: "email"
+    },
+    question: {
+      required: true,
+      minLength: 1
+    },
+    type: {
+      required: true,
+      minLength: 1
+    }
+  },
+  
+  url: "/v1/resource_questions.json"
+  
+});

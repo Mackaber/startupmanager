@@ -1,0 +1,107 @@
+lll.views.OrganizationSummaryView = Backbone.View.extend({
+  
+  events: {
+    "click .new-project": "newProject",
+    "click .project .delete": "deleteProject"
+  },
+  
+  initialize: function() {
+    var self = this;
+    
+    _.bindAll(self, "destroy", "render", "newProject", "deleteProject");
+    
+    self.model.on("change", self.render);
+
+    self._initialized = true;
+  },
+  
+  onDestroy: function() {
+    var self = this;
+    self.model.off("change", self.render);
+  },
+
+  render: function() {
+    var self = this;
+    
+    $(self.el).data("view", self);
+    
+    $(self.el).empty();
+    
+    $(self.el).append(new lll.views.OrganizationHeadingView({
+      model: self.model,
+      url_attribute: "summary_url"
+    }).render().el);
+    
+    $(self.el).append(new lll.views.AlertView().render().el);
+
+    $(self.el).append(new lll.views.OrganizationTabsView({
+      model: self.model,
+      selected: "summary"
+    }).render().el);
+    
+    templateLoader.loadRemoteTemplate("<%= asset_path 'v2/OrganizationSummary.html' %>", function(data) {
+      if (!self.template) {
+        self.template = _.template(data);
+      }
+      
+      $(self.el).append(self.template({
+        organization: self.model
+      }));
+      
+      self.delegateEvents();
+      self._rendered = true;
+    });
+    return self;
+  },
+  
+  newProject: function() {
+    var self = this;
+    
+    if (self.model.get("can_add_project")) {
+      var model = new lll.models.Project({organization_id: self.model.id});
+      var view = new lll.views.EditProjectSettingsView({
+        model: model,
+        create: function(model, response) {
+          lll.models.loadData(response);
+          self.model.trigger("change");
+        }
+      });
+      view.render();
+    }
+    else {
+      new lll.views.UpgradeSubscriptionView({
+        model: self.model
+      }).render();
+    }
+    return false;
+  },
+  
+  deleteProject: function(e) {
+    var self = this;
+    
+    var row = $(e.currentTarget).closest(".project");
+    var project = lll.models.projects.get(parseInt(row.attr("data-model-id")));
+    $("<div><h1><strong>Warning:</strong> This action cannot be un-done.</h1> <p>Do you want to proceed with deleting project &ldquo;" + project.get("name") + "&rdquo;?</p> <div class='well'><button class='btn danger delete-confirm'>Yes, delete it</button> <button class='btn cancel-confirm'>Cancel</button></div></div>").dialog({
+      dialogClass: "delete-confirmation",
+      width: 800,
+      modal: true,
+      open: function() {
+        var dialog = $(this);
+        dialog.find(".delete-confirm").click(function() { 
+          project.destroy();
+          row.remove();
+          dialog.dialog("close");
+        });
+        dialog.find(".cancel-confirm").click(function() { 
+          dialog.dialog("close");
+        });
+      },
+      close: function() {
+        $(this).dialog("destroy").remove();
+      }
+    });
+    
+    return false;
+  }
+    
+}); 

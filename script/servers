@@ -1,0 +1,7 @@
+#!/bin/sh
+
+pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log start &
+redis-server > /tmp/redis.$$ &
+memcached-debug > /tmp/memcached.$$ &
+QUEUE=\* bundle exec rake resque:work &
+exec rails s $*

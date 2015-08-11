@@ -1,0 +1,50 @@
+lll.views.UpgradeSubscriptionView = Backbone.View.extend({
+  
+  events: {
+    "click .upgrade": "upgrade"
+  },
+  
+  initialize: function() {
+    var self = this;
+    
+    _.bindAll(self, "destroy", "upgrade");
+  },
+  
+  onDestroy: function() {
+    var self = this;
+    $(self.el).dialog("close");
+  },
+  
+  render: function() {
+    var self = this;
+    templateLoader.loadRemoteTemplate("<%= asset_path 'v2/UpgradeSubscription.html' %>", function(data) {
+      if (!self.template) {
+        self.template = _.template(data);
+      }
+      
+      $(self.el).html(self.template({
+      }));
+      
+      $(self.el).dialog({
+        width: 400,
+        modal: true,
+        title: "Upgrade Required",
+        open: function(event, ui) {
+          self.delegateEvents();
+        },
+        close: function(event, ui) { 
+          $(this).dialog("destroy");
+        }
+      });
+      
+      self._rendered = true;
+    });
+    return self;
+  },
+  
+  upgrade: function() {
+    var self = this;
+    window.location.href = self.model.get("payment_url");
+    return false;
+  }
+});

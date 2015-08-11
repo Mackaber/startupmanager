@@ -1,0 +1,16 @@
+<% title("LeanLaunchLab - Help") %>
+<% body_class("help") %>
+
+<% content_for(:scripts) do %>
+  <script type="text/javascript">
+  //<![CDATA[
+    $(function() {
+      var view = new lll.views.HelpView({
+        el: $("#main")[0],
+        autoplay: <%= params.has_key?(:video) ? params[:video].to_json.html_safe : "null" %>
+      });
+      view.render();        
+    });
+  //]]>
+  </script>
+<% end %>

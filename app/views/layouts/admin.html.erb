@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title><%= h(content_for?(:title) ? yield(:title) : "LeanLaunchLab Admin") %></title>
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <%= csrf_meta_tag %>
+    <%= stylesheet_link_tag :admin %>
+    <%= yield(:styles) %>
+  </head>
+
+  <body class="<%= content_for?(:body_class) ? yield(:body_class) : "#{params[:controller].sub(/^admin\//,'')}-#{params[:action]}" %>">
+
+    <div class="topbar">
+      <div class="fill">
+        <div class="container">
+          <%= link_to("LeanLaunchLab", root_path, :class => "brand") %>
+          <ul class="nav">
+            <li class="<%= params[:controller] == "admin/admin" ? "active" : nil %>">
+              <%= link_to("Admin", admin_root_path) %>
+            </li>
+            <li class="<%= params[:controller] == "admin/charges" ? "active" : nil %>">
+              <%= link_to("Charges", admin_charges_path) %>
+            </li>
+            <li class="<%= params[:controller] == "admin/organizations" ? "active" : nil %>">
+              <%= link_to("Organizations", admin_organizations_path) %>
+            </li>
+            <li class="<%= params[:controller] == "admin/projects" ? "active" : nil %>">
+              <%= link_to("Projects", admin_projects_path) %>
+            </li>
+            <li class="<%= params[:controller] == "admin/signups" ? "active" : nil %>">
+              <%= link_to("Signups", admin_signups_path) %>
+            </li>
+            <li class="<%= params[:controller] == "admin/users" ? "active" : nil %>">
+              <%= link_to("Users", admin_users_path) %>
+            </li>
+            <li class="<%= params[:controller] == "admin/user_activities" ? "active" : nil %>">
+              <%= link_to("User Activity", admin_user_activities_path) %>
+            </li>
+          </ul>
+          <ul class="nav secondary-nav">
+            <li>
+              <%= link_to("Log out", destroy_user_session_path) %>
+            </li>
+          </ul>          
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div id="alerts" class="content">
+        <% unless flash[:error].blank? %>
+          <div class="alert-message error">
+            <%= flash[:error].html_safe %>
+          </div>
+        <% end %>
+        <% unless flash[:alert].blank? %>
+          <div class="alert-message warning">
+            <%= flash[:alert].html_safe %>
+          </div>
+        <% end %>
+        <% unless flash[:notice].blank? %>
+          <div class="alert-message info">
+            <%= flash[:notice].html_safe %>
+          </div>
+        <% end %>
+      </div>
+      
+      <div class="content">
+        <% if content_for?(:title) %>
+          <h1><%= yield(:title) %></h1>
+        <% end %>
+        <%= yield(:layout) %>
+      </div>
+
+    </div> <!-- /container -->
+
+    <%= javascript_include_tag :admin %>
+    <%= yield(:scripts) %>
+    
+  </body>
+</html>

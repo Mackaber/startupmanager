@@ -1,0 +1,19 @@
+:experiments:
+  :landing_headline:
+    :variants:
+        - :the_easy_way_for_your_team_to_go_lean
+        - :learn_how_to_innovate_like_a_lean_startup
+    :metrics:
+        - :pricing
+        - :signup
+    :completed:
+      :the_easy_way_for_your_team_to_go_lean
+  :landing_subtitle:
+    :variants:
+        - :innovation_management_software_for_lean_startups_and_custdev_teams
+        - :used_by_over_2000_companies_to_manage_lean_startup_activities
+    :metrics:
+        - :pricing
+        - :signup
+    :completed:
+      :innovation_management_software_for_lean_startups_and_custdev_teams

@@ -1,0 +1,91 @@
+lll.views.ProjectTaskView = Backbone.View.extend({
+  
+  events: {
+    "click a.completed, a.uncompleted": "complete",
+    "click": "select"
+  },
+  
+  template: null,
+  
+  initialize: function() {
+    var self = this;
+    
+    _.bindAll(self, "destroy", "render", "complete", "select");
+    
+    Backbone.Validation.bind(self);
+    
+    self.model.on("change", self.render);
+    
+    setTimeout(function() {
+      lll.views.router.route("tasks/" + self.model.id, "task" + self.model.id, self.select);
+    }, 500);
+  },
+  
+  onDestroy: function() {
+    var self = this;
+    self.model.off("change", self.render);
+    lll.views.router.off("route:task" + self.model.id);
+    Backbone.Validation.unbind(self);
+  },
+  
+  render: function() {
+    var self = this;
+    $(self.el).empty();
+    $(self.el).attr("id", self.model.get("type") + "_" + self.model.id);
+    $(self.el).attr("data-model-id", self.model.id);
+    $(self.el).attr("data-model-type", self.model.get("type"));
+    if (self.model.get("completed_at")) {
+      $(self.el).addClass("complete");
+    }
+    $(self.el).data("model", self.model);
+    templateLoader.loadRemoteTemplate("<%= asset_path 'v2/ProjectTask.html' %>", function(data) {
+      if (!self.template) {
+        self.template = _.template(data);
+      }
+      
+      $(self.el).append(self.template({
+        task: self.model,
+        read_only: !self.model.project().currentMember().get("can_manage_tasks")
+      }));
+      
+      self._rendered = true;
+    });
+    return self;
+  },
+  
+  complete: function() {
+    var self = this;
+    var val;
+    if (self.model.get("completed_at")) {
+      val = null;
+    }
+    else {
+      val = new Date();
+    }
+    lll.models.tasks.remove(self.model);
+    self.model.save({completed_at: val, position: 0}, {
+      wait: true,
+      success: function(model, response) {        
+        lll.models.loadData(response);
+      },
+      error: function(model, response) {
+        if (response.readyState == 0 || response.status == 0) {
+          // ajax call cancelled
+        }
+        else {
+          lll.views.error("error saving task: " + response.responseText);
+          if (self.options.error) {
+            self.options.error(model, response);
+          }
+        }          
+      }
+    });
+    return false;
+  },
+  
+  select: function() {
+    var self = this;
+    self.model.trigger("selected", self.model);
+    return false;
+  }
+});

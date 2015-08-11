@@ -1,0 +1,96 @@
+lll.views.EditCreditCardView = Backbone.View.extend({
+  
+  events: {
+    "click .save": "save",
+    "click .cancel": "cancel"
+  },
+  
+  initialize: function() {
+    var self = this;
+    
+    _.bindAll(self, "destroy", "render", "save", "cancel");    
+    Backbone.Validation.bind(self);       
+    self.model.on("change", self.render);
+  },
+  
+  onDestroy: function() {
+    var self = this;
+    Backbone.Validation.unbind(self);
+    self.model.off("change", self.render);
+  },
+  
+  render: function() {
+    var self = this;
+    templateLoader.loadRemoteTemplate("<%= asset_path 'v2/EditCreditCard.html' %>", function(data) {
+      if (!self.template) {
+        self.template = _.template(data);
+      }
+      
+      $(self.el).html(self.template({
+      }));
+      
+      if (self.options.omitCancel) {
+        self.$(".cancel").remove();
+      }
+      
+      self.$("img.cards").attr("src", "<%= asset_path 'v2/cards.gif' %>");
+
+      self.delegateEvents();
+      self._rendered = true;
+    });
+    return self;
+  },
+  
+  cancel: function() {
+    var self = this;
+    self.model.trigger("change");
+    return false;
+  },
+  
+  save: function() {
+    var self = this;
+    if (self.saving) {
+      return;
+    }
+    self.saving = true;
+    self.$(".save").hide();
+    self.$(".save").after("<img src=\"<%= asset_path 'v2/ajax-loader-horizontal.gif' %>\"/>");
+    lll.views.info("Processing credit card...");
+    Stripe.createToken({
+      number: $("input.ccn").val(),
+      cvc: $("input.ccv").val(),
+      exp_month: $("select.mns").val(),
+      exp_year: $("select.yrs").val()
+    }, function(status, response) {
+      if (response.error) {
+        lll.views.error(response.error.message);
+        self.saving = false;
+        self.$(".save").show();
+        self.$(".save").next("img").remove();
+      }
+      else {
+        self.model.set({stripe_card_token: response.id}, {silent: true});
+        self.model.save(self.model.attributes, {
+          wait: true,
+          success: function() {
+            self.saving = false;
+            self.model.unset("stripe_card_token", {silent: true});
+          },
+          error: function(model, response) {
+            if (response.readyState == 0 || response.status == 0) {
+              // ajax call cancelled
+            }
+            else {
+              lll.views.error("error saving credit card: " + response.responseText);
+              if (self.options.error) {
+                self.options.error(model, response);
+              }
+            }
+            self.saving = false;         
+          }
+        });
+      }
+    });
+    return false;
+  }
+});

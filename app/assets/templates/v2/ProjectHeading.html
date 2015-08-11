@@ -1,0 +1,11 @@
+<h1 class="project">
+  <a href="#" class="project"><%= project.get("name") %></a>
+  <% if (project.get("pitch")) { %>
+    <span><%= project.get("pitch") %></span>
+  <% } %>
+</h1>
+<div class="project-list">
+  <ul>           
+    <li class="first"><a href="#" class="new-project">(New Project)</a></li>
+  </ul>
+</div>  

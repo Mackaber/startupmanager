@@ -1,0 +1,19 @@
+daily_billing:
+  cron: "5 0 * * *"
+  class: Jobs::Billing::Daily
+
+clear_cache:
+  cron: "0 1 * * *"  
+  class: Jobs::ClearCache
+
+# warm_cache:
+#   cron: "17 * * * *"
+#   class: Jobs::WarmCache
+
+summary:
+  cron: "1 * * * *"
+  class: Jobs::Notify::Summary
+
+project_goal:
+  cron: "37 10 * * *"
+  class: Jobs::Notify::ProjectGoal

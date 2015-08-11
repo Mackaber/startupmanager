@@ -1,0 +1,199 @@
+lll.views.NewHypothesisView = Backbone.View.extend({
+  
+  events: {
+    "focus input#title": "focusTitle",
+    "keypress input#title": "keypress",
+    "click .open-details": "openDetails",
+    "click .open-attachments": "openAttachments",
+    "click .save": "save",
+    "click .cancel": "cancel",
+    "click a.how": "how"
+  },
+  
+  initialize: function() {
+    var self = this;
+    
+    _.bindAll(self, "destroy", "render", "save", "cancel", "focusTitle", "keypress", "openDetails", "openAttachments", "how");
+    
+    Backbone.Validation.bind(self);   
+    
+    self.model.on("change", self.render); 
+    
+    self.experimentsView = new lll.views.ListView({
+      collection: new (Backbone.Collection.extend({model: lll.models.Experiment}))(),
+      heading: "<strong>Step 2:</strong> What <strong>experiments</strong> will prove or disprove your hypothesis?",
+      placeholder: "Enter Experiment",
+      addExplicit: true,
+      manage: true
+    });
+    self.experimentsView.on("itemAdded", function(title) {
+      var experiment = new lll.models.Experiment({
+        title: title
+      });
+      self.experimentsView.collection.add(experiment);
+    }, self);
+    self.experimentsView.on("itemRemoved", function(item) {
+      self.experimentsView.collection.remove(item);
+    }, self);
+    
+    self.questionsView = new lll.views.ListView({
+      collection: new (Backbone.Collection.extend({model: lll.models.Question}))(),
+      heading: "<strong>Step 3:</strong> List the <strong>key metrics</strong> you'll measure in your experiments.",
+      placeholder: "Enter Metric",
+      addExplicit: true,
+      manage: true
+    });
+    self.questionsView.on("itemAdded", function(title) {
+      var experiment = new lll.models.Experiment({
+        title: title
+      });
+      self.questionsView.collection.add(experiment);
+    }, self);
+    self.questionsView.on("itemRemoved", function(item) {
+      self.questionsView.collection.remove(item);
+    }, self);
+    
+    self.tasksView = new lll.views.ListView({
+      collection: new (Backbone.Collection.extend({model: lll.models.Task}))(),
+      heading: "<strong>Step 4:</strong> Enter <strong>tasks</strong> to break it down.",
+      placeholder: "Enter Task",
+      addExplicit: true,
+      manage: true
+    });
+    self.tasksView.on("itemAdded", function(title) {
+      var experiment = new lll.models.Experiment({
+        title: title
+      });
+      self.tasksView.collection.add(experiment);
+    }, self);
+    self.tasksView.on("itemRemoved", function(item) {
+      self.tasksView.collection.remove(item);
+    }, self);
+    
+    self.wizard = new lll.views.HypothesisWizardView({
+      model: self.model
+    });
+  },
+  
+  onDestroy: function() {
+    var self = this;
+    Backbone.Validation.unbind(self);
+    self.model.off("change", self.render); 
+    self.experimentsView.off("itemAdded", null, self);
+    self.experimentsView.off("itemRemoved", null, self);
+    self.questionsView.off("itemAdded", null, self);
+    self.questionsView.off("itemRemoved", null, self);
+    self.tasksView.off("itemAdded", null, self);
+    self.tasksView.off("itemRemoved", null, self);
+  },
+  
+  render: function() {
+    var self = this;
+    templateLoader.loadRemoteTemplate("<%= asset_path 'v2/NewHypothesis.html' %>", function(data) {
+      if (!self.template) {
+        self.template = _.template(data);
+      }
+      
+      $(self.el).html(self.template({
+        hypothesis: self.model
+      }));
+      
+      self.$(".steps.questions").append(self.questionsView.render().el);
+      self.$(".steps.experiments").append(self.experimentsView.render().el);
+      self.$(".steps.tasks").append(self.tasksView.render().el);
+      
+      self.$(".expanded, .details, .attachments").hide();
+      self.delegateEvents();
+    });
+    return self;
+  },
+  
+  save: function() {
+    var self = this;
+    self.$(".clearfix.error").removeClass("error");
+    self.$("span.error").empty();
+    var attrs = {
+      status: self.$("#status").val(),
+      title: self.$("#title").val(),
+      description: self.$("#description").val(),
+      questions_attributes: self.questionsView.addPending().collection.map(function(q) { return {title: q.get("title")} }).reverse(),
+      experiments_attributes: self.experimentsView.addPending().collection.map(function(q) { return {title: q.get("title")} }).reverse(),
+      tasks_attributes: self.tasksView.addPending().collection.map(function(q) { return {title: q.get("title")} }).reverse()
+    };
+    self.model.set(attrs);
+  
+    if (self.model.isValid()) {
+      if (self.options.create) {
+        self.options.create(self.model);
+      }
+      lll.views.track("hypothesis", self.model.isNew() ? "add" : "edit");
+      self.model.save(self.model.attributes, { 
+        wait: true,
+        success: function(model, response) {
+          lll.models.loadData(response);
+        },
+        error: function(model, response) {
+          if (response.readyState == 0 || response.status == 0) {
+            // ajax call cancelled
+          }
+          else {
+            lll.views.error("error saving hypothesis: " + response.responseText);
+            if (self.options.error) {
+              self.options.error(model, response);
+            }
+          }          
+        }
+      });    
+    }
+    else {
+      self.$(".invalid").each(function() {
+        $(this).closest(".clearfix").addClass("error");
+        $(this).closest(".clearfix").find("span.error").text($(this).attr("data-error"));
+      });
+    }
+    return false;
+  },
+  
+  cancel: function() {
+    var self = this;
+    self.$(".expanded").hide();
+    self.model.clear();
+    return false;
+  },
+  
+  focusTitle: function() {
+    var self = this;
+    self.$(".expanded").slideDown("fast");
+  },
+  
+  keypress: function (e) {  
+    var self = this;
+    if ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13)) {
+      self.save();
+      return false;  
+    } else if ($(e.currentTarget).val().length < 255) {  
+      return true;  
+    } else {
+      return false;
+    }
+  },
+  
+  openDetails: function(e) {
+    var self = this;
+    self.$(".details").slideDown("fast");
+    return false;
+  },
+  
+  openAttachments: function(e) {
+    var self = this;
+    self.$(".attachments").slideDown("fast");
+    return false;
+  },
+  
+  how: function() {
+    var self = this;
+    self.wizard.render();
+    return false;
+  }
+  
+});

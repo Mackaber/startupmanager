@@ -1,0 +1,48 @@
+lll.views.ProjectTabsView = Backbone.View.extend({
+    
+  template: null,
+  
+  initialize: function() {
+    var self = this;
+    
+    _.bindAll(self, "destroy", "make", "render");
+  },
+  
+  make: function() {
+    var el = $("<div class='project-tabs'/>");
+    return el;
+  },
+  
+  render: function() {
+    var self = this;
+    templateLoader.loadRemoteTemplate("<%= asset_path 'v2/ProjectTabs.html' %>", function(data) {
+      if (!self.template) {
+        self.template = _.template(data);
+      }
+
+      $(self.el).html(self.template({
+        project: self.model
+      }));
+      self.$("> ul > li a." + self.options.selected).addClass("selected");
+      
+      self.$(".canvas").attr("href", self.model.get("canvas_url"));
+      self.$(".plan").attr("href", self.model.get("plan_url"));
+      self.$(".tasks").attr("href", self.model.get("tasks_url"));
+      self.$(".interviews").attr("href", self.model.get("interviews_url"));
+      self.$(".journal").attr("href", self.model.get("journal_url"));
+      self.$(".members").attr("href", self.model.get("members_url"));
+      
+      var member = self.model.currentMember();
+      if (member.get("can_manage_project")) {
+        self.$(".settings").attr("href", self.model.get("settings_url"));        
+      }
+      else {
+        self.$(".settings").closest("li").remove();
+      }
+            
+      self._rendered = true;
+    });
+    return self;
+  }
+  
+});

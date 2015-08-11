@@ -1,0 +1,78 @@
+lll.views.RemoveProjectMemberView = Backbone.View.extend({
+  
+  events: {
+    "click button": "deleteIt"
+  },
+  
+  template: null,
+  
+  initialize: function() {
+    var self = this;
+    
+    _.bindAll(self, "destroy", "render", "deleteIt", "deleted");
+    
+    Backbone.Validation.bind(self);
+    
+    self.model.on("change", self.render);
+    
+    Backbone.View.prototype.initialize.apply(self, arguments);
+    
+    self.model.on("destroy", self.deleted);
+  },
+  
+  onDestroy: function() {
+    var self = this;
+    self.model.off("change", self.render);
+    self.model.off("destroy", self.deleted);
+    Backbone.Validation.unbind(self);
+  },
+  
+  make: function() {
+    var el = $("<div class='body-wrapper'></div>");
+    return el;
+  },
+  
+  render: function() {
+    var self = this;
+    $(self.el).attr("id", self.model.get("type") + "_" + self.model.id);
+    $(self.el).attr("data-model-id", self.model.id);
+    $(self.el).data("model", self.model);
+    templateLoader.loadRemoteTemplate("<%= asset_path 'v2/RemoveProjectMember.html' %>", function(data) {
+      if (!self.template) {
+        self.template = _.template(data);
+      }
+      
+      $(self.el).empty();
+      $(self.el).append(self.template({
+        member: self.model
+      }));
+            
+      self._rendered = true;
+    });
+    return self;
+  },
+  
+  deleteIt: function() {
+    var self = this;
+
+    if (self.model.get("level") == "Owner" && self.model.project.members.select(function(member) { return member.get("level") == "Owner" && member.get("active") == true}).length == 1) {
+      alert("Sorry, you're currently the only Owner on this project so you cannot remove yourself. If you'd like to leave this project, please give another member Owner permissions, then try to remove yourself again.");
+    }
+    else {
+      msg = "Are you sure you'd like to leave this project?";
+      if (confirm(msg)) {
+        self.model.destroy({
+          error: function(model, response) {
+            alert("error removing membership: " + response.responseText);
+          }
+        });
+        lll.views.track("member", "delete");
+      }
+    }
+    return false;
+  },
+  
+  deleted: function() {
+    self.$("p").text("You have been removed.");
+  }
+});

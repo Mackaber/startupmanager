@@ -1,0 +1,36 @@
+<%= %Q{A #{@exception.class} occurred #{@request ? "at #{@request.url} (#{@request.env['REQUEST_METHOD']})" : nil}} %>
+
+
+<%= (@exception ? @exception.message : @message).html_safe %>
+
+
+*** BACKTRACE
+<% if @exception %>
+<% Rails.backtrace_cleaner.clean(@exception.backtrace).each do |s| %>
+  <%= s.html_safe %>
+<% end %>
+<% else %>
+  <%= @stacktrace.join("<br/>").html_safe %>
+<% end %>
+<% if @request %>
+
+*** PARAMETERS
+<% @request.parameters.sort.each do |k,v| %>
+  <%= "#{k}: #{v.inspect}".html_safe %>
+<% end %>
+
+*** ENVIRONMENT
+<% @request.env.select{|k,v| k =~ /^(HTTP|REMOTE|REQUEST|SERVER)/}.sort.each do |k,v| %>
+  <%= "#{k}: #{v.inspect}".html_safe %>
+<% end %>
+
+*** SESSION
+<% @session.keys.sort_by{|x| x.to_s.downcase}.each do |k| %>
+  <%= "#{k}: #{@session[k].inspect}".html_safe %>
+<% end %>
+  
+*** COOKIES
+<% @cookies.each do |k,v| %>
+  <%= "#{k}: #{v.inspect}".html_safe %>
+<% end %>
+<% end %>

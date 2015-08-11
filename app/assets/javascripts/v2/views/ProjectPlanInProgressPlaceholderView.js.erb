@@ -1,0 +1,35 @@
+lll.views.ProjectPlanInProgressPlaceholderView = Backbone.View.extend({
+    
+  initialize: function() {
+    var self = this;
+    
+    _.bindAll(self, "destroy", "render");
+    
+    Backbone.Validation.bind(self);   
+    
+    self.model.on("change", self.render); 
+  },
+
+  onDestroy: function() {
+    var self = this;
+    self.model.off("change", self.render); 
+    Backbone.Validation.unbind(self);
+  },
+  
+  render: function() {
+    var self = this;
+    templateLoader.loadRemoteTemplate("<%= asset_path 'v2/ProjectPlanInProgressPlaceholder.html' %>", function(data) {
+      if (!self.template) {
+        self.template = _.template(data);
+      }
+      
+      $(self.el).html(self.template({
+        hypothesis: self.model
+      }));
+      
+      self.$("img.arrow-left").attr("src", "<%= asset_path 'v2/arrow-left.gif' %>");
+    });
+    return self;
+  }  
+  
+});

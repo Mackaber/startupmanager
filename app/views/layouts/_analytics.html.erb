@@ -1,0 +1,92 @@
+<% content_for(:script_head) do %>
+  <script type="text/javascript">
+  //<![CDATA[
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-725912-8']);
+    _gaq.push(['_trackPageview']);
+    <% if current_user %>
+      _gaq.push(['_setCustomVar', 1, "User", <%= (current_user ? "#{current_user.name} <#{current_user.email}>" : nil).to_json.html_safe %>, 1]);
+      _gaq.push(['_setCustomVar', 2, "User Cohort", <%= (current_user ? current_user.cohort : nil).to_json %>, 1]);
+      <% if @project && (member = @project.members.active.where(:user_id => current_user.id).first) %>
+        _gaq.push(['_setCustomVar', 3, "Project ID", <%= (@project ? @project.id : nil).to_json %>, 1]);
+        _gaq.push(['_setCustomVar', 4, "Member Role", <%= (member ? "\"#{member.role_name}\"" : "null").html_safe %>, 1]);
+        _gaq.push(['_setCustomVar', 5, "Member Level", <%= (member ? "\"#{member.level}\"" : "null").html_safe %>, 1]);
+      <% end %>
+    <% end %>
+    
+    var mpq=[];
+    mpq.push(["init","8ec34144bb2d608b82725ca4863ee351"]);
+    var mpqProp = {distinct_id: "<%= tracking_code %>"};
+    <% if current_user %>
+      mpqProp.email = <%= (current_user ? "\"#{current_user.email}\"" : "null").html_safe %>;
+      <% if @project && member %>
+        mpqProp.project_id = <%= (@project ? @project.id : nil).to_json %>;
+        mpqProp.role = <%= (member ? "\"#{member.role_name}\"" : "null").html_safe %>;
+        mpqProp.level = <%= (member ? "\"#{member.level}\"" : "null").html_safe %>;
+      <% end %>
+    <% end %>
+    <% if session[:promo] || (current_user && current_user.source) %>
+      mpqProp.source = <%= "\"#{session[:promo] || current_user.source}\"".html_safe %>;
+    <% end %>    
+  //]]>
+  </script>
+<% end %>
+
+<% content_for(:scripts) do %>
+  <% if (Rails.env == "production") %>
+    <!-- start Mixpanel -->
+    <script type="text/javascript">
+    //<![CDATA[
+      (function(){
+        var b,a,e,d,c;b=document.createElement("script");
+        b.type="text/javascript";
+        b.async=true;
+        b.src=(document.location.protocol==="https:"?"https:":"http:")+"//api.mixpanel.com/site_media/js/api/mixpanel.js";
+        a=document.getElementsByTagName("script")[0];
+        a.parentNode.insertBefore(b,a);
+        e=function(f){return function(){mpq.push([f].concat(Array.prototype.slice.call(arguments,0)))}};
+        d=["init","track","track_links","track_forms","register","register_once","identify","name_tag","set_config"];
+        for(c=0;c<d.length;c++){
+          mpq[d[c]]=e(d[c]);
+        }
+        <% if current_user %>
+          mpq.name_tag("<%= (current_user ? current_user.email : nil) %>");          
+        <% end %>
+        
+        mpq.register(mpqProp);        
+      })();
+    //]]>
+    </script><!-- end Mixpanel -->
+  
+    <script type="text/javascript">
+    //<![CDATA[
+      (function() {
+        var ga = document.createElement('script');
+        ga.type = 'text/javascript';
+        ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(ga, s);
+      })();
+    //]]>
+    </script>
+  <% else %>
+    <script type="text/javascript">
+    //<![CDATA[
+      mpq.register = function(event, prop) {        
+      };
+      mpq.track = function(event, prop) {        
+      };
+    //]]>
+    </script>
+  <% end %> 
+  
+  <% if user_signed_in? && session[:new_user] %>
+    <% session[:new_user] = nil %>
+    <script type="text/javascript">
+      mpq.track("Signup preauth");
+      mpq.track("$signup");
+    </script>
+  <% end %>
+  
+<% end %>

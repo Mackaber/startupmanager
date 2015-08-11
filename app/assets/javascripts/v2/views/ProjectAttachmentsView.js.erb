@@ -1,0 +1,85 @@
+lll.views.ProjectAttachmentsView = Backbone.View.extend({
+    
+  events: {
+    "click .removeAttachment": "deleteAttachment"
+  },  
+    
+  template: null,
+  
+  initialize: function() {
+    var self = this;
+    
+    _.bindAll(self, "destroy", "render", "addAttachment", "deleteAttachment", "removeAttachment", "resetAttachments");
+    
+    self.model.attachments.on("reset", self.resetAttachments);
+    self.model.attachments.trigger("reset");
+    self.model.attachments.on("add", self.addAttachment);
+    self.model.attachments.on("remove", self.removeAttachment);    
+  },
+  
+  onDestroy: function() {
+    var self = this;
+    self.model.attachments.off("reset", self.resetAttachments);
+    self.model.attachments.off("add", self.addAttachment);
+    self.model.attachments.off("remove", self.removeAttachment);    
+  },
+  
+  render: function() {
+    var self = this;
+    templateLoader.loadRemoteTemplate("<%= asset_path 'v2/ProjectAttachments.html' %>", function(data) {
+      if (!self.template) {
+        self.template = _.template(data);
+      }
+
+      $(self.el).html(self.template({
+        attachments: self.model.attachments
+      }));
+      
+      if (!self.options.can_manage) {
+        self.$(".removeAttachment").remove();
+      }
+      
+      self._rendered = true;
+    });
+    return self;
+  },
+  
+  addAttachment: function(attachment) {
+    var self = this;
+    $(self.el).append("<div class='attachment' data-attachment-id='" + attachment.id + "'><a target='_blank' href='" + attachment.get("url") + "'>" + _.escapeHTML(attachment.get("name")) + "</a> (" + Math.ceil(attachment.get("size") / 1024) + "K) <a class='removeAttachment' href='#'>remove</a></div>");
+    self.delegateEvents();
+  },
+  
+  deleteAttachment: function(event) {
+    var self = this;
+    if (confirm("Are you sure?")) {
+      var div = $(event.currentTarget).closest(".attachment");
+      var id = div.attr("data-attachment-id");
+      var m = lll.models.attachments.get(id);
+      m.destroy();
+      self.model.trigger("change");
+    }
+    return false;
+  },
+  
+  removeAttachment: function(model) {
+    var self = this;
+    self.$("div[data-attachment-id='" + model.id + "']").remove();    
+  },
+  
+  resetAttachments: function() {
+    var self = this;
+    $(self.el).empty();
+    _.each(
+      _.sortBy(
+        self.model.attachments.models,
+        function(attachment) { return attachment.get("created_at").getTime() }
+      ),
+      function(attachment) {
+        self.addAttachment(attachment);
+      }
+    );
+  },
+  
+});
+

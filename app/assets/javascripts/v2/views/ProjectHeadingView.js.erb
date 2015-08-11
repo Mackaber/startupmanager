@@ -1,0 +1,102 @@
+lll.views.ProjectHeadingView = Backbone.View.extend({
+  
+  events: {
+    "click a.project": "projectMenu",
+    "click .project-list a.new-project": "newProject"
+  },
+   
+  template: null,
+  
+  initialize: function() {
+    var self = this;
+    
+    _.bindAll(self, "destroy", "make", "render", "projectMenu", "newProject");
+    
+    var currentMemberProjectIds = lll.models.User.current.members().map(function(member) { return member.get("project_id") });
+    
+    self.collection = new (Backbone.Subset.extend({
+      parent: function () {
+        return lll.models.projects;
+      },
+      sieve: function (project) {
+        return _.include(currentMemberProjectIds, project.id);
+      }
+    }))();
+    
+    self.collection.on("reset", self.render);
+    
+    self.model.on("change", self.render);
+  },
+  
+  onDestroy: function() {
+    var self = this;
+    self.collection.off("reset", self.render);
+    self.model.off("change", self.render);
+  },
+  
+  make: function() {
+    var el = $("<div class='project-heading'/>");
+    return el;
+  },
+  
+  render: function() {
+    var self = this;
+    templateLoader.loadRemoteTemplate("<%= asset_path 'v2/ProjectHeading.html' %>", function(data) {
+      if (!self.template) {
+        self.template = _.template(data);
+      }
+
+      $(self.el).html(self.template({
+        project: self.model
+      }));
+      
+      // Fetch data for project menu
+      self.$(".project-list").hide();
+      
+      self.$(".project-list ul").append("<li><b>Org Name:</b> Project Name</li>");
+      _.each(
+        self.collection.sortBy(function(p) { return ((p.organization() ? p.organization().get("name") : '') + p.get("name")).toLowerCase() }),
+        function(project) {
+          organization = lll.models.organizations.get(project.get("organization_id"));
+        self.$(".project-list ul").append("<li><a href='" + project.get(self.options.url_attribute) + "'><b>" + (organization && organization.get("name")) + ":</b> " + project.get("name") + "</a></li>");
+        }
+      );
+      
+      if (self.model.organization().get("locked")) {
+        s = "This project is read-only";
+                
+        if (self.model.organization().currentMember().get("level") == "Admin") {
+          s += " - ";
+          s += "<a href='" + self.model.organization().get("payment_url") + "'>UPGRADE</a>";
+        }
+        
+        setTimeout(function() { 
+          lll.views.perm(s);
+        }, 0);
+      }
+    
+      self._rendered = true;
+    });
+    return self;
+  },
+  
+  projectMenu: function() {
+    self.$(".project-list").toggle();
+    return false;
+  },
+  
+  newProject: function() {
+    var self = this;
+    
+    var model = new lll.models.Project();
+    var view = new lll.views.EditProjectSettingsView({
+      model: model,
+      create: function(model) {
+        window.location.href = model.get(self.options.url_attribute);
+      }
+    });
+    view.render();
+    return false;
+  }
+  
+});

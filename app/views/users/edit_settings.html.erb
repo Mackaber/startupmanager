@@ -1,0 +1,81 @@
+<%= link_to "back to project", root_path %>
+<h1>Settings</h1>
+</div>
+<div id="main">
+  <div class="inner">
+
+    <div class="settings-block">
+      <h2>Profile</h2>
+      <%= form_for(@user, :url => update_setting_path, :html => {:method => :post, :class => "settings-form"}) do |f| %>
+        <fieldset>
+          <div class="row">
+            <strong class="field-description">
+              <%= f.label :name %>
+            </strong>
+            <%= f.text_field :name, :class => "text" %>
+          </div>
+          <!--<div class="row">-->
+            <!--<strong class="field-description">-->
+              <!--<%#= f.label :email %>-->
+            <!--</strong>-->
+            <!--<%#= f.text_field :email, :class => "text" %>-->
+          <!--</div>-->
+          <div class="submit-holder">
+            <a href="#" class="submit form-submit"><span>Save</span></a>
+          </div>
+        </fieldset>
+      <% end %>
+    </div>
+
+    <div class="settings-block">
+      <h2>Email Preferences</h2>
+      <%= form_for(@user.setting, :html => {:class => "settings-form"}) do |f| %>
+        <fieldset>
+          <div class="row">
+            <strong class="field-description"><span>New Blog Post</span></strong>
+            <%= f.check_box :post_email %>
+            Email me on all new blog posts
+          </div>
+          <div class="row">
+            <strong class="field-description"><span>New Feedback</span></strong>
+            <%= f.check_box :feedback_email %>
+            Email me on all new feedback
+          </div>
+          <div class="row">
+            <strong class="field-description"><span>Daily Digest</span></strong>
+            <%= f.check_box :digest_email %>
+            Email me one summary email per day
+            <br/>(enabling this option will disable notifications on new blog posts and feedback)
+          </div>
+          <div class="submit-holder">
+            <a href="#" class="submit form-submit"><span>Save</span></a>
+          </div>
+        </fieldset>
+      <% end %>
+    </div>
+
+    <div class="settings-block">
+      <h2>Password</h2>
+      <%= form_for(@user, :url => update_setting_path, :html => {:method => :post, :class => "settings-form"}) do |f| %>
+        <fieldset>
+          <div class="row">
+            <strong class="field-description">
+              <%= f.label :password, "New password" %>
+            </strong>
+            <%= f.password_field :password, :class => "text" %>
+          </div>
+          <div class="row">
+            <strong class="field-description">
+              <%= f.label :password_confirmation, "New password again" %>
+            </strong>
+            <%= f.password_field :password_confirmation, :class => "text" %>
+          </div>
+          <div class="submit-holder">
+            <a href="#" class="submit form-submit"><span>Change Password</span></a>
+          </div>
+        </fieldset>
+      <% end %>
+    </div>
+
+  </div>
+</div>

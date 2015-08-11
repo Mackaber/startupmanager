@@ -1,0 +1,16 @@
+<% title("LeanLaunchLab") %>
+<% body_class("projects") %>
+
+<% content_for(:scripts) do %>
+  <%= javascript_include_tag("/ckeditor/ckeditor", "/ckeditor/adapters/jquery") %>
+  <script type="text/javascript">
+  //<![CDATA[
+    $(function() {      
+      var view = new lll.views.ProjectsView({
+        el: $("#main")[0]
+      });
+      view.render();
+    });
+  //]]>
+  </script>
+<% end %>

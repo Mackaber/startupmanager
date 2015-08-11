@@ -1,0 +1,71 @@
+//= require ./ProjectCommentable
+
+lll.views.UpdateUpdateView = Backbone.View.extend(lll.views.ProjectCommentable).extend({
+  
+  template: null,
+  
+  initialize: function() {
+    var self = this;
+    
+    _.bindAll(self, "destroy", "onChange", "make", "render");
+    
+    Backbone.Validation.bind(self);
+    
+    self.model.on("change", self.onChange);
+  }, 
+  
+  onDestroy: function() {
+    var self = this;
+    self.destroyComments();
+    self.model.off("change", self.onChange);
+    Backbone.Validation.unbind(self);
+  },
+  
+  onChange: function() {
+    var self = this;
+    self.initializeComments({blog_post_id: self.model.id}, "> .comments");
+    self.render();
+  },
+  
+  make: function() {
+      return $("<div class='journal-updates expand-section' data-model-type='" + this.model.get("type") + "'></div>");
+    },
+  
+  render: function() {
+    var self = this;
+    $(self.el).empty();
+    $(self.el).attr("id", self.model.get("type") + "_" + self.model.id);
+    $(self.el).attr("data-model-id", self.model.id);
+    $(self.el).attr("data-position", -self.model.get("published_at").getTime());
+    $(self.el).data("model", self.model);
+    templateLoader.loadRemoteTemplate("<%= asset_path 'v2/UpdateUpdate.html' %>", function(data) {
+      if (!self.template) {
+        self.template = _.template(data);
+      }          
+      
+      $(self.el).append(self.template({
+        blog_post: self.model,
+        is_new: self.model.get("published_at") > lll.models.User.current.get("last_sign_in_at")
+      }));
+      
+      new lll.views.ProjectAttachmentsView({
+        model: self.model,
+        el: self.$(".attachments"),
+        can_manage: self.model.project().currentMember().get("can_manage_journal")        
+      }).render();
+      
+      if (self.model.project().currentMember().get("can_manage_journal")) {
+        new lll.views.ProjectUploaderView({
+          model: self.model,
+          el: self.$(".upload")
+        }).render();
+      }
+      
+      self.renderComments();
+      
+      self._rendered = true;
+    });    
+    return self;
+  }
+  
+});

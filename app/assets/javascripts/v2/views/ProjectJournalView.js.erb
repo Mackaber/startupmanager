@@ -1,0 +1,114 @@
+//= require ./BlogPostContainer
+
+lll.views.ProjectJournalView = Backbone.View.extend(lll.views.BlogPostContainer).extend({
+
+  initialize: function() {
+    var self = this;
+    _.bindAll(self, "destroy", "render", "renderItem");
+    
+    self.collection = new (Backbone.Subset.extend({
+      parent: function () {
+        return lll.models.blogPosts;
+      },
+      sieve: function (blog_post) {
+        return (blog_post.get("project_id") == self.model.id) && (blog_post.get("post_type") != "interview");
+      }
+    }))();
+    
+    self.model.on("change", self.render);
+    
+    lll.views.BlogPostContainer.initialize.apply(self, arguments);
+    
+    self._initialized = true;
+  },
+  
+  onDestroy: function() {
+    var self = this;
+    self.model.off("change", self.render);
+  },
+  
+  render: function() {
+    var self = this;
+    
+    $(self.el).empty();
+    
+    $(self.el).append(new lll.views.ProjectHeadingView({
+      model: self.model,
+      url_attribute: "journal_url"
+    }).render().el);
+    
+    $(self.el).append(new lll.views.AlertView().render().el);
+
+    $(self.el).append(new lll.views.ProjectTabsView({
+      model: self.model,
+      selected: "journal"
+    }).render().el);
+    
+    templateLoader.loadRemoteTemplate("<%= asset_path 'v2/ProjectJournal.html' %>", function(data) {
+      if (!self.template) {
+        self.template = _.template(data);
+      }
+      
+      $(self.el).append(self.template({
+        project: self.model
+      }));
+      
+      if (self.model.currentMember().get("can_manage_journal")) {
+        var newView = function() {
+          var newUpdate = new lll.models.BlogPost({
+            project_id: self.model.id,
+            published_at: new Date()
+          });
+          var newUpdateView = new lll.views.NewUpdateView({
+            model: newUpdate,
+            create: function(model) {
+              newUpdateView.destroy();
+              self.collection.add(model);
+              newView();
+              lll.views.info("Update was added successfully");
+            },
+            error: _.bind(self.collection.remove, self.collection)    // FIXME: need an "off" for this
+          });
+          newUpdateView.render();
+          setTimeout(function() { 
+            self.$(".left-sidebar").prepend(newUpdateView.el);
+          }, 0);
+        };
+      
+        newView();
+      }
+
+      lll.views.BlogPostContainer.render.apply(self, arguments);
+      
+      self._rendered = true;
+    });
+    self.delegateEvents();
+    return self;
+  },
+  
+  renderItem: function(view) {
+    var self = this;
+    var modelPosition = -view.model.get("published_at").getTime();
+    var first = _.find(
+      self.$(".left-sidebar > div[data-position]"),
+      function(e) { 
+        return (parseInt($(e).attr("data-position")) >= modelPosition);
+      }
+    );
+    if (first == view.el) {
+      return;
+    }    
+    if (first) {
+      $(first).before(view.el);
+    }
+    else {
+      self.$(".left-sidebar").append(view.el);
+    }                      
+    if (view.model.isNew()) { 
+      setTimeout(function() {
+        $(view.el).effect("highlight", "slow");
+      }, 0);
+    }
+    view.delegateEvents();
+  }
+});

@@ -1,0 +1,85 @@
+body#project-settings
+{
+  ul.toplink {
+    padding:0;
+    margin:-12px 18px 0 0;
+    text-align:left;
+    float:right;
+  }
+  ul.toplink li {
+    text-align:left;
+    display:inline-block;
+    padding:0 1px 0 0;
+    line-height:13px;
+    margin:0;
+  }
+  ul.toplink li:last-child {
+    border:none;
+  }
+  ul.toplink li a {
+    color:#333333;
+    font-size:12px;
+    text-decoration:none;
+    border:1px solid #e5e5e5;
+    border-bottom-color:#ebebeb;
+    display:block;
+    padding:0 10px;
+    line-height:28px;
+      background:url(<%= asset_path 'v2/sub-nav.jpg' %>) 0 0 repeat-x;
+  }
+  ul.toplink li a:hover {
+    color:#626060;
+    text-decoration:none;
+    background:#ebebeb;
+    border:1px solid #dbd9d9;
+    border-bottom-color:#ebebeb;
+  }
+  ul.toplink li a.selected {
+    color:#626060;
+    text-decoration:none;
+    background:#ebebeb;
+    border:1px solid #dbd9d9;
+    border-bottom-color:#ebebeb;
+  }
+  
+	form
+	{
+		label
+		{
+			float: none;
+		}
+		
+		p.error > label, p.error .help-block, p.error .help-inline
+		{
+			color: #b94a48;
+		}
+		p.error input, p.error textarea 
+		{
+			color: #b94a48;
+		  border-color: #ee5f5b;
+		}
+		
+		span.error
+		{
+			width: 449px;
+			float: right;
+		}
+		
+	}
+	
+	.name-email
+	{
+	  select
+  	{
+  	  font-size: 18px;
+  	  font-weight: bold;
+  	  margin: 8px 5px 0 15px;
+  	}
+  	
+  	a.new-organization
+  	{
+  	  margin-top: 12px;
+  	  display: inline-block;
+  	}
+	}
+}

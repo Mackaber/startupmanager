@@ -1,0 +1,529 @@
+lll.views.CanvasView = Backbone.View.extend({
+  
+  events: {
+    "click a.intro": "introVideo",
+    "click a.settings.canvas": "editSettings",
+    "click .post-it-notes > a": "newItem",
+    "click .canvas_item .title a": "editItem",
+    "click .date-controller .first": "first",
+    "click .date-controller .prev": "prev",
+    "click .date-controller .next": "next",
+    "click .date-controller .last": "last",
+    "click a.wizard": "wizard",
+    "click a.pdf": "pdf",
+    "click a.jpg": "jpg"
+  },
+  
+  template: null,
+  
+  reset: function() {
+    var self = this;
+    self._canvasItemViews = {};
+    self.collection.each(self.addItem);
+  },
+  
+  initialize: function() {
+    var self = this;
+    
+    _.bindAll(self, "reset", "destroy", "render", "introVideo", "editSettings", "addItem", "removeItem", "newItem", "renderItem", "isCurrentWeek", "first", "prev", "next", "last", "updateFirstLast", "wizard", "pdf", "jpg");
+    
+    self.collection = new (Backbone.Subset.extend({
+      parent: function () {
+        return lll.models.canvasItems;
+      },
+      
+      sieve: function (canvasItem) {
+        return canvasItem.get("project_id") == self.model.id;
+      },
+      
+      addMissing: Backbone.Collection.prototype.addMissing,
+      
+      active: function() {
+        var self = this;
+        var items = self.select(function(item) {
+          return (
+            (item.get("inactive_at") == null) &&
+            (item.get("deleted") == false)
+          );
+        });
+        return items;
+      },
+
+      items_for_week: function(startDate, endDate) {
+        var self = this;
+        var items = self.select(function(item) {
+          return (
+            (item.get("created_at").compareTo(endDate) < 1) &&
+            (item.get("inactive_at") == null || item.get("inactive_at").compareTo(endDate) > 0) &&
+            (item.get("deleted") == false)
+          );
+        });
+        return items;
+      },
+
+      firstNonDeleted: function() {
+        var self = this;
+        return _.first(self.sortBy(function(item) { return item.get("created_at").getTime() }));
+      },
+
+      lastNonDeleted: function() {
+        var self = this;
+        return _.last(
+          _.sortBy(
+            self.select(function(item) {
+              return (!item.get("deleted"));
+            }),
+            function(item) {
+              return item.get("created_at");
+            }
+          )
+        );
+      }      
+    }))();
+    
+    self.collection.on("reset", self.reset);
+    self.collection.trigger("reset");
+    self.collection.on("add", self.addItem);
+    self.collection.on("remove", self.removeItem);
+    
+    self.startDate = Date.today();
+    if (self.startDate.getDay() != 1) {
+      self.startDate.moveToDayOfWeek(1, -1);
+    }
+    self.endDate = self.startDate.clone().addDays(7).addSeconds(-1);
+    
+    self.today = Date.today();
+    
+    $(window).resize(function() {
+      self.collection.each(function(item) {
+        var view = self._canvasItemViews[item.cid];
+        view.position();
+      });
+      self.$(".box-area-wrapper").css("visibility", "visible");             
+    });
+    
+    self.canvasWizard = new lll.views.CanvasWizardView({
+      model: self.model,
+      collection: self.collection,
+      display_init: self.options.wizard_display_init
+    });    
+    
+    self.model.on("change", self.render);
+  },
+  
+  onDestroy: function() {
+    var self = this;
+    self.collection.off("reset", self.reset);
+    self.collection.off("add", self.addItem);
+    self.collection.off("remove", self.removeItem);    
+    self.model.off("change", self.render);
+    self.collection.each(function(item) {
+      var view = self._canvasItemViews[item.cid];
+      view.destroy();
+      item.off("change", null, self);
+    });
+  },
+
+  render: function() {
+    var self = this;
+
+    $(self.el).empty();
+
+    $(self.el).append(new lll.views.ProjectHeadingView({
+      model: self.model,
+      url_attribute: "canvas_url"
+    }).render().el);
+
+    $(self.el).append(new lll.views.AlertView().render().el);
+    
+    $(self.el).append(new lll.views.ProjectTabsView({
+      model: self.model,
+      selected: "canvas"
+    }).render().el);
+    
+    templateLoader.loadRemoteTemplate("<%= asset_path 'v2/Canvas.html' %>", function(data) {
+      if (!self.template) {
+        self.template = _.template(data);
+      }
+      
+      $(self.el).append(self.template({
+        project: self.model,
+        startDate: self.startDate,
+        endDate: self.endDate
+      }));
+      
+      _.each(self.options.categories, function(category) {
+        h = $("<h2/>");
+        h.attr("title", self.model.get("canvas_startup_headers") ? category.startup_description : category.description);
+        h.text(self.model.get("canvas_startup_headers") ? category.startup_label : category.label);
+        $("#" + category.value).append(h);
+        
+        var num;
+        if (self.model.get("canvas_startup_headers")) {
+          switch (category.value) {
+            case "customer_segments":
+              num = 2;
+              break;
+            case "value_propositions":
+              num = 3;
+              break;
+            case "channels":
+              num = 5;
+              break;
+            case "customer_relationships":
+              num = 9;
+              break;
+            case "revenue_stream":
+              num = 6;
+              break;
+            case "key_resources":
+              num = 8;
+              break;
+            case "key_activities":
+              num = 4;
+              break;
+            case "key_partners":
+              num = 1;
+              break;
+            case "cost_structure":
+              num = 7;
+              break;
+          }          
+        } else {
+          switch (category.value) {
+            case "customer_segments":
+              num = 1;
+              break;
+            case "value_propositions":
+              num = 2;
+              break;
+            case "channels":
+              num = 3;
+              break;
+            case "customer_relationships":
+              num = 4;
+              break;
+            case "revenue_stream":
+              num = 5;
+              break;
+            case "key_resources":
+              num = 6;
+              break;
+            case "key_activities":
+              num = 7;
+              break;
+            case "key_partners":
+              num = 8;
+              break;
+            case "cost_structure":
+              num = 9;
+              break;
+          }
+        }
+        $("#" + category.value + " span").text(num.toString());
+      });
+      
+      var member = self.model.currentMember();
+      
+      // this to prevent "flashing" of the items before they are positioned in the resize handler
+      self.$(".box-area-wrapper").css("visibility", "hidden");
+      
+      self.$(".wizard img").attr("src", "<%= asset_path 'v2/canvas-stepsetting-icon.gif' %>");
+            
+      self.$(".post-it-notes a.yellow img").attr("src", "<%= asset_path 'v2/yellow-small-note.png' %>");
+      self.$(".post-it-notes a.red img").attr("src", "<%= asset_path 'v2/red-small-note.png' %>");
+      self.$(".post-it-notes a.blue img").attr("src", "<%= asset_path 'v2/blue-small-note.png' %>");
+      self.$(".post-it-notes a.green img").attr("src", "<%= asset_path 'v2/green-small-note.png' %>");
+      self.$(".post-it-notes a.purple img").attr("src", "<%= asset_path 'v2/purple-small-note.png' %>");
+      
+      self.$(".post-it-notes img.ques").attr("src", "<%= asset_path 'v2/question-note.gif' %>");        
+
+      self.$(".top-links a.example").attr("href", "<%= asset_path 'v2/canvas-example.jpg' %>");        
+      self.$(".top-links a.example").attr("target", "_blank");        
+          
+      if (!member.get("can_manage_canvas") || !self.isCurrentWeek()) {
+        self.$(".post-it-notes").css("visibility", "hidden");
+        self.$("a.wizard").css("visibility", "hidden");
+      }
+      
+      self.updateFirstLast();
+
+      self.$(".canvas-item-container").livequery(function() {
+        $(this).droppable({
+          accept: ".canvas_item",
+          drop: $.proxy(self.canvasItemDropped, this),
+          hoverClass: "active",
+          tolerance: "pointer"
+        });            
+      });
+      
+      if (member.get("can_manage_canvas") && self.isCurrentWeek()) {
+        self.$(".canvas_item").livequery(self.makeDraggable);
+      }
+      else {
+        self.$(".canvas_item").expire(self.makeDraggable);     
+      }
+      
+      $(".box-area-wrapper").livequery(function() {
+        var items = self.collection.items_for_week(self.startDate, self.endDate);
+        _.each(items, function(item) {
+          var view = self._canvasItemViews[item.cid];
+          item.trigger("change");        
+          self.renderItem(view);
+        });      
+        setTimeout(function() { $(window).resize(); }, 250);
+      });
+      
+      if (self.options.wizard_display_init) {
+        self.options.wizard_display_init = false;
+        self.$("a.wizard").click();        
+      }
+      
+      var e = self.$(".footer-left");
+      if (self.model.get("canvas_startup_headers")) {
+        e.html("The Canvas is adapted from <span><a href='http://businessmodelgeneration.com' target='_blank'>businessmodelgeneration.com</a></span> and <span><a href='http://leancanvas.com'>leancanvas.com</a></span> and is licensed under the Creative Commons Attribution-Share Alike 3.0 Unported License.");
+      } else {
+        e.html("The Canvas is adapted from <span><a href='http://businessmodelgeneration.com' target='_blank'>businessmodelgeneration.com</a></span> and is licensed under the Creative Commons Attribution-Share Alike 3.0 Unported License.");
+      }      
+      
+      $(self.el).data("canvasView", self);
+      self._rendered = true;
+    });
+    
+    return self;
+  },
+  
+  makeDraggable: function(e) {
+    $(this).draggable({
+      containment: $(".box-area-wrapper"),
+      cursor: "move",
+      stack: ".canvas_item"
+    });
+    $(this).css("position", "absolute");
+  },
+  
+  updateFirstLast: function() {
+    var self = this;
+    if (self.collection.length == 0) {
+      self.firstDate = self.startDate;
+      self.lastDate = self.startDate;
+    }
+    else {
+      self.firstDate = self.collection.firstNonDeleted().get("created_at").clone().clearTime();
+      if (self.firstDate.getDay() != 1) {
+        self.firstDate.moveToDayOfWeek(1, -1);
+      }
+      self.lastDate = self.collection.lastNonDeleted().get("created_at").clone().clearTime();
+      if (self.lastDate.getDay() != 1) {
+        self.lastDate.moveToDayOfWeek(1, -1);
+      }
+    }
+    if (self.startDate.compareTo(self.firstDate) < 1) {
+      self.$(".date-controller .first, .date-controller .prev").css("visibility", "hidden");
+    }
+    else {      
+      self.$(".date-controller .first, .date-controller .prev").css("visibility", "visible");
+    }
+    if (self.isCurrentWeek()) {
+      self.$(".date-controller .last, .date-controller .next").css("visibility", "hidden");
+    }
+    else {      
+      self.$(".date-controller .last, .date-controller .next").css("visibility", "visible");
+    }
+  },
+  
+  renderItem: function(view) {
+    var self = this;
+    self.$(".box-area-wrapper").append(view.el);
+    view.delegateEvents();
+    view.position();    
+  },
+  
+  canvasItemDropped: function(event, ui) {
+    var self = $("#main").data("canvasView");
+
+    var canvas_item = self.collection.get(parseInt(ui.draggable.attr("data-model-id")));
+    var targetElement = $(this).closest(".canvas-item-container");
+    var category = targetElement.attr("id");
+    
+    var itemOffset = ui.draggable.offset();
+    var targetOffset = self.$(".box-area-wrapper").offset();
+    var x = itemOffset.left - targetOffset.left;
+    var y = itemOffset.top - targetOffset.top;
+    var z = _.max(_.map(self.collection.active(), function(ci) { return ci.get("z") }))+1;
+    
+    attrs = {
+      category: category,
+      x: x,
+      y: y,
+      z: z
+    };
+    
+    setTimeout(function() { 
+      $(ui.draggable).draggable("destroy");
+    }, 0);
+    canvas_item.save(attrs, {
+      wait: true,
+      success: function(model, response) {
+        lll.models.loadData(response);
+      },
+      error: function(model, response) {
+        if (response.readyState == 0 || response.status == 0) {
+          // ajax call cancelled
+        }
+        else {
+          alert("error saving " + canvas_item + ": " + response.responseText);
+        }
+      }
+    });
+    lll.views.track(canvas_item.get("type"), "move");    
+  },
+  
+  introVideo: function() {
+    $('<div><iframe width="853" height="505" src="http://www.youtube.com/embed/QoAOzMTLP5s?autoplay=1&rel=0" frameborder="0" allowfullscreen></iframe></div>').dialog({
+      title: "Intro to the Canvas",
+      width: 881,
+      height: 555,
+      zIndex: 10001,
+      close: function(event, ui) { $(this).dialog("destroy").remove() }
+    });
+  },
+  
+  editSettings: function() {
+    var self = this;
+    var editCanvasSettingsView = new lll.views.EditCanvasSettingsView({
+      model: self.model
+    });
+    editCanvasSettingsView.render();
+    return false;
+  },
+
+  addItem: function(model, index) {
+    var self = this;
+    var v = new lll.views.CanvasItemView({
+      model: model,
+      container: self
+    });
+    self._canvasItemViews[model.cid] = v;
+    
+    var previousItem = $("#" + model.get("type") + "_" + model.id);
+    if (self._rendered && _.include(self.collection.items_for_week(self.startDate, self.endDate), model)) {
+      v.model.trigger("change");
+      self.renderItem(v);
+      setTimeout(function() { $(window).resize(); }, 250);
+    }
+    if (previousItem.length > 0) {
+      // workaround for the fact that jquery sortable ALSO moves the DOM element
+      previousItem.remove();
+    }
+    
+    model.on("change", function() {
+      if (model.get("deleted") || model.get("inactive_at")) {
+        $(v.el).remove();
+      }
+    }, self);
+  },
+
+  removeItem: function(model) {
+    var self = this;
+    var v = self._canvasItemViews[model.cid];
+    delete self._canvasItemViews[model.cid];
+    v.destroy();
+  },
+
+  newItem: function(e) {
+    var self = this;
+    var w = self.$(".box-area-wrapper").innerWidth();
+    var h = self.$(".box-area-wrapper").innerHeight();
+    var newCanvasItem = new lll.models.CanvasItem({
+      project_id: self.model.id,
+      x: (w - 86)/2,
+      y: (h - 75)/2,
+      display_color: $(e.currentTarget).attr("class"),
+      include_in_plan: self.model.get("canvas_include_plan_default")
+    });
+    var active = self.collection.active();
+    var z = (active.length > 0 ? _.max(_.map(active, function(ci) { return ci.get("z") })) : 0) + 1;
+    var newCanvasItemView = new lll.views.EditCanvasItemView({
+      model: newCanvasItem,
+      z: z,
+      error: _.bind(self.collection.remove, self.collection)
+    });
+    newCanvasItemView.render();
+    return false;
+  },
+
+  editItem: function(e) {
+    var self = this;
+    var itemElement = $(e.currentTarget).closest(".canvas_item");
+    var canvasItem = self.collection.get(parseInt(itemElement.attr("data-model-id")));
+    var active = self.collection.active();
+    var z = (active.length > 0 ? _.max(_.map(active, function(ci) { return ci.get("z") })) : 0) + 1;
+    var editCanvasItemView = new lll.views.EditCanvasItemView({
+      model: canvasItem,
+      z: z
+    });
+    editCanvasItemView.render();
+    return false;
+  },
+  
+  isCurrentWeek: function() {
+    var self = this;
+    return self.today.between(self.startDate, self.endDate);
+  },
+  
+  first: function() {
+    var self = this;
+    self.startDate = self.firstDate;
+    self.endDate = self.startDate.clone().addDays(7).addSeconds(-1);
+    self.render();
+    return false;
+  },
+  
+  prev: function() {
+    var self = this;
+    self.startDate.addDays(-7);
+    self.endDate.addDays(-7);
+    self.render();
+    return false;
+  },
+  
+  next: function() {
+    var self = this;
+    self.startDate.addDays(7);
+    self.endDate.addDays(7);
+    self.render();
+    return false;
+  },
+  
+  last: function() {
+    var self = this;
+    self.startDate = Date.today();
+    if (self.startDate.getDay() != 1) {
+      self.startDate.moveToDayOfWeek(1, -1);
+    }
+    self.endDate = self.startDate.clone().addDays(7).addSeconds(-1);
+    self.render();
+    return false;    
+  },
+  
+  wizard: function() {
+    var self = this;
+    self.canvasWizard.render();
+    return false;
+  },
+  
+  pdf: function() {
+    var self = this;
+    var url = self.model.get("canvas_url") + ".pdf?d=" + self.startDate.toString("yyyy-MM-dd");
+    window.open(url, "_blank");
+    return false;
+  },
+  
+  jpg: function() {
+    var self = this;
+    var url = self.model.get("canvas_url") + ".jpg?d=" + self.startDate.toString("yyyy-MM-dd");
+    window.open(url, "_blank");
+    return false;
+  }
+});

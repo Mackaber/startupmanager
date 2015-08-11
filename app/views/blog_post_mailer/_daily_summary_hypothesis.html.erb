@@ -1,0 +1,175 @@
+<tr>
+  <td>
+    <% 
+      bgcolor = case hypothesis.item_status.status
+      when 'started'
+        '#f9f8bf'
+      when 'valid'
+        '#d5eac7'
+      when 'invalid'
+        '#f7dfd1'
+      else
+        ''
+      end
+    %>
+    <table width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="<%= bgcolor %>">
+      <tr><td colspan="5" height="1" bgcolor="#ececec"></td></tr>
+      <tr>
+        <td width="1" bgcolor="#ececec"></td>
+        <td width="12"></td>
+        <td width="576" valign="top">
+          <table width="100%" cellpadding="0" cellspacing="0" border="0">
+            <tr><td height="9"></td></tr>
+            <tr>
+              <td>
+                <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                  <tr>
+                    <td>
+                      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                        <tr>
+                          <td>
+                            <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                              <tr>
+                                <td style="line-height:20px;">
+                                  <font face="Arial, Helvetica, sans-serif" color="#313143" size="2" style="font-size:14px; line-height:20px;">
+                                    <strong>
+                                      <a style="text-decoration:none; color:#313143;" href="<%= hypothesis.url %>">
+                                        <font size="3" style="font-size:16px;" color="#313143"><%= hypothesis.title %></font>
+                                      </a>
+                                    </strong>
+                                    <% if hypothesis.canvas_item %>
+                                      &nbsp; 
+                                      <%= hypothesis.canvas_item.box.label %> Hypothesis <br />
+                                    <% end %>
+                                  </font>
+                                </td>
+                              </tr>
+                              <tr><td height="5"></td></tr>
+                              <tr>
+                                <td style="line-height:17px;">
+                                  <font face="Arial, Helvetica, sans-serif" color="#888888" size="2" style="font-size:14px; line-height:17px;">
+                                    Hypothesis in 
+                                    <a style="text-decoration:none; color:#0033FF;" href="<%= project_url(hypothesis.project) %>">
+                                      <font color="#0033FF"><%= hypothesis.project.name %></font>
+                                    </a>
+                                    <% if (m = hypothesis.created_by_member) %>
+                                      by <%= m.user.name %>
+                                    <% end %>
+                                  </font>
+                                </td>
+                              </tr>
+                            </table>
+                          </td>
+                          <td width="10"></td>
+                          <td align="right" style="line-height:18px;">
+                            <font face="Arial, Helvetica, sans-serif" color="#999999" size="2" style="font-size:14px; line-height:18px;">
+                              <% if hypothesis.item_status == ItemStatus.cached_find_by_status("started") %>
+                              Started Testing <br />
+                              <% elsif hypothesis.item_status == ItemStatus.cached_find_by_status("valid") %> 
+                              Validated
+                              <% elsif hypothesis.item_status == ItemStatus.cached_find_by_status("invalid") %> 
+                              Invalidated
+                              <% elsif hypothesis.item_status == ItemStatus.cached_find_by_status("unknown") %> 
+                              Unknown
+                              <% end %>
+                              <% if hypothesis.completed_at %>
+                                on 
+                                <%= hypothesis.completed_at.strftime("%b %d, %Y") %>
+                              <% end %>
+                            </font>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <% unless hypothesis.experiments.empty? && hypothesis.questions.empty? && hypothesis.tasks.empty? %>
+            <tr><td height="14"></td></tr>
+            <tr>
+              <td style="line-height:20px;">
+                <font face="Arial, Helvetica, sans-serif" color="#626262" size="2" style="font-size:14px; line-height:20px;">
+                  <% unless hypothesis.experiments.empty? %>
+                  <strong>Experiments</strong> <br />
+                  <% hypothesis.experiments.sort_by{|x| x.position || 0}.each_with_index do |e,i| %>
+                  <%= i+1 %>. <%= e.title %> <br />
+                  <% end %>
+                  <% end %>
+                  <% unless hypothesis.questions.empty? %>
+                  <strong>Key Metrics</strong> <br />
+                  <% hypothesis.questions.sort_by{|x| x.position || 0}.each_with_index do |e,i| %>
+                  <%= i+1 %>. <%= e.title %> <br />
+                  <% end %>
+                  <% end %>
+                  <% unless hypothesis.tasks.empty? %>
+                  <strong>Tasks</strong> <br />
+                  <% hypothesis.tasks.sort_by{|x| x.position || 0}.each_with_index do |e,i| %>
+                  <%= i+1 %>. <%= e.title %> <br />
+                  <% end %>
+                  <% end %>
+                </font>
+              </td>
+            </tr>
+            <% end %>
+            <% unless hypothesis.attachments.empty? %>
+            <tr><td height="14"></td></tr>
+            <tr>
+              <td style="line-height:18px;">
+                <font face="Arial, Helvetica, sans-serif" color="#626262" size="2" style="font-size:14px; line-height:18px;">
+                  <strong>Attachments</strong> <br />
+                  <% hypothesis.attachments.sort_by{|x| x.created_at}.each do |attachment| %>
+                  <a style="text-decoration:none; color:#0033FF;" href="<%= project_attachment_url(hypothesis.project, attachment) %>">
+                    <font color="#0033FF"><%= attachment.data_file_name %></font>
+                  </a>(<%= (attachment.data_file_size / 1024.0).ceil %>K)
+                  <br />
+                  <% end %>
+                </font>
+              </td>
+            </tr>
+            <% end %>
+            <% unless hypothesis.comments.empty? %>
+            <tr><td height="10"></td></tr>
+            <tr><td style="line-height:16px;"><font face="Arial, Helvetica, sans-serif" color="#626262" size="2" style="font-size:14px; line-height:16px;"><strong>Comments</strong> <br /></font></td></tr>
+            <% hypothesis.comments.sort_by{|x| x.created_at}.each do |comment| %>
+            <tr>
+              <td style="line-height:15px;">
+                <font face="Arial, Helvetica, sans-serif" color="#626262" size="2" style="font-size:12px; line-height:15px;">
+                  <%= comment.member.user.name %>
+                  on
+                  <%= comment.created_at.strftime("%a %b %d, %Y at %l:%M%P") %>
+                  <br /> 
+                  <font color="#000000"><%= comment.body %></font>
+                </font>
+              </td>
+            </tr>
+            <tr><td height="7"></td></tr>
+            <% end %>
+            <% end %>
+            <tr><td height="16"></td></tr>
+            <tr>
+              <td>
+                <table align="left" cellpadding="0" cellspacing="0" border="0" bgcolor="#c9c9c9">
+                  <tr><td colspan="5" height="1" bgcolor="#a1a1a1"></td></tr>
+                  <tr>
+                    <td width="1" bgcolor="#a1a1a1" height="30"></td>
+                    <td width="21" height="30"></td>
+                    <td><font face="Arial, Helvetica, sans-serif" color="#000000" size="2" style="font-size:14px; line-height:17px;"><a style="text-decoration:none; color:#000;" href="<%= hypothesis.url %>"><font color="#000000">Post a Comment</font></a> </font></td>
+                    <td width="21" height="30"></td>
+                    <td width="1" bgcolor="#a1a1a1" height="30"></td>
+                  </tr>
+                  <tr><td colspan="5" height="1" bgcolor="#a1a1a1"></td></tr>
+                </table>
+              </td>
+            </tr>
+            <tr><td height="16"></td></tr>
+          </table>
+        </td>
+        <td width="12"></td>
+        <td width="1" bgcolor="#ececec"></td>
+      </tr>
+      <tr><td colspan="5" height="1" bgcolor="#ececec"></td></tr>
+    </table>
+  </td>
+</tr>
+<tr><td height="20"></td></tr>

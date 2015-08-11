@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<%= render(:partial => "/layouts/analytics") %>
+<html id="<%= content_for?(:body_class) ? yield(:body_class) : nil %>" lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title><%= h(content_for?(:title) ? yield(:title) : "LeanLaunchLab") %></title>
+    <%= csrf_meta_tag %>
+
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    
+    <%= stylesheet_link_tag :v2 %>
+    <%= yield(:styles) %>
+
+    <link rel="shortcut icon" href="/favicon.ico">
+    
+    <%= yield(:script_head) %>
+  </head>
+
+  <body id="<%= content_for?(:body_class) ? yield(:body_class) : "body" %>">
+    <div id="header" data-active="<%= header_active %>"></div>
+    
+    <div id="wrapper" class="container-fluid">      
+      <div id="main">
+        <%= yield %>
+      </div>
+    </div>
+    
+    <script type="text/javascript">
+      window.environment = "<%= Rails.env %>";
+    </script>
+    <%= include_gon(:camel_case => true, :namespace => 'lllData') %>
+    <%= javascript_include_tag :v2 %>
+    <%= yield(:scripts) %>
+    
+    <% unless flash.empty? %>
+      <script type="text/javascript">
+        $(function() {
+          $("#alert").livequery(function() {  
+            setTimeout(function() {        
+              <% unless flash[:error].blank? %>
+                lll.views.error("<%= flash[:error].html_safe %>");
+              <% end %>
+              <% unless flash[:alert].blank? %>
+                lll.views.warn("<%= flash[:alert].html_safe %>");
+              <% end %>
+              <% unless flash[:notice].blank? %>
+                lll.views.info("<%= flash[:notice].html_safe %>");
+              <% end %>
+            }, 500);
+          });
+        });    
+      </script>
+    <% end %>    
+    
+    <!--[if lt IE 8]>
+    <script type="text/javascript">
+    //<![CDATA[
+      $(function() {
+        lll.views.warn("LeanLaunchLab is optimized for Chrome, Firefox, Safari, and IE >= 8.  You appear to be running IE < 8.");
+      });
+    //]]>
+    </script>
+    <![endif]-->
+    
+    <% if ["production", "staging"].include?(Rails.env) %>
+      <%= render(:partial => "/layouts/olark")%>
+      <%= render(:partial => "/layouts/user_voice")%>
+    <% end %>
+  </body>
+</html>

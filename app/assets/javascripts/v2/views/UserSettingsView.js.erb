@@ -1,0 +1,130 @@
+lll.views.UserSettingsView = Backbone.View.extend({
+  
+  events: {
+    "click .save": "save"    
+  },
+  
+  template: null,
+  
+  initialize: function() {
+    var self = this;
+    
+    _.bindAll(self, "destroy", "render", "save");
+    
+    Backbone.Validation.bind(self);
+        
+    self.model.on("change", self.render);    
+    
+  },
+  
+  onDestroy: function() {
+    var self = this;
+    self.model.off("change", self.render);    
+    Backbone.Validation.unbind(self);
+  },
+
+  render: function() {
+    var self = this;
+
+    $(self.el).empty();
+
+    templateLoader.loadRemoteTemplate("<%= asset_path 'v2/UserSettings.html' %>", function(data) {
+      if (!self.template) {
+        self.template = _.template(data);
+      }
+      
+      $(self.el).append(self.template({
+        user: self.model
+      }));
+      
+      _.each(_.filter(self.options.time_zones, function(tz) { return tz.us }), function(tz) {
+        self.$("select#time_zone").append("<option value='" + tz.value + "'>" + tz.label + "</option>");
+      });
+      self.$("select#time_zone").append("<option disabled='disabled'>-------------</option>");
+      _.each(self.options.time_zones, function(tz) {
+        self.$("select#time_zone").append("<option value='" + tz.value + "'>" + tz.label + "</option>");
+      });
+      self.$("select#time_zone option[value='" + lll.models.User.current.get("time_zone") + "']:first").attr("selected", "selected");
+      
+      var selected = self.model.get("home_page");
+      if (!selected) {
+        if (self.model.members().find(function(m) { return m.get("role") == "Manager" })) {
+          selected = "/projects";
+        }
+        else {
+          selected = "/projects/last";
+        }
+      }
+      self.$("select#home_page option[value='" + selected + "']").attr("selected", "selected");
+      
+      self.$("> h1").after(new lll.views.AlertView().render().el);
+                
+      self.$("img.basic").attr("src", "<%= asset_path 'v2/basic-info-img.gif' %>");
+      self.$("img.avatar").attr("src", "<%= asset_path 'v2/profile-img.gif' %>");
+      self.$("img.password").attr("src", "<%= asset_path 'v2/password-icon.gif' %>");
+      
+      self._rendered = true;
+    });
+    
+    return self;
+  },
+  
+  save: function(e) {
+    var self = this;
+    var form = $(e.currentTarget).closest("form");
+    form.find("p.error").removeClass("error");
+    form.find("span.error").empty();
+    if (form.hasClass("password")) {
+      self.model.set({
+        current_password: form.find("#current_password").val(),
+        password: form.find("#password").val(),
+        password_confirmation: form.find("#password_confirmation").val()
+      });      
+    }
+    else {
+      self.model.set({
+        name: form.find("#name").val(),
+        email: form.find("#email").val(),
+        time_zone: form.find("#time_zone").val(),
+        home_page: form.find("#home_page").val()
+      });      
+    }
+    if (self.model.isValid()) {
+      if (self.model.isNew()) {
+        if (self.options.create) {
+          self.options.create(self.model);
+        }
+      }
+      else {
+        if (self.options.update) {
+          self.options.update(self.model);
+        }
+      }
+      self.model.save(self.model.attributes, {
+        success: function(model, response) {
+          lll.views.info("Updates saved");
+        },
+        error: function(model, response) {
+          if (response.readyState == 0 || response.status == 0) {
+            // ajax call cancelled
+          }
+          else {
+            lll.views.error("error saving settings: " + response.responseText);
+            if (self.options.error) {
+              self.options.error(model, response);
+            }
+          }                  
+        }
+      });
+      $(self.el).dialog("close");
+    }
+    else {
+      self.$(".invalid").each(function() {
+        $(this).closest("p").addClass("error");
+        $(this).closest("p").find("span.error").text($(this).attr("data-error"));
+      });
+    }
+    return false;
+  }
+
+});

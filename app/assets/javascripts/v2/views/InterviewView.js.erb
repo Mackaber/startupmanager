@@ -1,0 +1,142 @@
+//= require ./ProjectCommentable
+
+lll.views.InterviewView = Backbone.View.extend(lll.views.ProjectCommentable).extend({
+  
+  events: {
+    "click .expand": "expand",
+    "click .expand-comments": "expandComments",
+    "click .expand-attachments": "expandAttachments",
+    "click .edit": "edit",
+    "click .delete": "deleteIt"
+  },
+  
+  template: null,
+  
+  initialize: function() {
+    var self = this;
+    
+    _.bindAll(self, "destroy", "onChange", "make", "render", "expand", "expandComments", "expandAttachments", "edit", "deleteIt");
+    
+    Backbone.Validation.bind(self);
+    
+    self.model.on("change", self.onChange);
+    
+    self.expanded = false;
+    
+    setTimeout(function() {    
+      lll.views.router.route("blog_post/" + self.model.id, "blog_post", self.expand);
+    }, 500);
+  }, 
+  
+  onDestroy: function() {
+    var self = this;
+    Backbone.Validation.unbind(self);
+    self.destroyComments();
+    self.model.off("change", self.onChange);
+  },
+  
+  onChange: function() {
+    var self = this;
+    self.initializeComments({blog_post_id: self.model.id}, "> .hypothesis-heading > .expanded > .expanded-content > .comments");
+    self.render();
+  },
+  
+  make: function() { 
+    return $("<div>");
+  },
+
+  render: function() {
+    var self = this;
+    $(self.el).empty();
+    $(self.el).addClass("hypothesis");
+    $(self.el).attr("id", self.model.get("type") + "_" + self.model.id);
+    $(self.el).attr("data-model-id", self.model.id);
+    $(self.el).attr("data-position", -(self.model.get("date") || self.model.get("published_at")).getTime());
+    $(self.el).data("model", self.model);
+    templateLoader.loadRemoteTemplate("<%= asset_path 'v2/Interview.html' %>", function(data) {
+      if (!self.template) {
+        self.template = _.template(data);
+      }          
+      
+      $(self.el).append(self.template({
+        blog_post: self.model        
+      }));
+      
+      self.$(".jbar > a.expand > img").attr("src", (self.model.get("post_type") == "interview") ? "<%= asset_path 'v2/int-icon.gif' %>" : "<%= asset_path 'v2/update-icon2.gif' %>");
+      
+      if (self.expanded) {
+        self.$("> .hypothesis-heading .collapsed").hide();        
+      }
+      else {
+        self.$("> .hypothesis-heading .expanded").hide();
+      }      
+      
+      new lll.views.ProjectAttachmentsView({
+        model: self.model,
+        el: self.$(".attachments"),
+        can_manage: self.model.project().currentMember().get("can_manage_journal")
+      }).render();
+      
+      if (self.model.project().currentMember().get("can_manage_journal")) {
+        new lll.views.ProjectUploaderView({
+          model: self.model,
+          el: self.$(".upload")
+        }).render();
+      }
+      else {
+        self.$(".edit, .delete").remove();
+      }
+      
+      self.renderComments();
+      
+      new lll.views.ProjectPermalinkView({
+        model: self.model,
+        el: self.$(".permalink"),
+        trigger: self.expand
+      }).render();
+      
+      self._rendered = true;
+    });    
+    return self;
+  },
+  
+  expand: function() {
+    var self = this;
+    self.expanded = !self.expanded;
+    self.$(".collapsed").toggle();
+    self.$(".expanded").toggle();
+    return false;
+  },
+  
+  expandComments: function() {
+    var self = this;
+    self.expand();
+    self.$("> .hypothesis-heading form.comment textarea").focus();
+    return false;
+  },
+  
+  expandAttachments: function() {
+    var self = this;
+    self.expand();
+    return false;
+  },
+  
+  edit: function() {
+    var self = this;
+    var view = new lll.views.EditProjectJournalEntryView({
+      model: self.model
+    });
+    view.render();
+    return false;
+  },
+  
+  deleteIt: function() {
+    var self = this;
+    if (confirm("Are you sure?")) {
+      self.model.destroy();
+      lll.views.track(self.model.get("post_type") ? self.model.get("post_type") : self.model.get("type"), "delete");
+    }
+    return false;
+  }
+  
+});

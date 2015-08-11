@@ -1,0 +1,103 @@
+<div id="hypothesis-heading-<%= hypothesis.id %>" class="heading hypothesis-heading">
+  <div class="collapsed">
+    <div class="left">
+      <p class="hypothesis-title">
+        <a class="expand" href="#"></a>
+      </p>
+      <% if (_.include(["valid", "invalid", "unknown"], hypothesis.get("status"))) { %>
+        <div class="reason"></div>
+      <% } else { %>
+        <div class="experiments"></div>
+        <div class="questions"></div>
+        <div class="tasks"></div>
+      <% } %>
+      <div class="comments"></div>
+      <div class="attachments"></div>
+    </div>
+    <div class="right">
+    </div>
+    <br class="spacer">
+  </div>
+  <div class="expanded" id="hypothesis_<%= hypothesis.id %>-target">
+    <p class="hypothesis-title">
+      <a class="expand" href="#">
+      </a>
+    </p>
+    <ul class="hov title">
+      <li>
+      </li>
+    </ul>
+    <div class="steps">
+      <br class="spacer">
+      <% if (hypothesis.get("completed_at")) { %>
+        <% if (hypothesis.get("created_at")) { %>
+          <div>
+            Created on
+            <%= hypothesis.get("created_at").toString("MMM d, yyyy") %>
+            <% var member = hypothesis.member(); %>
+            <% if (member) { %>
+              by
+              <%= member.user().get("name") %>
+            <% } %>
+          </div>
+        <% } %>
+      <% } %>        
+      <select id="status" name="status">
+        <option value="">To do</option>
+        <option value="started">In progress </option>
+        <option value="valid">Validated</option>
+        <option value="invalid">Invalidated </option>
+        <option value="unknown">Unknown</option>
+      </select>
+      <% if (hypothesis.get("completed_at")) { %>
+        <span>
+          on
+          <input type="text" class="date" id="completed_at_<%= hypothesis.id %>" name="completed_at" value="<%= hypothesis.get('completed_at').toString("yyyy-MM-dd") %>"/>        
+        </span>      
+      <% } else if (hypothesis.get("created_at")) { %>
+        <span>
+          Created on
+          <%= hypothesis.get("created_at").toString("MMM d, yyyy") %>
+          <% if (hypothesis.get("created_by_member_id")) { %>
+            by
+            <%= hypothesis.member().user().get("name") %>
+          <% } %>
+        </span>
+      <% } %>
+      <span class="manage">
+        <button class="btn small expand">Save</button>
+        <button class="btn small danger delete">Delete</button>
+      </span>      
+    </div>
+    <div class="steps description">
+      <h4>
+        <strong>Details</strong>
+      </h4>
+      <ul class="hov details">
+        <li></li>
+      </ul>
+    </div>
+    <div class="steps experiments">
+    </div>
+    <div class="steps questions">
+    </div>
+    <div class="steps tasks">
+    </div>    
+    <div class="expanded-content expand-section expand-hypothesis">      
+      <div class="steps">
+        <h4>Attachments</h4>
+        <div class="attachments"></div>
+        <div class="upload"></div>
+      </div>
+      <div class="steps">
+        <h4>Comments</h4>
+        <div class="comments"></div>
+      </div>
+      <div class="steps">
+        <h4>Permalink URL</h4>
+        <div class="permalink"></div>
+      </div>
+    </div>
+  </div>  
+</div>
+<ol></ol>

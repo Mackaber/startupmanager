@@ -1,0 +1,15 @@
+<div class="body-wrapper">
+  <div class="box-wrapper">
+    <div class="info-bar paym-info-bar">
+      Organization: <span><%= organization.get("name") %> (<%= organization.organizationMembers().length %> members)</span> 
+      <% if (organization.currentMember().get("level") == "Admin" && organization.subscriptionLevel()) { %>
+        Subscription Plan:
+        <%= organization.subscriptionLevel().get("name") %>
+      <% } %>
+    </div>  
+    <div class="form-body">
+      <div class="member-area">
+      </div>
+    </div>
+  </div>
+</div>

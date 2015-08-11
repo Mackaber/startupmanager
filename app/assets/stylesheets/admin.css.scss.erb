@@ -1,0 +1,57 @@
+/*
+ *= require bootstrap
+ *= require jquery-ui-1.8.16.custom
+ *= require jquery-ui-overrides
+ *= require demo_table_jui
+ *= require demo_table_jui-overrides
+ *= require_self
+*/             
+
+body
+{
+  padding-top: 50px;
+  
+  .actions
+  {
+    > div
+    {
+      display: inline;
+    }
+  }
+}
+
+body.user_activities-index
+{
+  table#the_table
+  {
+    tr.page-view td:nth-child(4)
+    {
+      background-color: #ddeeff;
+    }
+    
+    tr.sign-up td:nth-child(4)
+    {
+      background-color: #eeccff;
+    }
+
+    tr.invited td:nth-child(4)
+    {
+      background-color: #ccffcc;
+    }
+    
+    tr.create-blog-post td:nth-child(4)
+    {
+      background-color: #ffcccc;
+    }
+    
+    tr.create-feedback td:nth-child(4)
+    {
+      background-color: #ffffbb;
+    }
+    
+    tr.create-canvas-item td:nth-child(4)
+    {
+      background-color: #ffddaa;
+    }
+  }
+}

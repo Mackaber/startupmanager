@@ -1,0 +1,122 @@
+lll.views.ListView = Backbone.View.extend({
+  
+  events: {
+    "keypress input": "keypress"
+  },
+  
+  initialize: function() {
+    var self = this;
+    
+    _.bindAll(self, "destroy", "render", "keypress", "addItem", "removeItem", "addPending");
+
+    self.collection.on("add", self.addItem);
+    self.collection.on("remove", self.removeItem);
+    
+    self._listItemViews = {};
+  },
+  
+  onDestroy: function() {
+    self.collection.off("add", self.addItem);
+    self.collection.off("remove", self.removeItem);
+  },
+  
+  render: function() {
+    var self = this;
+    templateLoader.loadRemoteTemplate("<%= asset_path 'v2/List.html' %>", function(data) {
+      if (!self.template) {
+        self.template = _.template(data);
+      }
+      
+      $(self.el).html(self.template({
+        heading: self.options.heading,
+        placeholder: self.options.placeholder
+      }));
+      if (self.collection) {
+        _.each(
+          self.collection.models,
+          function(model) { self.addItem(model) }
+        );
+      }
+      if (!self.options.manage) {
+        self.$(".new").remove();
+      }
+     
+      self.delegateEvents();
+    });
+    return self;
+  },
+  
+  keypress: function (e) {  
+    var self = this;
+    if ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13)) {
+      self.addPending();
+      return false;  
+    } else if ($(e.currentTarget).val().length < 256) {
+      return true;  
+    }
+    else {
+      return false;
+    }
+  },
+  
+  addItem: function(item) {
+    var self = this;
+    var title = item.get("title");
+    if (title && title.length > 0 && title.length < 256) {
+      var v = new lll.views.ListItemView({
+        model: item,
+        tagName: "li",
+        manage: self.options.manage,
+        addExplicit: self.options.addExplicit,
+        checkable: self.options.checkable
+      });
+      self._listItemViews[item.cid] = v;
+      self.$("ul").append(v.render().el);
+      setTimeout(function() {
+        self.$("ul").css("list-style", "decimal inside");
+      }, 2);
+    }
+  },
+  
+  removeItem: function(item) {
+    var self = this;
+    var v = self._listItemViews[item.cid];
+    if (v) {
+      delete self._listItemViews[item.cid];
+      v.destroy();
+    }    
+  },
+  
+  addPending: function(e) {
+    var self = this;
+    var title = self.$("input").val().trim();
+    self.$("input").val("");
+    if (title.length > 0) {
+      var item = new self.collection.model(_.extend({title: title}, self.options.initializer));
+      if (self.options.saveNew) {
+        item.save(null, {
+          wait: true,
+          success: function(model, response) {
+            lll.models.loadData(response);
+          },
+          error: function(model, response) {
+            if (response.readyState == 0 || response.status == 0) {
+              // ajax call cancelled
+            }
+            else {
+              lll.views.error("error saving item: " + response.responseText);
+              if (self.options.error) {
+                self.options.error(model, response);
+              }
+            }          
+          }
+        });
+      }
+      else {
+        self.collection.add(item);
+      }
+    }
+    return self;
+  }
+
+});

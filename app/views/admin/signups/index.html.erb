@@ -1,0 +1,18 @@
+<% title("Signups") %>
+<%= link_to("Export CSV", :format => "csv") %>
+<table>
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Email</th>
+      <th>Created</th>
+    </tr>
+  </thead>
+  <% for signup in @signups %>
+    <tr>
+      <td style="text-align:left"><%= signup.id %></td>
+      <td><%= signup.email %></td>
+      <td style="text-align:left"><%= signup.created_at %></td>
+    </tr>
+  <% end%>
+</table>

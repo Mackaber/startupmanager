@@ -1,0 +1,7 @@
+<% _.each(attachments.sortBy(function(a) { return a.get("name").toLowerCase() }), function(attachment) { %>
+  <div class="attachment" data-attachment-id='<%= attachment.id %>'>
+    <a target='_blank' href='<%= attachment.get("url") %>'><%= attachment.get("name") %></a>
+    (<%= Math.ceil(attachment.get("size") / 1024) %>K)
+    <a class='removeAttachment' href='#'>remove</a>
+  </div>
+<% }); %>

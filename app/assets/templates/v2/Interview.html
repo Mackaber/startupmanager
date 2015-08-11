@@ -1,0 +1,84 @@
+<div class="hypothesis-heading">
+  <div class="collapsed">
+    <p class="hypothesis-title">
+      <a href="#" class="expand">
+        <img class="interview" alt="">
+        <%= blog_post.get("title") %>
+        <% if (blog_post.get("text1")) { %>
+          (<%= blog_post.get("text1") %>)
+        <% } %>
+        <% if (blog_post.get("date")) {%>
+          on
+          <%= blog_post.get("date").toString("MMM d, yyyy") %>
+        <% } %>
+      </a>
+    </p>
+    <div class="int-text">
+      <% var description = blog_post.get("description"); %>
+      <% if (description) { %>
+        <%- description.truncate(200) %>
+      <% } %>
+    </div>
+    <% if (blog_post.member()) { %>
+      <span class="name"><%= blog_post.member().user().get("name") %></span>
+    <% } %>    
+    <!-- <span class="comment" style="margin:0;"><a href="#">3 comments</a></span> -->
+    <!-- <span class="view"><a href="#">5 views</a></span> -->
+    <!-- <span class="attach"><a href="#">2</a></span> -->
+    <% if (blog_post.comments.length > 0) { %>
+      <span class="comment" title="<%= blog_post.comments.map(function(c) { return c.member().user().get("name") + "<br/>" + c.get("created_at").toString("ddd MMM d, yyyy") + " at " + c.get("created_at").toString("h:mmtt").toLowerCase() + "<br/>" + c.get('body') + "<br/>"}).join("<br/>") %>"><a href="#" class="expand-comments"><%= blog_post.comments.length %> comment<%= blog_post.comments.length > 1 ? "s" : "" %></a></span>
+    <% } %>
+    <% if (blog_post.attachments.length > 0) { %>
+      <span class="attach" title="<%= blog_post.attachments.map(function(a) { return a.get("name") + "<br/>" }) %>"><a href="#" class="expand-attachments"><%= blog_post.attachments.length %></a></span>
+    <% } %>
+  </div>
+  <div class="expanded">
+    <span class="date">
+      <%= blog_post.get("published_at").toString("MMM d") %>
+    </span>
+    <p class="hypothesis-title">
+      <a class="expand" href="#">
+        <img class="interview" alt="">
+        <%= blog_post.get("title") %>     
+      </a>
+      <span class="manage">
+        <button class="btn small edit">Edit</button><button class="btn small danger delete">Delete</button>
+      </span>
+      <div class="status">
+        <% if (blog_post.get("the_ask")) { %>
+          The Ask
+          <strong>
+            <%= blog_post.get("the_ask") %>
+          </strong>
+          <br/>     
+        <% } %>
+        <% if (blog_post.get("text2")) { %>
+          Contact Info
+          <strong>
+            <%= blog_post.get("text2") %>
+          </strong>
+          <br/>
+        <% } %>
+        <% if (blog_post.member()) { %>
+          Posted By
+          <strong>
+            <%= blog_post.member().user().get("name") %>
+          </strong>
+        <% } %>       
+      </div>    
+    </p>
+    <div class="expanded-content expand-section expand-journal">
+      <% if (blog_post.get("description")) { %>
+        <h4>INTERVIEW DETAILS</h4>
+        <div class="description"><%- blog_post.get("description") %></div>
+      <% } %>
+      <h4>ATTACHMENTS</h4>
+      <div class="attachments"></div>
+      <div class="upload"></div>
+      <h4>COMMENTS</h4>
+      <div class="comments"></div>
+      <h4>PERMALINK URL</h4>
+      <div class="permalink"></div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,16 @@
+<% title("LeanLaunchLab - Check Email") %>
+<% body_class("login") %>
+
+<div class="body-wrapper">
+  <div class="login-header">
+    <%= image_tag("v2/login-icon.gif", :alt => "") %>FORGOT PASSWORD
+  </div>
+  <div class="login-body">
+    <form action="<%= new_user_session_path %>" method="get">
+      <div class="forget_text">
+        Please check your email.<br>
+        We sent you a link to change your password.
+      </div><button class="btn login">login</button>
+    </form>
+  </div>
+</div>

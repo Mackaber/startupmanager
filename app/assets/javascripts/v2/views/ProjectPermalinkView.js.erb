@@ -1,0 +1,52 @@
+lll.views.ProjectPermalinkView = Backbone.View.extend({
+    
+  events: {
+    "click .permalink": "permalink"
+  },  
+    
+  template: null,
+  
+  initialize: function() {
+    var self = this;
+    
+    _.bindAll(self, "destroy", "render"); 
+    
+    lll.views.router.route(self.model.get("type") + "/" + self.model.id, self.model.get("type") + self.model.id, self.options.trigger);
+  },
+  
+  render: function() {
+    var self = this;
+    templateLoader.loadRemoteTemplate("<%= asset_path 'v2/ProjectPermalink.html' %>", function(data) {
+      if (!self.template) {
+        self.template = _.template(data);
+      }
+
+      $(self.el).html(self.template({
+      }));
+      
+      var url;
+      if (self.model.get("type") == "blog_post" && self.model.get("post_type") == "interview") {
+        url = self.model.project().get("interviews_url");
+      }
+      else if (self.model.get("type") == "blog_post") {
+        url = self.model.project().get("journal_url");
+      }
+      else {
+        url = self.model.project().get("plan_url");
+      }
+      url += "#" + self.model.get("type") + "/" + self.model.id;
+      self.$("input.permalink").val(url);      
+            
+      self._rendered = true;
+    });
+    return self;
+  },
+  
+  permalink: function(e) {
+    $(e.currentTarget).focus();
+    $(e.currentTarget).select();
+    return false;
+  }
+  
+});
+

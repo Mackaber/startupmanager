@@ -1,0 +1,30 @@
+<div class="body-wrapper">
+  <div id="columns" class="column-2">
+    <div class="column">
+      <div class="plan">
+        <div class="left-sidebar">
+          <div class="step-heading">
+            <div class="steps">
+              <h3>
+                <strong>New Task</strong> <a href="#" class="example toggle-completed">hide completed tasks</a>
+              </h3>
+              <% var id = _.uniqueId("err"); %>
+              <input type="text" placeholder="Enter Task" class="quest" autocomplete="off" data-maxsize="255" data-output="<%= id %>">
+              <span class='help-block'><span id='<%= id %>'></span>/255 chars</span>
+            </div>
+          </div>
+          <ul class="group">
+            <li>
+              <ul class="completed">
+              </ul>
+              <ul class="uncompleted">
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="column last">
+    </div><br class="spacer">
+  </div>
+</div>

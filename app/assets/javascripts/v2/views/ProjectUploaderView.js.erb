@@ -1,0 +1,125 @@
+lll.views.ProjectUploaderView = Backbone.View.extend({
+    
+  template: null,
+  
+  initialize: function() {
+    var self = this;
+    
+    _.bindAll(self, "destroy", "render");
+  },
+
+  onDestroy: function() {
+    var self = this;
+    if (self.uploader) {
+      self.uploader.off();
+    }
+  },
+  
+  render: function() {
+    var self = this;
+    $(self.el).attr("id", self.model.get("type") + "_" + self.model.id + "-uploader");
+    templateLoader.loadRemoteTemplate("<%= asset_path 'v2/ProjectUploader.html' %>", function(data) {
+      if (!self.template) {
+        self.template = _.template(data);
+      }
+
+      $(self.el).html(self.template({
+        model: self.model
+      }));
+      
+      self.$(".browse-upload").attr("id", $(self.el).attr("id") + "-browse-upload");
+      self.$(".drag").attr("id", $(self.el).attr("id") + "-target");
+     
+      var csrf_token = $('meta[name=csrf-token]').attr('content');
+      var csrf_param = $('meta[name=csrf-param]').attr('content');
+      var url = "/v1/attachments?project_id=" + self.model.project().id + "&" + self.model.get("type") + "_id=" + self.model.id + "&" + csrf_param + "=" + csrf_token;
+      
+      setTimeout(function() {      
+        self.uploader = new plupload.Uploader({      
+          runtimes: "html5,flash,html4",
+          flash_swf_url: "<%= asset_path 'plupload.flash.swf' %>",
+          container: $(self.el).attr("id"),
+          browse_button: $(self.el).attr("id") + "-browse-upload",
+          drop_element: $(self.el).attr("id") + "-target",
+          url: url,
+          max_file_size: "50mb"
+        });
+    
+        self.uploader.bind("Init", function(up, params) {
+          if (!up.features.dragdrop) {
+            $("#" + up.settings.container).find("span.drag").remove();  
+          }
+          setTimeout($.proxy(up.refresh, up), 1000);
+        });
+            
+        self.uploader.bind("FilesAdded", function(up, files) {
+          if (self.model.project().organization().get("can_add_attachment")) {
+            _.each(files, function(file) {
+              self.$(".pending-list").append("<div id='file" + file.id + "'>" + file.name + " <span></span><div>");
+              lll.views.track(self.model.get("post_type") ? self.model.get("post_type") : self.model.get("type"), "upload");
+            });
+            up.refresh();
+            setTimeout(function() {
+              up.start();
+            }, 100);
+          }
+          else {
+            new lll.views.UpgradeSubscriptionView({
+              model: self.model.project().organization()
+            }).render();
+          }
+        });
+        
+        self.uploader.bind("UploadProgress", function(up, file) {
+          self.$(".pending-list #file" + file.id + " span").text(file.percent < 100 ? (file.percent + "%") : "processing...");
+        });
+        
+        self.uploader.bind("FileUploaded", function(up, file) {
+          
+          // poll for upload status every second
+          // double the polling interval every 10 attempts
+          // repeat until done
+          var count = 0;
+          var interval = 1000;
+          var check = function() {
+            count += 1;
+            $.get(
+              "/v1/attachments?" + self.model.get("type") + "_id=" + self.model.id,
+              function(result) {
+                lll.models.attachments.addMissing(result);
+                var found = false;
+                _.each(result, function(attachment) {
+                  if (attachment.name == file.name && attachment.size == file.size) {
+                    found = true;
+                  }
+                });
+                if (found) {
+                  self.$(".pending-list #file" + file.id).remove();                             
+                }
+                else {
+                  if (count % 10 == 0) {
+                    interval *= 2;
+                  }
+                  setTimeout(check, interval);
+                }
+              }
+            );
+          };
+          
+          setTimeout(check, interval);
+        });
+        
+        self.uploader.bind("Error", function(up, err) {
+          console.log(err.message + (err.file ? (": " + err.file.name) : ""));
+        });
+            
+        self.uploader.init();
+      }, 1000);
+      
+      self._rendered = true;
+    });
+    return self;
+  }
+  
+});
+

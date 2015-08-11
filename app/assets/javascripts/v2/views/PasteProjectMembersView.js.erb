@@ -1,0 +1,92 @@
+lll.views.PasteProjectMembersView = Backbone.View.extend({
+  
+  events: {
+    "click .import": "importIt"
+  },
+  
+  template: null,
+  
+  initialize: function() {
+    var self = this;
+    
+    _.bindAll(self, "destroy", "make", "render", "importIt");
+    
+    Backbone.Validation.bind(self);
+    
+    self.model.on("change", self.render);
+  },
+  
+  onDestroy: function() {
+    var self = this;
+    self.model.off("change", self.render);
+    Backbone.Validation.unbind(self);
+  },
+  
+  make: function() {
+    var el = $("<div class='excel-section'></div>");
+    return el;
+  },
+
+  render: function() {
+    var self = this;
+
+    $(self.el).empty();
+    templateLoader.loadRemoteTemplate("<%= asset_path 'v2/PasteProjectMembers.html' %>", function(data) {
+      if (!self.template) {
+        self.template = _.template(data);
+      }
+      
+      $(self.el).append(self.template({
+      }));
+            
+      self.$(".excel-heading img").attr("src", "<%= asset_path 'v2/excel-quest.gif' %>");
+            
+      self._rendered = true;
+    });
+    return self;
+  },
+  
+  importIt: function() {
+    var self = this;
+    $.post(
+      self.model.get("members_import_url"),
+      {
+        project_id: self.model.id,
+        data: self.$("textarea").val()
+      },
+      function(response) {
+        self.$("textarea").val("");        
+        if (response.errors.length > 0) {
+          var msg = "<div style='max-height: 500px;overflow:auto'>";
+          msg += "<p>The following items could not be imported due to errors:</p>";
+          msg += "<table>";
+          _.each(response.errors, function(error) {
+            msg += "<tr>";
+            _.each(error, function(cell) {
+              if (cell) {
+                msg += "<td>" + escape(cell) + "</td>";
+              }
+            });
+            msg += "</tr>";
+          });
+          msg += "</table>";
+          msg += "</div>";
+          $(msg).dialog({title: "Import Error", width: 750});
+        }
+        else {
+          $(self.el).slideUp();
+
+          // _.each(response.members, function(member_data) {
+          //   var member = new lll.models.Member();
+          //   member.set(member.parse(member_data));
+          //   member.project = self.model;
+          //   self.model.members.add(member);
+          // }); 
+          window.location.reload();
+        }
+      }
+    );
+    return false;
+  }
+  
+});

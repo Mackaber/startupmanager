@@ -1,0 +1,124 @@
+lll.views.EditProjectJournalEntryView = Backbone.View.extend({
+  
+  events: {
+    "click .publish": "publish",
+    "click .cancel": "cancel"
+  },
+  
+  initialize: function() {
+    var self = this;
+    _.bindAll(self, "destroy", "make", "render", "publish", "cancel");    
+    
+    Backbone.Validation.bind(self);
+  },
+  
+  onDestroy: function() {   
+    var self = this;
+    $(self.el).dialog("close"); 
+    Backbone.Validation.unbind(self);
+  },
+  
+  make: function() {
+    var self = this;
+    var el = $("<div id='EditProjectJournalEntryView'></div>");
+    el.dialog({
+      autoOpen: false,
+      title: (self.model.isNew() ? "New" : "Edit") + " " + (self.model.get("post_type") == "interview" ? "Interview" : "Update"),
+      width: 600,
+      modal: true,
+      open: function(event, ui) {
+        $(this).find("input.date").datepicker({
+          dateFormat: 'yy-mm-dd',
+          showOn: 'both',
+          buttonImage: "<%= asset_path 'v2/calendar.gif' %>",
+          buttonImageOnly: true
+        });
+        $(this).find("input#title").focus();
+        $(this).find("textarea").ckeditor();
+      },
+      close: function(event, ui) { 
+        $(this).find("textarea").ckeditorGet().destroy();
+        $(this).dialog("destroy");
+      }
+    });
+    return el;
+  },
+  
+  render: function() {
+    var self = this;
+	  templateLoader.loadRemoteTemplate(self.model.get("post_type") == "interview" ? "<%= asset_path 'v2/EditProjectInterview.html' %>": "<%= asset_path 'v2/EditProjectJournalEntry.html' %>", function(data) {
+	    $("input.date").remove();
+      if (!self.template) {
+        self.template = _.template(data);
+      }
+      
+      $(self.el).html(self.template({
+	      blog_post: self.model
+	    }));
+	    $(self.el).dialog("open");
+	  });
+	  return self;
+  },
+  
+  publish: function() {
+    var self = this;
+    self.$(".clearfix.error").removeClass("error");
+    self.$("span.error").empty();
+    var attrs = {
+      title: self.$("#title").val(),
+      description: self.$("textarea[name='description']").val(),
+      published_at: new Date()
+    }
+    if (self.model.get("post_type") == "interview") {
+      attrs.date = Date.parse(self.$("#date").val());
+      attrs.text1 = self.$("#text1").val();
+      attrs.text2 = self.$("#text2").val();
+    }
+    else {
+      attrs.urgent = self.$("#urgent").prop("checked");
+      attrs.the_ask = self.$("#the_ask").val();
+    }
+    self.model.set(attrs);
+    if (self.model.isValid()) {
+      if (self.model.isNew()) {
+        if (self.options.create) {
+          self.options.create(self.model);
+        }
+      }
+      else {
+        if (self.options.update) {
+          self.options.update(self.model);
+        }
+      }
+      lll.views.track(self.model.get("post_type") ? self.model.get("post_type") : self.model.get("type"), self.model.isNew() ? "add" : "edit");
+      self.model.save(self.model.attributes, {
+        error: function(model, response) {
+          if (response.readyState == 0 || response.status == 0) {
+            // ajax call cancelled
+          }
+          else {
+            lll.views.error("error saving update: " + response.responseText);
+            if (self.options.error) {
+              self.options.error(model, response);
+            }            
+          }          
+        }
+      });
+      $(self.el).dialog("close");
+    }
+    else {
+      self.$(".invalid").each(function() {
+        $(this).closest(".clearfix").addClass("error");
+        $(this).closest(".clearfix").find("span.error").text($(this).attr("data-error"));
+      });
+    }
+    return false;
+  },
+  
+  cancel: function() {
+    var self = this;
+    $(self.el).dialog("close");
+    return false;
+  }
+  
+});

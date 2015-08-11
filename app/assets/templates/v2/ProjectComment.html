@@ -1,0 +1,19 @@
+<div class="avatar">
+  <% if (comment.member()) { %>
+  <img width="20" height="20" src="<%= comment.member().user().get("photo_url") %>"></img>
+  <% } %>
+</div>
+<div class="content">
+  <% if (comment.member()) { %>
+  <div class="member">  
+    <%= comment.member().user().get("name") %>
+  </div>
+  <% } %>
+  <div class="created_at"><%= comment.get("created_at").toString("ddd MMM d, yyyy") %> at <%= comment.get("created_at").toString("h:mmtt").toLowerCase() %></div>
+  <span class="manage">
+    <a href="#" class="editComment">edit</a>
+    <a href="#" class="deleteComment">delete</a>
+  </span>    
+  <div class="body"><%- body %></div>
+</div>
+<br class="spacer"/>

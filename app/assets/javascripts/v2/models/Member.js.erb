@@ -1,0 +1,62 @@
+lll.models.Member = Backbone.Model.extend({
+
+  validation: {
+    level: {
+      required: true,
+      minLength: 1
+    },
+    role: {
+      required: true,
+      minLength: 1
+    }
+  },
+  
+  url: function() {
+    return "/v1/members" + (this.isNew() ? "" : ("/" + this.id)) + ".json";
+  },  
+  
+  parse: function(response) {
+    var self = this;
+    var attrs = _.clone(response);
+    
+    attrs = Backbone.Model.prototype.parse.call(this, attrs);
+    return attrs;
+  },
+  
+  project: function() {
+    var self = this;
+    return lll.models.projects.get(self.get("project_id"));
+  },
+  
+  user: function() {
+    var self = this;
+    if (!self._user) {
+      if (self.isNew()) {
+        self._user = new lll.models.User(self.user);
+      }
+      else {
+        self._user = lll.models.users.get(self.get("user_id"));
+      }
+    }
+    return self._user;
+  }
+
+});
+
+lll.models.members = new (Backbone.Collection.extend({
+
+  model: lll.models.Member, 
+  
+  comparator: function(member) {
+    var user = member.user();
+    return user.get("name").toLowerCase() + user.get("email").toLowerCase();
+  },
+  
+  active: function() {
+    var self = this;
+    return self.filter(function(member) { return member.get("active") });
+  },
+  
+  url: "/v1/members.json"
+  
+}))();

@@ -1,0 +1,87 @@
+lll.models.Experiment = Backbone.Model.extend({
+
+  validation: {
+    title: {
+      required: true,
+      minLength: 1,
+      maxLength: 255
+    }
+  },
+
+  defaults: {
+    type: "experiment"
+  },
+  
+  initialize: function() {
+    var self = this;
+    
+    self.on("change:status", function() {       // FIXME: should have an "off" for this
+      if (self.previous("id")) {
+        var status = self.get("status");
+        lll.views.track(self.get("type"), status.length > 0 ? status : "reset");
+      }
+    });
+  },
+
+  toString: function() {
+    return this.get("title");
+  },
+
+  url: function() {
+    return "/v1/experiments" + (this.isNew() ? "" : ("/" + this.id)) + ".json";
+  },
+
+  parse: function(response) {
+    var self = this;
+    var attrs = _.clone(response);
+
+    if (attrs.created_at) {
+      attrs.created_at = Date.parse(attrs.created_at);
+    }
+    if (attrs.completed_at) {
+      attrs.completed_at = Date.parse(attrs.completed_at);
+    }
+    if (attrs.start_date) { 
+      attrs.start_date = Date.parse(attrs.start_date);
+    }
+    if (attrs.end_date) { 
+      attrs.end_date = Date.parse(attrs.end_date);
+    }
+    
+    attrs = Backbone.Model.prototype.parse.call(this, attrs);
+    // this._changed = true;
+    return attrs;
+  },
+
+  toJSON: function() {
+    var attrs = _.clone(this.attributes);
+    if (attrs.created_at) {
+      attrs.created_at = attrs.created_at.toISOString();
+    }
+    if (attrs.start_date) {
+      attrs.start_date = attrs.start_date.toString("yyyy-MM-dd");
+    }
+    if (attrs.end_date) {
+      attrs.end_date = attrs.end_date.toString("yyyy-MM-dd");
+    }
+    return attrs;
+  }
+
+});
+
+lll.models.experiments = new (Backbone.Collection.extend({
+  
+  model: lll.models.Experiment,
+  
+  comparator: function(model) {
+    return model.get("position");
+  },
+  
+  active: function(start, end) {
+    var self = this;
+    return self.filter(function(item) {
+      return (item.get("completed_at") || item.get("created_at")).between(start, end);
+    });
+  }
+  
+}))();

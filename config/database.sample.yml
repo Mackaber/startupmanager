@@ -1,0 +1,17 @@
+development:
+  adapter: postgresql
+  encoding: utf8
+  pool: 5
+  database: leanlaunchlab_dev
+
+test:
+  adapter: postgresql
+  encoding: utf8
+  pool: 5
+  database: leanlaunchlab_test
+  
+production:
+  adapter: postgresql
+  encoding: utf8
+  pool: 5
+  database: leanlaunchlab_production

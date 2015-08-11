@@ -1,0 +1,69 @@
+lll.views.ProjectGoalsView = Backbone.View.extend({
+  
+  events: {
+    "click a": "click"
+  },
+  
+  initialize: function() {
+    var self = this;    
+    _.bindAll(self, "destroy", "render", "click");    
+    self.model.on("change", self.render);
+  },
+  
+  onDestroy: function() {
+    var self = this;
+    self.model.off("change", self.render);
+  },
+
+  render: function() {
+    var self = this;
+        
+    $(self.el).empty();
+    
+    templateLoader.loadRemoteTemplate("<%= asset_path 'v2/ProjectGoals.html' %>", function(data) {
+      if (!self.template) {
+        self.template = _.template(data);
+      }
+      
+      $(self.el).append(self.template({
+        project: self.model
+      }));
+    });
+    return self;
+  },
+  
+  click: function(e) {
+    var self = this;
+    
+    var link = $(e.currentTarget);
+    var content;
+    if (link.hasClass("canvas")) {
+      content = '<p>The canvas diagram is a powerful tool that helps you visualize your business model.  Each item you enter on your canvas represents​ a hypothesis​ that needs to be tested and will appear in the To-Do section of your Plan.  Major changes to your canvas are called "pivots".  These are normal.  Most new ventures pivot multiple times before finding a sustainable business model.</p><a href="' + self.model.get("canvas_url") + '" class="btn primary large">Go to the Canvas</a>';
+    }
+    else if (link.hasClass("create-hypothesis")) {
+      content = '<p>Hypothesis​ testing is a core "lean startup" principle.​  Even the simple exercise of writing down a hypothesis​ can provide a ton of focus.  (Try it, you\'ll be surprised)</p><p>Use the yellow form at the top of the To-Do section to create a new hypothesis.</p>';
+    }
+    else if (link.hasClass("test-hypothesis")) {
+      content = '<p>Once you\'ve defined some hypotheses​ you need to identify the riskiest ones and then figure out the best way to test them with experiment​s.  Experiment​s can be quantitati​ve (i.e., landing page a/b tests) or qualitativ​e (i.e., customer interviews​).  Track key metrics for quantitati​ve experiment​s and learn to use your instincts when running qualitativ​e experiment​s.  For example, if you interview 10 customers and you notice the same pattern in seven of them, it\'s probably ok to move on.  Remember, speed matters, and you can always interview more later.</p><p>Click the "Start" button on a hypothesis​ when you\'re ready to test it.</p>';
+    }
+    else if (link.hasClass("validate-hypothesis")) {
+      content = '<p>When you feel in your gut that you have enough data from your experiment​s, click "Validate" or "Invalidate​" on the hypothesis.  It will jump to the Done pane.  The list of tested hypotheses​ in your Done pane represents​ all of the learnings you\'ve accumulated.  Refer back to these often to help drive new business activities.</p>';
+    }
+    else if (link.hasClass("interview")) {
+      content = '<p>Document all of your customer interviews in the Interviews tab.  It\'s worth the effort to transcribe them and have them in one place.  You are extremely busy and now you\'ll never forget a conversation.</p><a href="' + self.model.get("interviews_url") + '" class="btn primary large">Store an Interview</a>';
+    }
+    else if (link.hasClass("invite")) {
+      content = '<p>Collaborate and get rapid feedback from your team.  Add them to your project from the Members tab.</p><p> TIP: When you add a member with a role of "Contributor" they will receive ALL email notifications by default.  If you add them as a "Manager" they will only receive daily and weekly summaries.  (You can override your own default email settings from the Settings->Email Preferences page.)</p><a href="' + self.model.get("members_url") + '" class="btn primary large">Invite a Team Member</a>';
+    }
+    
+    $("<div>" + content + "</div>").dialog({
+      title: link.text(),
+      dialogClass: "goals",
+      width: 400,
+      zIndex: 10001,
+      close: function(event, ui) { $(this).dialog("destroy").remove() }
+    });
+      
+    return false;
+  }
+}); 

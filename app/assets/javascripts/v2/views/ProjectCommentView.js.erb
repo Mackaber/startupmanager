@@ -1,0 +1,95 @@
+lll.views.ProjectCommentView = Backbone.View.extend({
+  
+  events: {
+    "click .editComment": "edit",
+    "click .deleteComment": "deleteIt"
+  },
+  
+  template: null,
+  
+  initialize: function() {
+    var self = this;
+    
+    _.bindAll(self, "destroy", "make", "render", "edit", "deleteIt");
+    
+    Backbone.Validation.bind(self);
+    
+    self.model.on("change", self.render);
+  },
+  
+  onDestroy: function() {
+    var self = this;
+    self.model.off("change", self.render);
+    Backbone.Validation.unbind(self);
+  },
+  
+  make: function() {
+    return $("<li class='" + this.model.get("type") + "' data-model-type='" + this.model.get("type") + "'></li>");
+  },
+
+  render: function() {
+    var self = this;
+    $(self.el).attr("id", self.model.get("type") + "_" + self.model.id);
+    $(self.el).attr("data-model-id", self.model.id);
+    $(self.el).attr("data-position", self.model.get("created_at").getTime());
+    templateLoader.loadRemoteTemplate("<%= asset_path 'v2/ProjectComment.html' %>", function(data) {
+      if (!self.template) {
+        self.template = _.template(data);
+      }
+    
+      $(self.el).html(self.template({
+        comment: self.model,
+        body: self.model.get("body") ? self.model.get("body").replace(/[\r\n]/g,'<br/>') : ""
+      }));      
+      
+      if ((self.model.project().currentMember().id != self.model.get("member_id")) || self.model.project().organization().get("locked")) {
+        self.$(".editComment, .deleteComment").remove();
+      }
+      
+      self._rendered = true;
+    });
+    return self;
+  },
+    
+  edit: function() {
+    var self = this;
+    var el = $("<div></div>").appendTo("body").dialog({
+      autoOpen: true,
+      title: "Edit Comment",
+      width: 600,
+      modal: true,
+      open: function(event, ui) {
+        setTimeout(function() { 
+          el.find("textarea").focus().select();
+        }, 0);
+      },
+      close: function(event, ui) { 
+        $(this).dialog("destroy").remove();
+      }
+    });
+    var view = new lll.views.EditProjectCommentView({
+      model: self.model,
+      el: el,
+      update: function() { el.dialog("close"); }
+    });
+    view.render();  
+    return false;  
+  },
+  
+  deleteIt: function() {
+    var self = this;
+    if (confirm("Are you sure?")) {
+      self.model.destroy();
+      lll.views.track("comment", "delete");
+      if (self.model.hypothesis()) {
+        self.model.hypothesis().trigger("change");
+      }
+      else {
+        self.model.blog_post().trigger("change");
+      }
+    }
+    return false;
+  }
+  
+});
+

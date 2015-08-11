@@ -1,0 +1,11 @@
+<div class="member-listing-name">
+  <%= member.user().get("name") %>
+</div>
+<div class="member-listing-email">
+  <a href="mailto:<%= member.user().get('email') %>"><%= member.user().get("email") %></a>
+</div>
+<div class="member-listing-perm">
+  <span><%= member.get("level") %></span>
+  <select name="level" id="level" />
+</div>
+<a href="#" class="delete">remove</a>

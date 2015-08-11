@@ -1,0 +1,44 @@
+lll.views.OrganizationTabsView = Backbone.View.extend({
+    
+  template: null,
+  
+  initialize: function() {
+    var self = this;
+    
+    _.bindAll(self, "destroy", "make", "render");
+  },
+  
+  make: function() {
+    var el = $("<div class='project-tabs'/>");
+    return el;
+  },
+  
+  render: function() {
+    var self = this;
+    templateLoader.loadRemoteTemplate("<%= asset_path 'v2/OrganizationTabs.html' %>", function(data) {
+      if (!self.template) {
+        self.template = _.template(data);
+      }
+
+      $(self.el).html(self.template({
+        organization: self.model
+      }));
+      self.$("> ul > li a." + self.options.selected).addClass("selected");
+      
+      self.$(".summary").attr("href", self.model.get("summary_url"))
+      self.$(".members").attr("href", self.model.get("members_url"))
+            
+      var member = self.model.currentMember();
+      if (member.get("level") == "Admin") {
+        self.$(".payment").attr("href", self.model.get("payment_url"))        
+      }
+      else {
+        self.$(".payment").closest("li").remove();
+      }
+            
+      self._rendered = true;
+    });
+    return self;
+  }
+  
+});

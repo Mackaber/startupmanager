@@ -1,0 +1,74 @@
+lll.models.CanvasItem = Backbone.Model.extend({
+  
+  defaults: {
+    type: "canvas_item",
+    category: "value_propositions",
+    status: "unknown",      // TODO: change this to "started" once the legacy canvas is gone
+    x: 0,
+    y: 0
+  },
+  
+  validation: {
+    title: {
+      required: true,
+      minLength: 1,
+      maxLength: 255
+    }
+  },
+  
+  toString: function() {
+    return this.get("title");
+  },
+  
+  url: function() {
+    return "/v1/canvas_items" + (this.isNew() ? "" : ("/" + this.id)) + ".json";
+  },
+  
+  parse: function(response) {
+    var self = this;
+    var attrs = _.clone(response);
+    
+    if (attrs.created_at) {
+      attrs.created_at = Date.parse(attrs.created_at);
+    }
+    if (attrs.inactive_at) {
+      attrs.inactive_at = Date.parse(attrs.inactive_at);
+    }
+        
+    attrs = Backbone.Model.prototype.parse.call(this, attrs);
+    // this._changed = true;
+    return attrs;
+  },
+  
+  toJSON: function() {
+    var attrs = _.clone(this.attributes);
+    if (attrs.created_at) {
+      attrs.created_at = attrs.created_at.toISOString();      
+    }
+    if (attrs.inactive_at) {
+      attrs.inactive_at = attrs.inactive_at.toISOString();      
+    }
+    return attrs;
+  },
+  
+  project: function() {
+    var self = this;
+    return lll.models.projects.get(self.get("project_id"));
+  },
+  
+  original: function() {
+    var self = this;
+    return self.get("original_id") ? lll.models.canvasItems.get(self.get("original_id")) : self;
+  }
+  
+});
+
+lll.models.canvasItems = new (Backbone.Collection.extend({ 
+  
+  model: lll.models.CanvasItem,
+  
+  comparator: function(canvas_item) {
+    return canvas_item.get("z") || 1000000;
+  }
+    
+}))();

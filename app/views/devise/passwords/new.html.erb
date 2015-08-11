@@ -1,0 +1,21 @@
+<% title("LeanLaunchLab - Forgot Password") %>
+<% body_class("login") %>
+
+<div class="body-wrapper">
+  <div class="login-header">
+    <%= image_tag("v2/login-icon.gif", :alt => "") %>FORGOT PASSWORD
+  </div>
+  <div class="login-body">
+    <%= form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { :method => :post }) do |f| %>
+      <%= devise_error_messages! %>
+      <div class="forget_text2">
+        Enter your email address and we’ll send you a link to reset it.
+      </div>
+      <%= f.email_field :email, :placeholder => "Email" %>
+      <button class="btn login">Enter</button>
+    <% end %>    
+    <div class="or-login-link">
+      <a href="<%= new_user_session_path %>">or LOGIN</a>
+    </div>
+  </div>
+</div>

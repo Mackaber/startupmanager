@@ -1,0 +1,33 @@
+//= require jquery
+//= require jquery_ujs
+//= require jquery-ui
+//= require jquery.dataTables
+//= require date
+//= require json2
+//= require jquery.livequery
+//= require underscore
+//= require underscore-template-autoescape
+//= require underscore-template-loader
+//= require backbone
+//= require backbone.validation
+//= require bootstrap-twipsy
+//= require bootstrap-alerts
+//= require bootstrap-modal
+//= require bootstrap-tabs
+//= require bootstrap-buttons
+//= require bootstrap-popover
+//= require bootstrap-dropdown
+//= require bootstrap-scrollspy
+//= require plupload
+//= require plupload.html5
+//= require plupload.flash
+//= require_self
+
+$(function() {
+  $("input.date").datepicker({
+    dateFormat: 'yy-mm-dd',
+    showOn: 'both',
+    buttonImage: "<%= asset_path 'v2/calendar.gif' %>",
+    buttonImageOnly: true
+  });
+})

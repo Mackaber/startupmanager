@@ -1,0 +1,2 @@
+#!/bin/sh
+cat | curl --url https://localhost/email --insecure --form email=@-

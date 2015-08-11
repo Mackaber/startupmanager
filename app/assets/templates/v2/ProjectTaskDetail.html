@@ -1,0 +1,51 @@
+<div class="top-buttons">
+  <% if (task.get("completed_at")) { %>
+    <button class="btn small uncomplete">Mark Incomplete</button>
+  <% } else { %>
+    <button class="btn small complete">Mark Complete</button>
+  <% } %>
+  <button class="btn small delete">DELETE</button>
+</div>
+<div class="right-sidebar">
+  <h4>
+    <a href="#" title="Click to edit"><%= task.get("title") %></a>
+  </h4>
+  <ul class="list">
+    <li>Hypothesis
+    </li>
+    <li class="rt hypothesis">
+      <a href="#">
+        <% var hypothesis = task.hypothesis(); %>
+        <%= hypothesis ? hypothesis.get("title") : "link to hypothesis" %>
+      </a>
+      <div class="dropdown">
+      </div>
+    </li>
+    <li>Assigned To
+    </li>
+    <li class="rt member">
+      <a href="#">
+        <% var member = task.member(); %>
+        <%= member ? member.user().get("name") : "assign to team member" %>
+      </a>
+      <div class="dropdown">
+      </div>
+    </li>
+    <li>Due Date
+    </li>
+    <li class="rt">
+      <input type="text" placeholder="yyyy-mm-dd" class="quest small date" value="<%= task.get('due_date') ? task.get('due_date').toString('yyyy-MM-dd') : '' %>">
+    </li>
+    <li>Details
+    </li>
+    <li class="rt">
+      <a href="#" class="no-bg description">
+        <% if (task.get("description")) { %>
+          <%= task.get("description") %>
+        <% } else { %>
+          add details
+        <% } %>
+      </a>
+    </li>
+  </ul>
+</div>

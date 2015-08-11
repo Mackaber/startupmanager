@@ -1,0 +1,31 @@
+<form class="form">
+  <fieldset>
+    <div class="clearfix">
+      <label>Name</label>
+      <div class="input">
+        <input type="text" name="name" id="name" value="<%= contact.get('name') %>">
+      </div>
+    </div>
+    <div class="clearfix">
+      <label>Email</label>
+      <div class="input">
+        <input type="text" name="email" id="email" value="<%= contact.get('email') %>">
+      </div>
+    </div>
+    <div class="clearfix">
+      <label>Company</label>
+      <div class="input">
+        <input type="text" name="company" id="company" value="<%= contact.get('company') %>">
+      </div>
+    </div>
+    <div class="clearfix">
+      <label>Message</label>
+      <div class="input">
+        <textarea name="message" id="message"><%= contact.get("message") %></textarea>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="btn primary save">Send</button>
+    </div>
+  </fieldset>
+</form>

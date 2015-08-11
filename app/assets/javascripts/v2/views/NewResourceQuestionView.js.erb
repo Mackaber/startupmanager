@@ -1,0 +1,91 @@
+lll.views.NewResourceQuestionView = Backbone.View.extend({
+  
+  events: {
+    "click .save": "save"
+  },
+  
+  initialize: function() {
+    var self = this;
+    _.bindAll(self, "destroy", "render", "save");    
+    Backbone.Validation.bind(self);
+  },
+
+  onDestroy: function() {
+    var self = this;
+    Backbone.Validation.unbind(self);
+  },
+   
+  render: function() {
+    var self = this;
+    templateLoader.loadRemoteTemplate("<%= asset_path 'v2/NewResourceQuestion.html' %>", function(data) {
+      if (!self.template) {
+        self.template = _.template(data);
+      }
+      
+      $(self.el).html(self.template({
+        question: self.model,
+        label: self.options.label,
+        compact: self.options.compact
+      }));
+      
+      self.$("select#industry option[value='" + (self.model.get("industry") || "") + "']").attr("selected", true);
+      self.$("select#funded option[value='" + (self.model.get("funded") || "") + "']").attr("selected", true);
+    });
+    return self;
+  },
+  
+  save: function() {
+    var self = this;
+    
+    self.$("p.error").removeClass("error");
+    self.$("span.error").empty();
+    self.model.set({
+      name: self.$("#name").val(),
+      email: self.$("#email").val(),
+      company: self.$("#company").val(),
+      url: self.$("#url").val(),
+      location: self.$("#location").val(),
+      industry: self.$("#industry").val(),
+      funded: self.$("#funded").val(),
+      question: self.$("#question").val()
+    });
+    if (self.model.isValid()) {
+      if (self.model.isNew()) {
+        if (self.options.create) {
+          self.options.create(self.model);
+        }
+      }
+      else {
+        if (self.options.update) {
+          self.options.update(self.model);
+        }
+      }
+      self.model.save(self.model.attributes, { 
+        wait: true,
+        success: function(model, response) {
+          self.$(".save").remove();
+          alert("Email sent successfully!");
+        },
+        error: function(model, response) {
+          if (response.readyState == 0 || response.status == 0) {
+            // ajax call cancelled
+          }
+          else {
+            lll.views.error("error sending question: " + response.responseText);
+            if (self.options.error) {
+              self.options.error(model, response);
+            }
+          }          
+        }
+      });
+    }
+    else {
+      self.$(".invalid").each(function() {
+        $(this).closest("p").addClass("error");
+        $(this).closest("p").find("span.error").text($(this).attr("data-error"));
+      });
+    }
+    return false;
+  }
+  
+});

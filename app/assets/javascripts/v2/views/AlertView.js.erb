@@ -1,0 +1,27 @@
+lll.views.AlertView = Backbone.View.extend({
+  
+  id: "alert",
+  
+  initialize: function() {
+    var self = this;
+    _.bindAll(self, "destroy", "render");
+  },
+  
+  render: function() {
+    var self = this;
+    $(self.el).data("view", self);
+    $(self.el).empty();
+    templateLoader.loadRemoteTemplate("<%= asset_path 'v2/Alert.html' %>", function(data) {
+      if (!self.template) {
+        self.template = _.template(data);
+      }
+      
+      $(self.el).append(self.template({
+      }));
+
+      self._rendered = true;
+    });    
+    return self;
+  }
+  
+});

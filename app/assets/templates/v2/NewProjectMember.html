@@ -1,0 +1,36 @@
+<form class="form">
+  <div class="head">
+    <div class="member-name clearfix">
+      <label for="name">Name</label>
+    </div>
+    <div class="member-email clearfix">
+      <label for="email">Email</label>
+    </div>
+    <div class="member-perm clearfix">
+      <label for="level">Permissions <img title="Owners can add/remove members and edit project settings. Normal members can create updates in the Plan and Journal. Viewer members have read-only access."/></label>
+    </div>
+    <div class="member-role clearfix">
+      <label for="role">Role <img title="Contributors are actively working on the project.  Managers are advising or overseeing the project."/></label>
+    </div>
+  </div>
+  <div class="member-name clearfix">
+    <input type="text" name="name" id="name" value="<%= member.user.name %>"/>
+  </div>
+  <div class="member-email clearfix">
+    <input type="text" name="email" id="email" value="<%= member.user.email %>">
+  </div>
+  <div class="member-perm clearfix">
+    <select name="level" id="level">
+      <option value="">(Select)</option>
+    </select>
+  </div>
+  <div class="member-role clearfix">
+    <select name="role" id="role">
+      <option value="">(Select)</option>
+    </select>
+  </div>
+  <div class="member-bttn">
+    <button class="btn add">Add</button>
+    or, <a class="paste" href="#">import a list</a>
+  </div>
+</form>

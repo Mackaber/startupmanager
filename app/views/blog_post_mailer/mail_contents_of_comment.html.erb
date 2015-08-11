@@ -1,0 +1,8 @@
+<% if @object.is_a?(BlogPost) %>
+Link to post: <a href="<%= @object.url %>"><%= @object.url %></a>
+<% else %>
+Link to project: <a href="<%= project_url(@comment.project) %>"><%= project_url(@comment.project) %></a>
+<% end %>
+<br />
+New Feedback from <%= @comment.member.user.name %>
+<%= ApplicationController.helpers.simple_format(@comment.body.html_safe) %>

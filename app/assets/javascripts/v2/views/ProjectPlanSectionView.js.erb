@@ -1,0 +1,255 @@
+//= require ./HypothesisContainer
+lll.views.ProjectPlanSectionView = Backbone.View.extend(lll.views.HypothesisContainer).extend({
+  
+  events: {
+    "click .sort a.newest, .sort a.oldest": "sort"
+  },
+
+  initialize: function() {
+    var self = this;
+    
+    _.bindAll(self, "destroy", "render", "renderItem", "canNest", "itemMoving", "itemMoved", "sort");
+
+    lll.views.HypothesisContainer.initialize.apply(self, arguments);
+    
+    $(window).resize(function() {
+      self.$(".left-sidebar").height($(window).height() - $("#header").outerHeight() - $("#alerts").outerHeight() - $("#footer").outerHeight() - 175);
+    });
+    
+    self._initialized = true;
+  },
+  
+  onDestroy: function() {
+    var self = this;
+    if (self.newHypothesisView) {
+      self.newHypothesisView.destroy();
+    }
+    lll.views.HypothesisContainer.onDestroy.apply(self, arguments);
+  },
+
+  render: function() {
+    var self = this;
+    
+    $(self.el).empty();
+        
+    templateLoader.loadRemoteTemplate("<%= asset_path 'v2/ProjectPlanSection.html' %>", function(data) {
+      if (!self.template) {
+        self.template = _.template(data);
+      }
+      
+      $(self.el).html(self.template({
+        project: self.model,
+        title: self.options.title
+      }));
+      
+      if (self.options.title == "To Do") {
+        if (self.model.currentMember().get("can_manage_hypotheses")) {
+          var newView = function() {
+            var newHypothesis = new lll.models.Hypothesis({
+              project_id: self.model.id,
+              position: 0
+            });
+            var newHypothesisView = new lll.views.NewHypothesisView({
+              model: newHypothesis,
+              create: function(model) { 
+                newHypothesisView.destroy();
+                //self.collection.add(model);
+                newView();
+                lll.views.info("Hypothesis was added successfully");
+              },
+              error: _.bind(self.collection.remove, self.collection)
+            });
+            newHypothesisView.render();
+            setTimeout(function() { 
+              self.$(".left-sidebar").prepend(newHypothesisView.el);
+            }, 0);
+          };      
+          newView();
+        }
+      } else if (self.options.title == "In Progress") {
+        self.$(".left-sidebar").append(
+          new lll.views.ProjectPlanInProgressPlaceholderView({
+            model: self.model
+          }).render().el
+        );
+      } else {
+        self.$("ul.topul > li.first").append("<div class='sort'><a href='#' class='newest'>newest first</a> | <a href='#' class='oldest'>oldest first</a></div>");
+      }
+      
+      lll.views.HypothesisContainer.render.apply(self, arguments);
+      
+      if (self.options.sortable) {
+        setTimeout(function() {     
+          self.$('.left-sidebar ol').nestedSortable({
+            canNest: self.canNest,
+            cursor: "move",
+            disableNesting: 'no-nest',
+            helper: 'clone',
+            items: 'li',
+            maxLevels: 2,
+            opacity: .6,
+            revert: 250,
+            start: self.itemMoving,
+            stop: function(event, ui) {
+              setTimeout(function() {
+                self.$(".ui-state-highlight").removeClass("ui-state-highlight");
+              }, 0);         
+            },
+            tabSize: 28,
+            update: self.itemMoved
+          });
+
+        }, 100); 
+      }
+      
+      if (self.model.currentMember().get("plan_done_sort") == "oldest") {
+        self.$(".sort a.oldest").addClass("selected");
+      }
+      else {
+        self.$(".sort a.newest").addClass("selected");
+      }      
+      
+      $(window).resize();
+      self.delegateEvents();
+      self._rendered = true;
+    });
+    return self;
+  },
+  
+  renderItem: function(view) {
+    var self = this;
+    var modelPosition = _.include(["valid", "invalid", "unknown", "completed"], view.model.get("status")) ? ((view.model.get("completed_at") || new Date()).getTime()*(self.model.currentMember().get("plan_done_sort") == "oldest" ? 1 : -1)) : parseInt(view.model.get("position"));
+    var first = _.find(
+      self.$(".left-sidebar > ol > li"),
+      function(e) { 
+        return (parseInt($(e).attr("data-position")) >= modelPosition);
+      }
+    );
+    if (first) {
+      $(first).before(view.el);
+    }
+    else {
+      self.$(".left-sidebar > ol").append(view.el);
+    }
+    if (view.model.isNew()) { 
+      setTimeout(function() {
+        $(view.el).find("> .heading").effect("highlight", "slow");
+      }, 0);
+    }
+    view.delegateEvents();
+  },
+  
+  canNest: function(child, parent) {
+    var self = this;
+    var allowed;
+    var source = $(child);
+    if ((parent == null || parent.length == 0) && (source.hasClass("hypothesis"))) {
+      allowed = true;
+    }
+    else if (parent.hasClass("hypothesis") && (!parent.data("model").get("hypothesis_id")) && source.hasClass("hypothesis")) {
+      allowed = true;
+    }
+    else {
+      allowed = false;
+    }
+    return allowed;
+  },
+  
+  itemMoving: function(event, ui) {
+    $(ui.item).show();
+    $(ui.item).find("> .heading").addClass("ui-state-highlight");
+  },
+  
+  itemMoved: function(event, ui) {
+    var child = ui.item;
+    var newParent = child.parents(".left-sidebar, .hypothesis").first();
+
+    var self = this;
+    
+    var childModel = $(child).data("model");
+    var newParentModel = newParent.data("model");
+
+    var children = newParent.find("> ol > li").map(function(i, e) { 
+      return $(e).data("model");
+    });
+    var position = $(child).prevAll().length+1;
+
+    // console.log(childModel + " moved to " + (newParentModel ? newParentModel : "top") + " position " + position);    
+    
+    if (childModel.hypothesis) {
+      childModel.hypothesis.hypotheses.remove(childModel);
+      childModel.hypothesis = null;
+    }
+    else {
+      self.collection.remove(childModel);
+    }
+
+    // console.log(childModel + " moved to " + (newParentModel ? newParentModel : "top") + " position " + position);    
+    
+    children.each(function(i, model) {
+      attrs = {
+        project_id: self.model.id,
+        position: i+1
+      };
+      if (model == childModel) {
+        if (!newParentModel) {          
+          attrs.hypothesis_id = null;
+        }
+        else {
+          attrs.hypothesis_id = newParentModel.id;
+        }
+      }
+      model.set(attrs);
+    });
+        
+    self.collection.add(childModel);
+    
+    childModel.save(childModel.attributes, {
+      error: function(model, response) {
+        if (response.readyState == 0 || response.status == 0) {
+          // ajax call cancelled
+        }
+        else {
+          alert("error saving " + model + ": " + response.responseText);
+        }
+      }
+    });
+    
+    lll.views.track(childModel.get("type"), "move");
+  },
+  
+  sort: function(e) {
+    var self = this;
+    var dir = $(e.currentTarget).hasClass("newest") ? "newest" : "oldest";
+    
+    if (dir == "newest") {
+      $(".sort a.newest").addClass("selected");
+      $(".sort a.oldest").removeClass("selected");
+    }
+    else {
+      $(".sort a.newest").removeClass("selected");
+      $(".sort a.oldest").addClass("selected");      
+    }
+    
+    if (self.model.currentMember().get("plan_done_sort") != dir) {
+      self.model.currentMember().save({plan_done_sort: dir}, {
+        wait: true,
+        success: function(model, response) {
+          //lll.models.loadData(response);
+          self.render();
+        },
+        error: function(model, response) {
+          if (response.readyState == 0 || response.status == 0) {
+            // ajax call cancelled
+          }
+          else {
+            alert("error saving member: " + response.responseText);
+          }
+        }
+      });
+    }
+       
+    return false;
+  }
+
+}); 

@@ -1,0 +1,61 @@
+lll.views.ProjectsView = Backbone.View.extend({
+  
+  template: null,
+  
+  initialize: function() {
+    var self = this;
+    
+    _.bindAll(self, "destroy", "render");
+    
+    var currentMemberProjectIds = lll.models.User.current.members().map(function(member) { return member.get("project_id") });
+    
+    self.collection = new (Backbone.Subset.extend({
+      parent: function () {
+        return lll.models.projects;
+      },
+      sieve: function (project) {
+        return _.include(currentMemberProjectIds, project.id);
+      }
+    }))();
+    
+    self.projectsUpdatesView = new lll.views.ProjectsUpdatesView({
+      collection: self.collection
+    });
+    
+    self.projectListView = new lll.views.ProjectListView({
+      collection: self.collection
+    });
+    
+    self.collection.on("reset", self.render);
+    
+    lll.views.track("dashboard", "load");
+  },
+  
+  onDestroy: function() {
+    var self = this;
+    self.collection.off("reset", self.render);
+  },
+
+  render: function() {
+    var self = this;
+    
+    $(self.el).empty();
+    
+    $(self.el).append(new lll.views.AlertView().render().el);
+
+    templateLoader.loadRemoteTemplate("<%= asset_path 'v2/Projects.html' %>", function(data) {
+      if (!self.template) {
+        self.template = _.template(data);
+      }
+            
+      $(self.el).append(self.template({        
+      }));      
+      
+      self.$("#projects").html(self.projectListView.render().el);
+      self.$("#updates").html(self.projectsUpdatesView.render().el);
+      
+      $(self.el).data("view", self);      
+    });
+    return self;
+  }
+});

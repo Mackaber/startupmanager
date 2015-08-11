@@ -1,0 +1,293 @@
+lll.views.ProjectTaskDetailView = Backbone.View.extend({
+  
+  events: {
+    "click h4 a": "editTitle",
+    "keypress h4 input.quest": "keypress",
+    "click a.description": "editDescription",
+    "click button.save": "saveDescription",
+    "click .hypothesis > a": "editHypothesis",
+    "click .hypothesis .dropdown a": "selectHypothesis",
+    "click .member > a": "editMember",
+    "click .member .dropdown a": "selectMember",
+    "change input.date": "saveDate",
+    "click button.complete, button.uncomplete": "complete",
+    "click button.delete": "deleteIt"
+  },
+  
+  template: null,
+  
+  initialize: function() {
+    var self = this;
+    _.bindAll(self, "destroy", "render", "editTitle", "keypress", "editDescription", "saveDescription", "editHypothesis", "selectHypothesis", "editMember", "selectMember", "saveDate", "complete", "deleteIt");
+    Backbone.Validation.bind(self);    
+    self.model.on("change", self.render);
+  },
+  
+  onDestroy: function() {
+    var self = this;
+    self.model.off("change", self.render);
+    Backbone.Validation.unbind(self);
+  },
+  
+  render: function() {
+    var self = this;
+    $(self.el).empty();
+    $(self.el).data("model", self.model);
+    templateLoader.loadRemoteTemplate("<%= asset_path 'v2/ProjectTaskDetail.html' %>", function(data) {
+      if (!self.template) {
+        self.template = _.template(data);
+      }
+      
+      $(self.el).append(self.template({
+        task: self.model,
+        read_only: !self.model.project().currentMember().get("can_manage_tasks")
+      }));
+      
+      self.$(".hypothesis .dropdown").hide();
+      self.$(".member .dropdown").hide();
+      
+      self.$("input.date").datepicker({
+         dateFormat: 'yy-mm-dd',
+         showOn: 'both',
+         buttonImage: "<%= asset_path 'v2/task-cal-icon.gif' %>",
+         buttonImageOnly: true
+       });
+      
+      $(window).resize();
+      self._rendered = true;
+    });
+    return self;
+  },
+  
+  editTitle: function() {
+    var self = this;
+    self.$("h4 a").twipsy("hide");
+    self.$("h4 a").replaceWith("<input type='text' value='" + self.model.get("title") + "' class='quest title' data-maxsize='255'>");
+    return false;
+  },
+  
+  editDescription: function() {
+    var self = this;
+    self.$("a.description").replaceWith("<textarea placeholder='Add Details'>" + (self.model.get("description") || "") + "</textarea><button class='btn small save'>Save</button>");
+    return false;
+  },
+  
+  keypress: function (e) {  
+    var self = this;
+    if ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13)) {
+      self.model.save({title: self.$("h4 input.quest").val()}, {
+        wait: true,
+        success: function(model, response) {
+          lll.models.loadData(response);
+        },
+        error: function(model, response) {
+          if (response.readyState == 0 || response.status == 0) {
+            // ajax call cancelled
+          }
+          else {
+            lll.views.error("error saving task: " + response.responseText);
+            if (self.options.error) {
+              self.options.error(model, response);
+            }
+          }          
+        }        
+      });
+      return false;  
+    } else {  
+      return true;  
+    }
+  },
+  
+  saveDescription: function() {
+    var self = this;
+    self.model.save({description: self.$("textarea").val()}, {
+      wait: true,
+      success: function(model, response) {
+        lll.models.loadData(response);
+      },
+      error: function(model, response) {
+        if (response.readyState == 0 || response.status == 0) {
+          // ajax call cancelled
+        }
+        else {
+          lll.views.error("error saving task: " + response.responseText);
+          if (self.options.error) {
+            self.options.error(model, response);
+          }
+        }          
+      }        
+    });
+    return false;
+  },
+
+  saveDate: function() {
+    var self = this;
+    self.model.save({due_date: self.$("input.date").val()}, {
+      wait: true,
+      success: function(model, response) {
+        lll.models.loadData(response);
+      },
+      error: function(model, response) {
+        if (response.readyState == 0 || response.status == 0) {
+          // ajax call cancelled
+        }
+        else {
+          lll.views.error("error saving task: " + response.responseText);
+          if (self.options.error) {
+            self.options.error(model, response);
+          }
+        }          
+      }        
+    });
+    return false;
+  },
+  
+  editHypothesis: function() {
+    var self = this;
+    if (self.$(".hypothesis .dropdown").css("display") == "block") {
+      self.$(".hypothesis .dropdown").hide();
+    }
+    else {
+      self.$(".hypothesis .dropdown").empty();
+      _.each(
+        _.sortBy(
+          _.filter(
+            self.model.project().hypotheses().models,
+            function(hypothesis) { 
+              return !_.include(["valid", "invalid", "unknown"], hypothesis.get("status")) 
+            }
+          ),
+          function(hypothesis) { 
+            return hypothesis.get("title").toLowerCase() 
+          }
+        ),
+        function(hypothesis) {
+          var label = ""
+          if (hypothesis.get("canvas_box")) {
+            label += hypothesis.get("canvas_box") + ": ";
+          }
+          label += hypothesis.get("title");
+          self.$(".hypothesis .dropdown").append("<a href='#' data-model-id='" + hypothesis.id + "'>" + label + "</a>");
+        }
+      );
+      self.$(".hypothesis .dropdown").show();
+    }
+    return false;
+  },
+  
+  selectHypothesis: function(e) {
+    var self = this;
+    var hypothesis_id = $(e.currentTarget).attr("data-model-id");
+    self.model.save({hypothesis_id: hypothesis_id}, {
+      wait: true,
+      success: function(model, response) {
+        lll.models.loadData(response);
+      },
+      error: function(model, response) {
+        if (response.readyState == 0 || response.status == 0) {
+          // ajax call cancelled
+        }
+        else {
+          lll.views.error("error saving task: " + response.responseText);
+          if (self.options.error) {
+            self.options.error(model, response);
+          }
+        }          
+      }        
+    });
+    return false;
+  },
+  
+  editMember: function() {
+    var self = this;
+    if (self.$(".member .dropdown").css("display") == "block") {
+      self.$(".member .dropdown").hide();
+    }
+    else {
+      self.$(".member .dropdown").empty();
+      _.each(
+        _.sortBy(
+          _.filter(
+            self.model.project().members().models,
+            function(member) { return member.get("active") }
+          ),
+          function(member) { 
+            return member.user().get("name").toLowerCase() 
+          }
+        ),
+        function(member) {
+          var label = "";
+          label += member.user().get("name");
+          self.$(".member .dropdown").append("<a href='#' data-model-id='" + member.id + "'>" + label + "</a>");
+        }
+      );
+      self.$(".member .dropdown").show();
+    }
+    return false;
+  },
+  
+  selectMember: function(e) {
+    var self = this;
+    var member_id = $(e.currentTarget).attr("data-model-id");
+    self.model.save({assigned_to_member_id: member_id}, {
+      wait: true,
+      success: function(model, response) {
+        lll.models.loadData(response);
+      },
+      error: function(model, response) {
+        if (response.readyState == 0 || response.status == 0) {
+          // ajax call cancelled
+        }
+        else {
+          lll.views.error("error saving task: " + response.responseText);
+          if (self.options.error) {
+            self.options.error(model, response);
+          }
+        }          
+      }        
+    });
+    return false;
+  },
+  
+  complete: function() {
+    var self = this;
+    var val;
+    if (self.model.get("completed_at")) {
+      val = null;
+    }
+    else {
+      val = new Date();
+    }
+    lll.models.tasks.remove(self.model);
+    self.model.save({completed_at: val, position: 0}, {
+      wait: true,
+      success: function(model, response) {        
+        lll.models.loadData(response);
+        $(self.el).remove();
+        self.destroy();
+      },
+      error: function(model, response) {
+        if (response.readyState == 0 || response.status == 0) {
+          // ajax call cancelled
+        }
+        else {
+          lll.views.error("error saving task: " + response.responseText);
+          if (self.options.error) {
+            self.options.error(model, response);
+          }
+        }          
+      }
+    });
+    return false;
+  },
+  
+  deleteIt: function() {
+    var self = this;
+    if (confirm("Are you sure?")) {
+      self.model.destroy();
+      $(self.el).remove();
+      self.destroy();
+    }
+    return false;
+  }
+});

@@ -1,0 +1,64 @@
+lll.views.HeaderView = Backbone.View.extend({
+  
+  events: {
+  },
+  
+  template: null,
+  
+  initialize: function() {
+    var self = this;
+    
+    _.bindAll(self, "destroy", "render"); 
+    
+    if (self.model) {
+      self.model.on("change", self.render);
+    }
+  },
+  
+  onDestroy: function() {
+    var self = this;
+    if (self.model) {
+      self.model.off("change", self.render);
+    }
+  },
+
+  render: function() {
+    var self = this;
+    
+    templateLoader.loadRemoteTemplate("<%= asset_path 'v2/Header.html' %>", function(data) {
+      if (!self.template) {
+        self.template = _.template(data);
+      }
+      
+      $(self.el).html(self.template({
+        user: self.model
+      }));
+      
+      self.$("a.brand img").attr("src", "<%= asset_path 'v2/logo.png' %>");
+      
+      var active = $(self.el).attr("data-active");
+      if (active.length > 0) {
+        self.$("ul.nav > li." + active).addClass("active");
+      }
+      
+      self.$(".topbar").dropdown();
+      
+      if (self.model) {
+        self.model.organizationMembers().each(function(organization_member) {
+          if (organization_member.get("level") == "Admin" && organization_member.organization().get("trial_remaining_days") && organization_member.organization().get("trial_remaining_days") <= 7) {  
+            lll.views.perm(organization_member.organization().get("trial_remaining_days") + " days left in trial for " + organization_member.organization().get("name") + " - <a href='" + organization_member.organization().get("payment_url") + "'>UPGRADE</a>");
+          }
+        });
+        
+        self.model.organizationMembers().each(function(organization_member) {
+          if (organization_member.get("payment_code") && !organization_member.get("paid_at")) {  
+            lll.views.perm("<a href='/org-payments/" + organization_member.get("payment_code") + "'>Submit payment for " + organization_member.organization().get("name") + "</a>");
+          }
+        });
+      }
+      
+      $(self.el).data("view", self);
+    });
+    return self;
+  }
+});

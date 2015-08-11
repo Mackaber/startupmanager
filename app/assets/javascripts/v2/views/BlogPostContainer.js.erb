@@ -1,0 +1,67 @@
+lll.views.BlogPostContainer = {
+  
+  initialize: function() {
+    var self = this;    
+    
+    _.bindAll(self, "destroy", "resetBlogPosts", "addBlogPost", "removeBlogPost", "render");
+    
+    self.collection.on("reset", self.resetBlogPosts);
+    self.collection.trigger("reset");
+    self.collection.on("add", self.addBlogPost);
+    self.collection.on("remove", self.removeBlogPost);
+  },
+  
+  onDestroy: function() {
+    var self = this;
+    self.collection.off("reset", self.resetBlogPosts);
+    self.collection.off("add", self.addBlogPost);
+    self.collection.off("remove", self.removeBlogPost);    
+  },
+  
+  resetBlogPosts: function() {
+    var self = this;
+    self._blogPostViews = {};
+    self.collection.each(self.addBlogPost);
+  },
+  
+  addBlogPost: function(model) {
+    var self = this;
+    
+    // console.log(model + " added to " + self.model);
+    var c = (model.get("post_type") == "interview" ? lll.views.InterviewView : lll.views.UpdateView);
+    var v = new c({
+      model: model
+    });
+    self._blogPostViews[model.cid] = v;
+  
+    var previousItem = $("#" + model.get("type") + "_" + model.id);
+    if (self._rendered) {
+      v.model.trigger("change");
+      self.renderItem(v);      
+    }
+    if (previousItem.length > 0) {
+      // workaround for the fact that jquery sortable ALSO moves the DOM element
+      previousItem.remove();
+    }
+  },
+
+  removeBlogPost: function(model) {
+    var self = this;
+    var v = self._blogPostViews[model.cid];
+    if (v) {
+      delete self._blogPostViews[model.cid];
+      v.destroy();
+    }
+  },
+  
+  render: function() { 
+    var self = this;        
+    self.collection.each(function(model) {
+      var view;
+      view = self._blogPostViews[model.cid];
+      view.model.trigger("change");
+      self.renderItem(view);
+    });    
+  }
+  
+}
