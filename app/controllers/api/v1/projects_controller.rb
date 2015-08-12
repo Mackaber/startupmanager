@@ -40,7 +40,7 @@ class Api::V1::ProjectsController < Api::V1::V1BaseController
     if (success) 
       respond_to do |format|
         format.json do
-          h = @project.to_hash
+          h = {}
           h[:organizations] = [@project.organization.to_hash]
           h[:projects] = @project.organization.projects.collect{|x| x.to_hash}
           render(:json => h)
