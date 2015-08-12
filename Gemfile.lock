@@ -85,7 +85,9 @@ GEM
       warden (~> 1.1.1)
     domain_name (0.5.24)
       unf (>= 0.0.5, < 1.0.0)
-    dotenv (2.0.2)
+    dotenv (2.0.1)
+    dotenv-rails (2.0.1)
+      dotenv (= 2.0.1)
     dynamic_form (1.1.4)
     erubis (2.7.0)
     execjs (2.5.2)
@@ -245,7 +247,7 @@ DEPENDENCIES
   coffee-rails
   dalli
   devise
-  dotenv
+  dotenv-rails
   dynamic_form
   foreigner
   gon

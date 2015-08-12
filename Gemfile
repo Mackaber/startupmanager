@@ -9,7 +9,7 @@ gem "aws-sdk"
 gem "cancan"
 gem "ckeditor", "3.6.0"   # TODO upgrade to latest version
 gem "devise"
-gem "dotenv"
+gem "dotenv-rails"
 gem "dynamic_form"      # error_message_on, etc.
 gem "foreigner"
 gem "gon"
