@@ -85,7 +85,7 @@ module LeanLaunchLab
 end
 
 ActionMailer::Base.default ({
-  :from => "\"LeanLaunchLab#{Rails.env == 'production' ? "" : " (#{Rails.env})"}\" <>",
+  :from => "\"LeanLaunchLab#{Rails.env == 'production' ? "" : " (#{Rails.env})"}\" <#{ENV['EMAIL_NOTIFICATIONS']}>",
   :return_path => ENV["EMAIL_SYSTEM"],
   :reply_to => ENV["EMAIL_SUPPORT"]
 })

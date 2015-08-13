@@ -54,7 +54,7 @@ class BlogPostMailer < ActionMailer::Base
     }
     if @can_comment
       s = comment.blog_post_id ? "l3b#{comment.blog_post_id}@" : "l3h#{comment.hypothesis_id}@"
-      s << (Rails.env == "production" ? "app.leanlaunchlab.com" : Rails.application.config.action_mailer.default_url_options[:host])
+      s << (Rails.env == "production" ? ENV["HOSTNAME"] : Rails.application.config.action_mailer.default_url_options[:host])
       attrs[:reply_to] = s
     end
     mail(attrs)
@@ -69,7 +69,7 @@ class BlogPostMailer < ActionMailer::Base
       :to => member.user.email,
       :subject => "#{new_record ? 'New' : status} Hypothesis (#{hypothesis.project}): #{hypothesis}"
     }
-    attrs[:reply_to] = "l3h#{hypothesis.id}@#{Rails.env == 'production' ? 'app.leanlaunchlab.com' : Rails.application.config.action_mailer.default_url_options[:host]}" if @can_comment
+    attrs[:reply_to] = "l3h#{hypothesis.id}@#{Rails.env == 'production' ? ENV["HOSTNAME"] : Rails.application.config.action_mailer.default_url_options[:host]}" if @can_comment
     mail(attrs)
   end
 
@@ -80,7 +80,7 @@ class BlogPostMailer < ActionMailer::Base
       :to => member.user.email,
       :subject => "Hypothesis Validated (#{hypothesis.project}): #{hypothesis}"
     }
-    attrs[:reply_to] = "l3h#{hypothesis.id}@#{Rails.env == 'production' ? 'app.leanlaunchlab.com' : Rails.application.config.action_mailer.default_url_options[:host]}" if @can_comment
+    attrs[:reply_to] = "l3h#{hypothesis.id}@#{Rails.env == 'production' ? ENV["HOSTNAME"] : Rails.application.config.action_mailer.default_url_options[:host]}" if @can_comment
     mail(attrs)
   end
 
@@ -92,7 +92,7 @@ class BlogPostMailer < ActionMailer::Base
       :to => member.user.email,
       :subject => "#{new_record ? 'New' : 'Updated'} Interview (#{interview.project}): #{interview}"
     }
-    attrs[:reply_to] = "l3b#{interview.id}@#{Rails.env == 'production' ? 'app.leanlaunchlab.com' : Rails.application.config.action_mailer.default_url_options[:host]}" if @can_comment
+    attrs[:reply_to] = "l3b#{interview.id}@#{Rails.env == 'production' ? ENV["HOSTNAME"] : Rails.application.config.action_mailer.default_url_options[:host]}" if @can_comment
     mail(attrs)
   end
 
@@ -105,7 +105,7 @@ class BlogPostMailer < ActionMailer::Base
       :to => member.user.email,
       :subject => "Task '#{task}' assigned to you"
     }
-    # attrs[:reply_to] = "l3t#{task.id}@#{Rails.env == 'production' ? 'app.leanlaunchlab.com' : Rails.application.config.action_mailer.default_url_options[:host]}" if @can_comment
+    # attrs[:reply_to] = "l3t#{task.id}@#{Rails.env == 'production' ? ENV["HOSTNAME"] : Rails.application.config.action_mailer.default_url_options[:host]}" if @can_comment
     mail(attrs)
   end
   
@@ -117,7 +117,7 @@ class BlogPostMailer < ActionMailer::Base
       :to => member.user.email,
       :subject => "#{update.urgent ? "URGENT " : ""}#{new_record ? 'New' : 'Updated'} Update (#{update.project}): #{update}"
     }
-    attrs[:reply_to] = "l3b#{update.id}@#{Rails.env == 'production' ? 'app.leanlaunchlab.com' : Rails.application.config.action_mailer.default_url_options[:host]}" if @can_comment
+    attrs[:reply_to] = "l3b#{update.id}@#{Rails.env == 'production' ? ENV["HOSTNAME"] : Rails.application.config.action_mailer.default_url_options[:host]}" if @can_comment
     mail(attrs)
   end
   

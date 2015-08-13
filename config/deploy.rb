@@ -38,7 +38,7 @@ set :default_environment, { 'PATH' => '$HOME/.rbenv/shims:$HOME/.rbenv/bin:$PATH
 
 # symlink config files from shared/, and data/
 before "deploy:assets:precompile" do
-  run "ln -nfs #{shared_path}/config/.env #{release_path}/"
+  run "ln -nfs #{shared_path}/config/.env.#{rails_env} #{release_path}/"
   run "ln -nfs #{shared_path}/config/database.yml #{release_path}/config/"
 end
 
