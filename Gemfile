@@ -22,6 +22,7 @@ gem "prawn", "0.12.0"
 gem "redis", "2.2.2"
 gem "resque", "1.23.0"
 gem "resque-scheduler", "2.0.0", :require => "resque_scheduler"
+gem "rufus-scheduler", "2.0.17"
 gem "stripe", :git => "https://github.com/stripe/stripe-ruby"
 
 gem "rake"
