@@ -37,7 +37,7 @@ group :production, :staging do
   gem "SyslogLogger", "2.0", :require => "syslog/logger"
   gem "therubyracer", "0.12.2"
   gem "unicorn", "4.3.1"
-  gem "whenever", "0.7.3"
+  gem "whenever", "0.9.4"
 end
 
 group :development do
