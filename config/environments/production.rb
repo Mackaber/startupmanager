@@ -30,7 +30,7 @@ LeanLaunchLab::Application.configure do
 
   # Use a different cache store in production
   # config.cache_store = :mem_cache_store
-  config.cache_store = :dalli_store, 'localhost:11211', {:expires_in => 24.hours, :socket_timeout => 1, :socket_max_failures => 3, :socket_failure_delay => 1, :down_retry_delay => 1, :namespace => "#{Rails.env}-#{File.read("REVISION").chop}"}
+#  config.cache_store = :dalli_store, 'localhost:11211', {:expires_in => 24.hours, :socket_timeout => 1, :socket_max_failures => 3, :socket_failure_delay => 1, :down_retry_delay => 1, :namespace => "#{Rails.env}-#{File.read("REVISION").chop}"}
 
   # Disable Rails's static asset server
   # In production, Apache or nginx will already do this

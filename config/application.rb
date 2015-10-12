@@ -19,7 +19,7 @@ module LeanLaunchLab
   class Application < Rails::Application
     
     config.assets.enabled = true
-    config.assets.version = "1.0"
+    config.assets.version = "2.0"
     # config.assets.prefix = "/assets"
     
     # When JSON-encoding a record, don't wrap the attributes in a hash where the

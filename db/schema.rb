@@ -451,58 +451,58 @@ ActiveRecord::Schema.define(:version => 20121001163922) do
   add_index "users", ["reset_password_token"], :name => "index_users_on_reset_password_token", :unique => true
   add_index "users", ["tracking_code"], :name => "index_users_on_tracking_code", :unique => true
 
-  add_foreign_key "attachments", "members", name: "attachments_member_id_fk"
+  add_foreign_key "attachments", "members", :name => "attachments_member_id_fk"
 
-  add_foreign_key "blog_posts", "members", name: "blog_posts_member_id_fk"
-  add_foreign_key "blog_posts", "projects", name: "blog_posts_project_id_fk", dependent: :delete
+  add_foreign_key "blog_posts", "members", :name => "blog_posts_member_id_fk"
+  add_foreign_key "blog_posts", "projects", :name => "blog_posts_project_id_fk", :dependent => :delete
 
-  add_foreign_key "canvas_items", "boxes", name: "canvas_items_box_id_fk"
-  add_foreign_key "canvas_items", "canvas_items", name: "canvas_items_original_id_fk", column: "original_id", dependent: :delete
-  add_foreign_key "canvas_items", "hypotheses", name: "canvas_items_hypothesis_id_fk", dependent: :nullify
-  add_foreign_key "canvas_items", "item_statuses", name: "canvas_items_item_status_id_fk", dependent: :nullify
-  add_foreign_key "canvas_items", "projects", name: "canvas_items_project_id_fk", dependent: :delete
+  add_foreign_key "canvas_items", "boxes", :name => "canvas_items_box_id_fk"
+  add_foreign_key "canvas_items", "canvas_items", :name => "canvas_items_original_id_fk", :column => "original_id", :dependent => :delete
+  add_foreign_key "canvas_items", "hypotheses", :name => "canvas_items_hypothesis_id_fk", :dependent => :nullify
+  add_foreign_key "canvas_items", "item_statuses", :name => "canvas_items_item_status_id_fk", :dependent => :nullify
+  add_foreign_key "canvas_items", "projects", :name => "canvas_items_project_id_fk", :dependent => :delete
 
-  add_foreign_key "charges", "organizations", name: "charges_organization_id_fk", dependent: :nullify
+  add_foreign_key "charges", "organizations", :name => "charges_organization_id_fk", :dependent => :nullify
 
-  add_foreign_key "comments", "blog_posts", name: "comments_blog_post_id_fk", dependent: :delete
-  add_foreign_key "comments", "hypotheses", name: "comments_hypothesis_id_fk", dependent: :delete
-  add_foreign_key "comments", "members", name: "comments_member_id_fk"
+  add_foreign_key "comments", "blog_posts", :name => "comments_blog_post_id_fk", :dependent => :delete
+  add_foreign_key "comments", "hypotheses", :name => "comments_hypothesis_id_fk", :dependent => :delete
+  add_foreign_key "comments", "members", :name => "comments_member_id_fk"
 
-  add_foreign_key "experiments", "hypotheses", name: "experiments_hypothesis_id_fk", dependent: :nullify
-  add_foreign_key "experiments", "item_statuses", name: "experiments_item_status_id_fk", dependent: :nullify
-  add_foreign_key "experiments", "projects", name: "experiments_project_id_fk", dependent: :delete
+  add_foreign_key "experiments", "hypotheses", :name => "experiments_hypothesis_id_fk", :dependent => :nullify
+  add_foreign_key "experiments", "item_statuses", :name => "experiments_item_status_id_fk", :dependent => :nullify
+  add_foreign_key "experiments", "projects", :name => "experiments_project_id_fk", :dependent => :delete
 
-  add_foreign_key "hypotheses", "hypotheses", name: "hypotheses_hypothesis_id_fk", dependent: :nullify
-  add_foreign_key "hypotheses", "item_statuses", name: "hypotheses_item_status_id_fk", dependent: :nullify
-  add_foreign_key "hypotheses", "projects", name: "hypotheses_project_id_fk", dependent: :delete
+  add_foreign_key "hypotheses", "hypotheses", :name => "hypotheses_hypothesis_id_fk", :dependent => :nullify
+  add_foreign_key "hypotheses", "item_statuses", :name => "hypotheses_item_status_id_fk", :dependent => :nullify
+  add_foreign_key "hypotheses", "projects", :name => "hypotheses_project_id_fk", :dependent => :delete
 
-  add_foreign_key "member_blog_post_views", "blog_posts", name: "member_blog_post_views_blog_post_id_fk", dependent: :delete
-  add_foreign_key "member_blog_post_views", "members", name: "member_blog_post_views_member_id_fk", dependent: :delete
+  add_foreign_key "member_blog_post_views", "blog_posts", :name => "member_blog_post_views_blog_post_id_fk", :dependent => :delete
+  add_foreign_key "member_blog_post_views", "members", :name => "member_blog_post_views_member_id_fk", :dependent => :delete
 
-  add_foreign_key "members", "projects", name: "members_project_id_fk", dependent: :delete
-  add_foreign_key "members", "users", name: "members_user_id_fk"
+  add_foreign_key "members", "projects", :name => "members_project_id_fk", :dependent => :delete
+  add_foreign_key "members", "users", :name => "members_user_id_fk"
 
-  add_foreign_key "organization_members", "organizations", name: "organization_members_organization_id_fk", dependent: :delete
-  add_foreign_key "organization_members", "users", name: "organization_members_user_id_fk", dependent: :delete
+  add_foreign_key "organization_members", "organizations", :name => "organization_members_organization_id_fk", :dependent => :delete
+  add_foreign_key "organization_members", "users", :name => "organization_members_user_id_fk", :dependent => :delete
 
-  add_foreign_key "organizations", "promotions", name: "organizations_promotion_id_fk"
-  add_foreign_key "organizations", "users", name: "organizations_cc_user_id_fk", column: "cc_user_id"
+  add_foreign_key "organizations", "promotions", :name => "organizations_promotion_id_fk"
+  add_foreign_key "organizations", "users", :name => "organizations_cc_user_id_fk", :column => "cc_user_id"
 
-  add_foreign_key "projects", "organizations", name: "projects_organization_id_fk"
+  add_foreign_key "projects", "organizations", :name => "projects_organization_id_fk"
 
-  add_foreign_key "questions", "hypotheses", name: "questions_hypothesis_id_fk"
-  add_foreign_key "questions", "projects", name: "questions_project_id_fk", dependent: :delete
+  add_foreign_key "questions", "hypotheses", :name => "questions_hypothesis_id_fk"
+  add_foreign_key "questions", "projects", :name => "questions_project_id_fk", :dependent => :delete
 
-  add_foreign_key "settings", "users", name: "settings_user_id_fk", dependent: :delete
+  add_foreign_key "settings", "users", :name => "settings_user_id_fk", :dependent => :delete
 
-  add_foreign_key "subscriptions", "organizations", name: "subscriptions_organization_id_fk", dependent: :delete
-  add_foreign_key "subscriptions", "subscription_levels", name: "subscriptions_subscription_level_id_fk"
+  add_foreign_key "subscriptions", "organizations", :name => "subscriptions_organization_id_fk", :dependent => :delete
+  add_foreign_key "subscriptions", "subscription_levels", :name => "subscriptions_subscription_level_id_fk"
 
-  add_foreign_key "tasks", "hypotheses", name: "tasks_hypothesis_id_fk", dependent: :nullify
-  add_foreign_key "tasks", "members", name: "tasks_assigned_to_member_id_fk", column: "assigned_to_member_id", dependent: :nullify
-  add_foreign_key "tasks", "projects", name: "goals_project_id_fk", dependent: :delete
+  add_foreign_key "tasks", "hypotheses", :name => "tasks_hypothesis_id_fk", :dependent => :nullify
+  add_foreign_key "tasks", "members", :name => "tasks_assigned_to_member_id_fk", :column => "assigned_to_member_id", :dependent => :nullify
+  add_foreign_key "tasks", "projects", :name => "goals_project_id_fk", :dependent => :delete
 
-  add_foreign_key "user_activities", "members", name: "user_activities_member_id_fk", dependent: :nullify
-  add_foreign_key "user_activities", "users", name: "user_activities_user_id_fk", dependent: :delete
+  add_foreign_key "user_activities", "members", :name => "user_activities_member_id_fk", :dependent => :nullify
+  add_foreign_key "user_activities", "users", :name => "user_activities_user_id_fk", :dependent => :delete
 
 end
