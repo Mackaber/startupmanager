@@ -72,10 +72,14 @@ module LeanLaunchLab
     
     config.action_mailer.delivery_method = :smtp
     config.action_mailer.smtp_settings = {
-      :address => "localhost",
-      :port => 25,
-      :domain => "leanlaunchlab.com"
-    }    
+        :address        => 'smtp.sendgrid.net',
+        :port           => '587',
+        :authentication => :plain,
+        :user_name      => ENV['SENDGRID_USERNAME'],
+        :password       => ENV['SENDGRID_PASSWORD'],
+        :domain         => 'heroku.com',
+        :enable_starttls_auto => true
+    }
 
     def utc_end_of_week
       Time.now.utc.end_of_week.to_date
