@@ -37,3 +37,6 @@ bower.json
 .env
 .env.*
 config/database.yml
+
+#Igonre everything in vendor
+/vendor/cache
