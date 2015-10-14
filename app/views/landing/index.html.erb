@@ -1,218 +1,74 @@
-<div id="landing-banner">
-  <div class="wrap-inner">
-    <div class="landing-banner">
-      <h1>      
+<div class="row">
+  <div class="container"">
+    <div class="col-md-3">
+      <h1>
         The <span>easy way</span> for your team to go lean.
       </h1>
-      <div class="video">
-        <div>
-          <p>Watch Video <span>(1 minute)</span></p>
-          <a href="#" class="play">Play</a>
-          <%= image_tag 'v2/preview.png' %>
-        </div>
-      </div>      
       <p class="sponsor">
         Innovation Management Software for lean startups&trade; and custdev teams
       </p>
       <%= link_to("Sign Up Now <span>Free 30-day trial</span>".html_safe, new_user_registration_path, :class => "signup") %>
       <%= link_to("*See pricing and plans", new_user_registration_path, :class => "pricing") %>
     </div>
-  </div>
-</div>
-<div class="land-feature">
-  <div class="wrap-inner">
-    <div class="glow">
-      <div class="sponsor">
-        <h3>Sponsors</h3>
-        <%= link_to(image_tag("v2/morgon-lewis.gif", :alt => ""), resource_path(:id => "legal")) %>
-        <%= link_to(image_tag("v2/roseryan-logo.gif", :alt => ""), resource_path(:id => "finance")) %>
-        <%= link_to(image_tag("v2/SVB-logo.jpeg", :alt => ""), resource_path(:id => "banking")) %>
-      </div>
-      <ul>
-        <li>Visualize your business model using the canvas.
-        </li>
-        <li class="track">Track hypotheses and experiments.
-        </li>
-        <li class="store">Store customer interviews in one place.
-        </li>
-        <li class="keep">Keep advisors, investors, &amp; managers in the loop.
-        </li>
-      </ul>
-    </div>
-  </div>
-</div>
-<div class="land-testimonial">
-  <div class="featured-section">
-    <div class="wrap-inner">
-      <h3 class="featuredon">
-        Featured On
-      </h3>
-      <ul>
-        <li>
-          <a target="_blank" href="http://techcocktail.com/define-and-test-your-business-model-with-leanlaunchlab-2012-02" class="tech">Tech</a>
-        </li>
-        <li>
-          <a target="_blank" href="http://pandodaily.com/2012/03/22/leanlaunchlab-is-bringing-lean-startup-tools-to-enterprise/" class="pando">pando</a>
-        </li>
-        <li>
-          <a target="_blank" href="http://gigaom.com/2011/06/30/leanlaunchpa/" class="gigaom">gigaom</a>
-        </li>
-        <li>
-          <a target="_blank" href="http://www.forbes.com/sites/tedgreenwald/2012/02/23/leanlaunchlab-online-tools-for-nimble-startups/" class="forbes">forbes</a>
-        </li>
-      </ul>
-    </div>
-  </div>
-  <div class="wrap-inner">
-    <h3>
-      What People Are Saying
-    </h3>
-    <div class="article-column">
-      <div class="article">
-        <div>
-          <%= image_tag("v2/david-weekly.jpeg", :alt => "") %>
-          <p>
-            "As an Entrepreneur In Residence at Trinity Ventures, my job is to invent and evaluate business ideas. There's no tool out there today that is anywhere near as helpful as LLL for systematically assessing the hypotheses underlying a potential business."
-          </p>
-          <p>
-            <strong>David Weekly</strong>, <em>Founder, PBWorks, HackerDojo, Mexican.VC</em>
-          </p>
-        </div><%= image_tag("v2/article-arrow.png", :class => "arrow", :alt => "") %>
-      </div>
-      <div class="article">
-        <div>
-          <%= image_tag("v2/dillon-mcdonald.jpeg", :alt => "") %>
-          <p>
-            "LLL provides the unique mix of business model canvas and blog functionality that allows for better management of information and BOD's. hugely helpful as we teach startups how to manage their resources."
-          </p>
-          <p>
-            <strong>Dillon McDonald</strong>, <em>Partner, Greenstart Accelerator</em>
-          </p>
-        </div><%= image_tag("v2/article-arrow.png", :class => "arrow", :alt => "") %>
-      </div>
-      <div class="article">
-        <div>
-          <%= image_tag("v2/josh-kopelman.jpg", :alt => "") %>
-          <p>
-            "We're looking forward to testing LeanLaunchLab with a handful of our early stage portfolio companies."
-          </p>
-          <p>
-            <strong>Josh Kopelman</strong>, <em>Managing Partner, First Round Capital</em>
-          </p>
-        </div><%= image_tag("v2/article-arrow.png", :class => "arrow", :alt => "") %>
-      </div>
-    </div>
-    <div class="article-column">
-      <div class="article">
-        <div>
-          <%= image_tag("v2/jonathan-abrams.jpeg", :alt => "") %>
-          <p>
-            "LeanLaunchLab takes startups out of the dark ages of inefficient board meetings and into the future of successful customer development."
-          </p>
-          <p>
-            <strong>Jonathan Abrams</strong>, <em>Founder, Nuzzel, Founders Den, Friendster</em>
-          </p>
-        </div><%= image_tag("v2/article-arrow.png", :class => "arrow", :alt => "") %>
-      </div>
-      <div class="article">
-        <div>
-          <%= image_tag("v2/chuck-eesley.jpeg", :alt => "") %>
-          <p>
-            "LeanLaunchLab allows me to see the progress the Stanford student teams in my class are making on their ventures on a week by week basis. It also reinforces to them the hypothesis testing methodology and that they should think in terms of experiments, outcomes and what they're learning as part of the process."
-          </p>
-          <p>
-            <strong>Chuck Eesley</strong>, <em>Professor, Stanford University</em>
-          </p>
-        </div><%= image_tag("v2/article-arrow.png", :class => "arrow", :alt => "") %>
-      </div>
-      <div class="article">
-        <div>
-          <%= image_tag("v2/dan-martell.jpg", :alt => "") %>
-          <p>
-            "I can't wait to use LeanLaunchLab at Flowtown and with my investment portfolio companies to improve founder/investor communications."
-          </p>
-          <p>
-            <strong>Dan Martell</strong>, <em>Founder, Flowtown</em>
-          </p>
-        </div><%= image_tag("v2/article-arrow.png", :class => "arrow", :alt => "") %>
-      </div>
-    </div>
-    <div class="article-column">
-      <div class="article">
-        <div>
-          <%= image_tag("v2/trevor-owens.jpeg", :alt => "") %>
-          <p>
-            "Lean Launch Lab is the perfect tool for teams to rigorously test and report their assumptions, leading to faster progress. Versioning is a concept in Lean Startup that's important to avoid after-the-fact rationalization and paint a clear path forward. Lean Launch Lab does this better than any tool I know of."
-          </p>
-          <p>
-            <strong>Trevor Owens</strong>, <em>Founder, Lean Startup Machine</em>
-          </p>
-        </div><%= image_tag("v2/article-arrow.png", :class => "arrow", :alt => "") %>
-      </div>
-      <div class="article">
-        <div>
-          <%= image_tag("v2/nick-swinmurn.jpg", :alt => "") %>
-          <p>
-            "I love what LeanLaunchLab is doing. I wish I had something like this when I was starting Zappos."
-          </p>
-          <p>
-            <strong>Nick Swimnurn</strong>, <em>Founder, Zappos, RNKD</em>
-          </p>
-        </div><%= image_tag("v2/article-arrow.png", :class => "arrow", :alt => "") %>
-      </div>
-      <div class="article">
-        <div>
-          <%= image_tag("v2/jon-bischke.jpg", :alt => "") %>
-          <p>
-            "I'm looking forward to using LeanLaunchLab at RG Labs and with the startups that I advise."
-          </p>
-          <p>
-            <strong>Jon Bischke</strong>, <em>Founder, RG Labs</em>
-          </p>
-        </div><%= image_tag("v2/article-arrow.png", :class => "arrow", :alt => "") %>
-      </div>
-    </div>
-  </div>
-  <br class="spacer">
-</div>
-<div class="story-block">
-  <div class="wrap-inner">
-    <h2>
-      The Steve Blank Story
-    </h2>
-    <div class="intro">
-      <%= image_tag("v2/photo-1.jpg", :height => "103", :width => "96", :alt => "") %>
-      <h3>
-        "Ben pitched me his idea but by the end of the meeting I had sold him on <em>my</em> new idea."
-      </h3>
-    </div>
-    <p>
-      I find myself telling this story to a lot of entrepreneurs I meet, mainly because it's probably the coolest thing that's ever happened to me. And I still wake up each morning and think I'm the luckiest guy ever.
+    <div class="col-md-3">
+    <h1>
+      The <span>easy way</span> for your team to go lean.
+    </h1>
+    <p class="sponsor">
+      Innovation Management Software for lean startups&trade; and custdev teams
     </p>
-    <p>
-      For the past few years I had been working independently on a site called <a href="http://www.techcofounder.com" target="_blank">Techcofounder.com</a> which is a lot like a dating site for entrepreneurs. It's very simple, but people seem to like it and it caught the eye of a VC named <a href="http://www.menloventures.com/team_bio.html?id=6" target="_blank">Shawn Carolan (Menlo Ventures)</a>. Shawn and <a href="http://www.steveblank.com" target="_blank">Steve</a> are friends and Shawn thought it would be a good idea for us to meet and maybe partner in some way. "Hell yea!", I'd love the opportunity to meet <a href="http://www.steveblank.com" target="_blank">Steve</a>, no matter what comes out of it. So the three of us sit down for coffee in mid-May and I give the best elevator pitch I can. <a href="http://www.steveblank.com" target="_blank">Steve</a> really liked the idea. He offered up some advice and asked if I needed any intros. Perfect! But then, for the next 20 minutes he started talking about his own ideas, and they were fantastic. He told us about how startup board meetings were broken and how he may have stumbled upon an innovative solution while teaching his class at Stanford. I casually asked <a href="http://www.steveblank.com" target="_blank">Steve</a> if he was going to pursue this idea and he said "well, no, I'm retired." I look at Shawn, then I look back at <a href="http://www.steveblank.com" target="_blank">Steve</a> and say "I'll build it." <a href="http://www.steveblank.com" target="_blank">Steve</a> says "That's great! And!...you should demo it with me on stage at the Startup Lessons Learned conference." Whoa! Within one hour I had gone from pitching <a href="http://www.steveblank.com" target="_blank">Steve Blank</a> an idea to starting a company based on his idea. A week later Shawn's investment hit the bank and a week after that I got on stage with <a href="http://www.steveblank.com" target="_blank">Steve</a> and launched a product with nothing more than a power point deck. LeanStartup at its finest.
+    <%= link_to("Sign Up Now <span>Free 30-day trial</span>".html_safe, new_user_registration_path, :class => "signup") %>
+    <%= link_to("*See pricing and plans", new_user_registration_path, :class => "pricing") %>
+    </div>
+    <div class="col-md-3">
+    <h1>
+      The <span>easy way</span> for your team to go lean.
+    </h1>
+    <p class="sponsor">
+      Innovation Management Software for lean startups&trade; and custdev teams
     </p>
-    <p>
-      Ben Mappen<br>
-      Founder, LeanLaunchLab<br>
-      ben@leanlaunchlab.com
+    <%= link_to("Sign Up Now <span>Free 30-day trial</span>".html_safe, new_user_registration_path, :class => "signup") %>
+    <%= link_to("*See pricing and plans", new_user_registration_path, :class => "pricing") %>
+    </div>
+    <div class="col-md-3">
+    <h1>
+      The <span>easy way</span> for your team to go lean.
+    </h1>
+    <p class="sponsor">
+      Innovation Management Software for lean startups&trade; and custdev teams
     </p>
+    <%= link_to("Sign Up Now <span>Free 30-day trial</span>".html_safe, new_user_registration_path, :class => "signup") %>
+    <%= link_to("*See pricing and plans", new_user_registration_path, :class => "pricing") %>
+    </div>
+    <div class="col-md-12">
+    <h1>
+      The <span>easy way</span> for your team to go lean.
+    </h1>
+    <p class="sponsor">
+      Innovation Management Software for lean startups&trade; and custdev teams
+    </p>
+    <%= link_to("Sign Up Now <span>Free 30-day trial</span>".html_safe, new_user_registration_path, :class => "signup") %>
+    <%= link_to("*See pricing and plans", new_user_registration_path, :class => "pricing") %>
+    </div>
+    <div class="col-md-12">
+    <h1>
+      The <span>easy way</span> for your team to go lean.
+    </h1>
+    <p class="sponsor">
+      Innovation Management Software for lean startups&trade; and custdev teams
+    </p>
+    <%= link_to("Sign Up Now <span>Free 30-day trial</span>".html_safe, new_user_registration_path, :class => "signup") %>
+    <%= link_to("*See pricing and plans", new_user_registration_path, :class => "pricing") %>
+    </div>
+    <div class="col-md-12">
+    <h1>
+      The <span>easy way</span> for your team to go lean.
+    </h1>
+    <p class="sponsor">
+      Innovation Management Software for lean startups&trade; and custdev teams
+    </p>
+    <%= link_to("Sign Up Now <span>Free 30-day trial</span>".html_safe, new_user_registration_path, :class => "signup") %>
+    <%= link_to("*See pricing and plans", new_user_registration_path, :class => "pricing") %>
+    </div>
   </div>
 </div>
-
-<% content_for(:scripts) do %>
-  <script type="text/javascript">      
-    $(function() {
-      $("a.play").click(function() {
-        $('<div><iframe width="853" height="505" src="' + "https://player.vimeo.com/video/39687297?autoplay=1" + '" frameborder="0" allowfullscreen></iframe></div>').dialog({
-          title: "Intro to LeanLaunchLab",
-          width: 881,
-          height: 575,
-          zIndex: 10001,
-          close: function(event, ui) { $(this).dialog("destroy").remove() }
-        });
-      });
-      mpq.track("Landing Loaded");
-    });
-  </script>
-<% end %>

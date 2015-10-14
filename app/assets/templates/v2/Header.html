@@ -1,66 +1,35 @@
-<div class="topbar">
-  <div class="topbar-inner">
+<nav class="navbar navbar-inverse navbar-static-top">
     <div class="container-fluid">
-      <a class="brand" href="/"><img alt="LeanLaunchLab"></a>
-      <ul class="nav">
-        <li class="dropdown resources">
-          <a href="#" class="dropdown-toggle">
-            <img class="new">
-            Resources
-          </a>
-          <ul class="dropdown-menu">
-            <li>
-              <a href="/resources/banking">Banking advice</a>
-            </li>
-            <li>
-              <a href="/resources/finance">Finance advice</a>
-            </li>
-            <li>
-              <a href="/resources/legal">Legal advice</a>
-            </li>
-            <li>
-              <a href="http://www.techcofounder.com" target="_blank">Find a cofounder</a>
-            </li>
-          </ul>
-        </li>
-        <% if (user) { %>
-          <% if (user.get("admin")) { %>
-            <li>
-              <a href="/admin">Admin</a>
-            </li>
-          <% } %>
-          <li class="header-dashboard">
-            <a href="/projects" title="Dashboard allows you to manage multiple projects easily">Dashboard</a>
-          </li>
-          <li class="header-organizations">
-            <a href="/organizations/last">Orgs</a>
-          </li>
-          <li class="header-projects">
-            <a href="/projects/last">Projects</a>
-          </li>
-          <li class="header-settings">
-            <a href="/settings/profile">Settings</a>
-          </li>
-          <li class="header-help">
-            <a href="/help">Help</a>
-          </li>
-          <li class="dropdown">
-            <a href="#" class="dropdown-toggle"><%= user.get("name") %></a>
-            <ul class="dropdown-menu">
-              <li>
-                <a href="/users/sign_out">Log Out</a>
-              </li>
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <a class="navbar-brand brand" href="/"><img alt="Spartans Online Academy"></a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
+            <ul class="nav navbar-nav navbar-right">
+                    <% if (user) { %>
+                    <% if (user.get("admin")) { %>
+                <li><a href="/admin">Admin</a></li>
+                <% } %>
+                <li ><a href="/projects" title="Dashboard allows you to manage multiple projects easily">Dashboard</a></li>
+                <li ><a href="/organizations/last">Orgs</a></li>
+                <li ><a href="/projects/last">Projects</a></li>
+                <li ><a href="/settings/profile">Settings</a></li>
+                <li ><a href="/help">Help</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle"><%= user.get("name") %></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/users/sign_out">Log Out</a></li>
+                    </ul>
+                </li>
+                <% } else { %>
+                <li><a href="/users/sign_up">Inscribirse</a></li>
+                <li><a href="/users/sign_in">Entrar</a></li>
+                <% } %>
+                </li>
             </ul>
-          </li>                
-        <% } else { %>
-          <li class="signup">
-            <a href="/users/sign_up">Pricing</a>
-          </li>
-          <li class="signin">
-            <a href="/users/sign_in">Login</a>
-          </li>
-        <% } %>
-      </ul>
-    </div>
-  </div>
-</div>
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>

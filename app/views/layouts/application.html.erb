@@ -3,7 +3,7 @@
 <html id="<%= content_for?(:body_class) ? yield(:body_class) : nil %>" lang="en">
   <head>
     <meta charset="utf-8">
-    <title><%= h(content_for?(:title) ? yield(:title) : "LeanLaunchLab") %></title>
+    <title><%= h(content_for?(:title) ? yield(:title) : "Spartans Online Academy") %></title>
     <%= csrf_meta_tag %>
 
     <!--[if lt IE 9]>
@@ -11,17 +11,19 @@
     <![endif]-->
     
     <%= stylesheet_link_tag :v2 %>
+
     <%= yield(:styles) %>
 
     <link rel="shortcut icon" href="/favicon.ico">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
     
     <%= yield(:script_head) %>
   </head>
 
   <body id="<%= content_for?(:body_class) ? yield(:body_class) : "body" %>">
-    <div id="header" data-active="<%= header_active %>"></div>
-    
-    <div id="wrapper" class="container-fluid">      
+  <div data-active="<%= header_active %>"></div>
+
+    <div id="wrapper" class="container-fluid">
       <div id="main">
         <%= yield %>
       </div>
@@ -52,21 +54,9 @@
           });
         });    
       </script>
-    <% end %>    
-    
-    <!--[if lt IE 8]>
-    <script type="text/javascript">
-    //<![CDATA[
-      $(function() {
-        lll.views.warn("LeanLaunchLab is optimized for Chrome, Firefox, Safari, and IE >= 8.  You appear to be running IE < 8.");
-      });
-    //]]>
-    </script>
-    <![endif]-->
+    <% end %>
     
     <% if ["production", "staging"].include?(Rails.env) %>
-      <%= render(:partial => "/layouts/olark")%>
-      <%= render(:partial => "/layouts/user_voice")%>
     <% end %>
   </body>
 </html>

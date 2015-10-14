@@ -4,16 +4,16 @@
   <head>
     <meta charset="utf-8">
     <link rel="shortcut icon" href="/favicon.ico">
-    <title>LeanLaunchLab: Test and innovate on your business model using the business model canvas, lean startup, and customer development</title>
-    <meta name="description" content="Test and innovate on your business model using the business model canvas, lean startup, and customer development">
-    <meta name="keywords" content="business model, business model canvas, business model innovation, business model validation, hypothesis testing, lean startup, customer development">
+    <title>Spartans Online Academy | Entrénate de manera intensiva y profesional en emprendimiento.</title>
+    <meta name="description" content="Spartans Online Academy: Entrénate de manera intensiva y profesional en emprendimiento.">
+    <meta name="keywords" content="Spartans Online Academy: Entrénate de manera intensiva y profesional en emprendimiento.">
     <meta name="tracking_code" content="<%= tracking_code %>">
     <!--[if lt IE 9]>
       <script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
     <!-- Le styles -->
     <%= stylesheet_link_tag "v2", :media => "all" %>
-    <link href='https://fonts.googleapis.com/css?family=Inder' rel='stylesheet' type='text/css'>
+
     <%= yield(:script_head) %>
     <style type="text/css">
       html {
@@ -22,54 +22,32 @@
     </style>
   </head>
   <body id="landing">
-    <div id="wrapp">
+    <div id="wrapper">
       <div id="header" data-active="<%= header_active %>"></div>
 
       <%= yield(:layout) %>
 
-      <div id="footer">
-        <div class="wrap-inner">
-          <a href="#"><%= image_tag("v2/logo.png", :alt => "", :border => "0", :class => "footer-logo") %></a>
-          <ul class="icons">
-            <li class="facebook last">
-              <div class="fb-like" data-href="http://www.facebook.com/leanlaunchlab" data-send="true" data-width="450" data-show-faces="false"></div>              
-            </li>
-            <li class="twitter">
-              <a href="https://twitter.com/LeanLaunchLab" class="twitter-follow-button" data-show-count="false"><%= image_tag("v2/twitter-icon.png", :alt => "") %></a>
-            </li>
-          </ul>
-          <br class="spacer">
+      <footer class="footer">
+        <div class="container text-center">
+          <p class="text-muted"><%= copyright.html_safe %></p>
+          <p><small>
+            The Canvas is adapted from <%= link_to("businessmodelgeneration.com", "http://businessmodelgeneration.com", :target => "_blank") %> and is licensed under the Creative Commons Attribution-Share Alike 3.0 Unported License.
+          </small></p>
           <p>
-            <%= copyright.html_safe %>
-            <br/>
-            <small>
-              The Canvas is adapted from <%= link_to("businessmodelgeneration.com", "http://businessmodelgeneration.com", :target => "_blank") %> and is licensed under the Creative Commons Attribution-Share Alike 3.0 Unported License.
-            </small>
-          </p>
-          <ul>
-            <li>
-              <%= link_to("Terms", terms_path, :target => "_blank") %>
-            </li>
-            <li class="last">
+              <%= link_to("Terms", terms_path, :target => "_blank") %> |
               <%= link_to("Privacy", privacy_path, :target => "_blank") %>
-            </li>
-            <!-- <li>
-              <a href="#">About</a>
-            </li> -->
-            <!-- <li class="last">
-              <a href="#">Pricing</a>
-            </li> -->
-          </ul>          
+          </p>
         </div>
-      </div>
+      </footer>
+
     </div>
     <div id="fb-root"></div>
     <%= include_gon(:camel_case => true, :namespace => 'lllData') %>
     <%= javascript_include_tag :v2 %>
     <%= yield(:scripts) %>
-    <script type="text/javascript">      
+    <script type="text/javascript">
       !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
-      
+
       (function(d, s, id) {
         var js, fjs = d.getElementsByTagName(s)[0];
         if (d.getElementById(id)) return;
@@ -77,10 +55,10 @@
         js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=159637014149720";
         fjs.parentNode.insertBefore(js, fjs);
       }(document, 'script', 'facebook-jssdk'));
-      
+
       $(function() {
         $(".topbar").dropdown();
-        
+
         $(".sponsor-body a[target='_blank']").click(function() {
           lll.views.track("<%= params[:id] %> resource", "load", $(this).attr("data-original-title"));
         });

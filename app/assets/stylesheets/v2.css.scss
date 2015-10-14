@@ -129,10 +129,6 @@ div#wrapper{
   background:url('v2/hover-bg.gif') 50% 100% no-repeat;
 }
 
-div#header{
-  top:0px;left:0px;right:0px;
-  height:60px
-}
 /*Header CSS ends*/
 
 /*Buttons*/
@@ -194,7 +190,7 @@ div#header{
 #dashboard .topbar div > ul > li, .nav > li {
   display: block;
   float: left;
-  padding:0 5px ;
+  padding:10px 5px ;
 }
 
 #dashboard .topbar div > ul a, .nav a {
