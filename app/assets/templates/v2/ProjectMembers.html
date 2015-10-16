@@ -3,7 +3,7 @@
     <div class="info-bar paym-info-bar">
       Project: <span><%= project.get("name") %> (<span class="member-count"><%= project.members().length %></span> members)</span>
       <% if (project.organization().currentMember().get("level") == "Admin" && project.organization().subscriptionLevel()) { %>
-        Subscription Plan:
+        Plan de Suscripción:
         <%= organization.subscriptionLevel().get("name") %>
       <% } %>
     </div>  

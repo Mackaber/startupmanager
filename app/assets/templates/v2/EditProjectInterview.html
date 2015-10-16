@@ -1,34 +1,34 @@
 <form class="blog_post interview form-stacked">
   <fieldset>
     <div class="clearfix name">
-      <label for="title">Interviewee Name<span class="help-inline">(required)</span></label>
+      <label for="title">Nombre del Entrevistado<span class="help-inline">(requerido)</span></label>
       <input type="text" id="title" name="title" value="<%= blog_post.get('title') %>" class="span4"></input>
       <span class="help-block error"></span>
     </div>
     <div class="clearfix company">
-      <label for="title">Interviewee Company</label>
+      <label for="title">Empresa del Entrevistado</label>
       <input type="text" id="text1" name="text1" value="<%= blog_post.get('text1') %>" class="span4"></input>
       <span class="help-block error"></span>
     </div>
     <div class="clearfix">
-      <label for="title">Contact Info</label>
+      <label for="title">Información de Contacto</label>
       <input type="text" class="span8" id="text2" name="text2" value="<%= blog_post.get('text2') %>"></input>
-      <span class="help-block">Email, phone, or both</span>
+      <span class="help-block">Email, telefono, o ambos</span>
       <span class="help-block error"></span>
     </div>
     <div class="clearfix">
-      <label for="description">Interview Details</label>
+      <label for="description">Detalles de la Entrevista</label>
       <textarea class="span7" id="description_<%= blog_post.id %>" name="description"><%= blog_post.get("description") %></textarea>
       <span class="help-block error"></span>
     </div>    
     <div class="clearfix">
-      <label for="date">Interview Date</label>
+      <label for="date">Fecha de la Entrevista</label>
       <input type="text" class="span2 date" id="date" name="date" value="<%= blog_post.get('date') ? blog_post.get('date').toString("yyyy-MM-dd") : '' %>"></input>
       <span class="help-block error"></span>
     </div>
   </fieldset>
   <div class="actions">
     <button class="btn small publish"><%= blog_post.isNew() ? "Publish" : "Save" %> Interview</button>
-    <button class="btn small cancel">Cancel</button>
+    <button class="btn small cancel">Cancelar</button>
   </div>
 </form>

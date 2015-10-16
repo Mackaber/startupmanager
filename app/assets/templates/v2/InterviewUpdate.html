@@ -2,7 +2,7 @@
   <span class="cal"><%= blog_post.get("published_at").toString("MMM d, yyyy")%></span>
   <a href="#" class="interview">
     <% if (is_new) { %>
-      <span class="new">New</span>
+      <span class="new">Nuevo</span>
     <% } %>
     <%= blog_post.get("title") %>
     <% if (blog_post.get("text1")) { %>
@@ -15,7 +15,7 @@
   </a>
 </p>
 <p class="details">
-  in 
+  en
   <a href="<%= blog_post.project().get('interviews_url') %>"><%= blog_post.project().get("name") %></a>
   <% if (blog_post.member()) { %>
     (<%= blog_post.member().user().get("name") %>)
@@ -24,7 +24,7 @@
 
 <% if (blog_post.get("the_ask")) { %>
   <div class="askbar">
-    The Ask
+    La Pregunta
     <span><%= blog_post.get("the_ask") %></span>
   </div>
 <% } %>
@@ -33,9 +33,9 @@
   <div class="description"><%- blog_post.get("description") %></div>
 <% } %>
 
-<h4>Attachments</h4>
+<h4>Archivos Adjuntos</h4>
 <div class="attachments"></div>
 <div class="upload"></div>
 
-<h4>Comments</h4>
+<h4>Comentarios</h4>
 <div class="comments"></div>

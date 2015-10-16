@@ -8,7 +8,7 @@
   </a>
 </p>
 <p class="details">
-  in 
+  in
   <a href="<%= blog_post.project().get('journal_url') %>"><%= blog_post.project().get("name") %></a>
   <% if (blog_post.member()) { %>
     (<%= blog_post.member().user().get("name") %>)
@@ -26,9 +26,9 @@
   <div class="description"><%- blog_post.get("description") %></div>
 <% } %>
 
-<h4>Attachments</h4>
+<h4>Adjuntos</h4>
 <div class="attachments"></div>
 <div class="upload"></div>
 
-<h4>Comments</h4>
+<h4>Comentarios</h4>
 <div class="comments"></div>

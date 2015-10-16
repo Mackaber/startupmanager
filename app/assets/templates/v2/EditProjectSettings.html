@@ -1,29 +1,29 @@
 <form class="project form-stacked">
   <fieldset>
     <div class="clearfix">
-      <label>Organization<span class="help-inline">(you must be an Admin to add a project to an organization)</span></label>              
+      <label>Organización<span class="help-inline">(Debes de ser Administrador para agregar un proyecto a una organización)</span></label>
       <% if (organizations.length == 0) { %>
-        <span class="no-admin">You are not an Admin of any organization that can create a new project.</span>
-        <a href="#" class="new-organization">create a new organization</a>
+        <span class="no-admin">No eres administrador de ninguna organización que puede crear un nuevo proyecto.</span>
+        <a href="#" class="new-organization">crar una nueva organización</a>
       <% } else { %>
         <select id="organization_id" name="organization_id">
           <% _.each(_.sortBy(organizations, function(org) { return org.get("name").toLowerCase() }), function(organization) { %>
             <option value="<%= organization.id %>" <%= organization.id == project.get("organization_id") ? "selected='selected'" : "" %>><%= organization.get("name") %></option>
           <% }); %>
         </select>
-        <a href="#" class="new-organization">or create a new organization</a>
+        <a href="#" class="new-organization">o crea una nueva organización</a>
       <% } %>
       <input type="text" class="span7" id="organization_name" name="organization_name"></input>
       <span class="help-block error"></span>
     </div>
     <div class="clearfix">
-      <label for="name">Project Name<span class="help-inline">(required)</span></label>
+      <label for="name">Nombre del Proyecto<span class="help-inline">(requerido)</span></label>
       <input type="text" class="span7" id="name" name="name"></input>
       <span class="help-block error"></span>
     </div>
   </fieldset>
   <div class="actions">
-    <button class="btn small save"><%= project.isNew() ? "Create" : "Update" %> Project</button>
-    <button class="btn small cancel">Cancel</button>
+    <button class="btn small save"><%= project.isNew() ? "Crear" : "Update" %> Proyecto</button>
+    <button class="btn small cancel">Cancelar</button>
   </div>
 </form>

@@ -43,35 +43,35 @@
         <% } %>
       <% } %>        
       <select id="status" name="status">
-        <option value="">To do</option>
-        <option value="started">In progress </option>
-        <option value="valid">Validated</option>
-        <option value="invalid">Invalidated </option>
-        <option value="unknown">Unknown</option>
+        <option value="">Pendientes</option>
+        <option value="started">En progreso </option>
+        <option value="valid">Validados</option>
+        <option value="invalid">Invalidados </option>
+        <option value="unknown">Desconocido</option>
       </select>
       <% if (hypothesis.get("completed_at")) { %>
         <span>
-          on
+          en
           <input type="text" class="date" id="completed_at_<%= hypothesis.id %>" name="completed_at" value="<%= hypothesis.get('completed_at').toString("yyyy-MM-dd") %>"/>        
         </span>      
       <% } else if (hypothesis.get("created_at")) { %>
         <span>
-          Created on
+          Creada el
           <%= hypothesis.get("created_at").toString("MMM d, yyyy") %>
           <% if (hypothesis.get("created_by_member_id")) { %>
-            by
+            por
             <%= hypothesis.member().user().get("name") %>
           <% } %>
         </span>
       <% } %>
       <span class="manage">
-        <button class="btn small expand">Save</button>
-        <button class="btn small danger delete">Delete</button>
+        <button class="btn small expand">Guardar</button>
+        <button class="btn small danger delete">Borrar</button>
       </span>      
     </div>
     <div class="steps description">
       <h4>
-        <strong>Details</strong>
+        <strong>Detalles</strong>
       </h4>
       <ul class="hov details">
         <li></li>
@@ -85,16 +85,16 @@
     </div>    
     <div class="expanded-content expand-section expand-hypothesis">      
       <div class="steps">
-        <h4>Attachments</h4>
+        <h4>Archivos adjuntos</h4>
         <div class="attachments"></div>
         <div class="upload"></div>
       </div>
       <div class="steps">
-        <h4>Comments</h4>
+        <h4>Comentarios</h4>
         <div class="comments"></div>
       </div>
       <div class="steps">
-        <h4>Permalink URL</h4>
+        <h4>URL</h4>
         <div class="permalink"></div>
       </div>
     </div>

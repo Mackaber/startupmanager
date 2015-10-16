@@ -5,7 +5,7 @@
 <% } %>
 <form action="" method="get">
   <p>
-    <label>Name</label>
+    <label>Nombre</label>
     <input type="text" name="name" id="name" value="<%= question.get('name') %>">
   </p>
   <p>
@@ -13,7 +13,7 @@
     <input type="text" name="email" id="email" value="<%= question.get('email') %>">
   </p>
   <p>
-    <label>Company</label>
+    <label>Compañia</label>
     <input type="text" name="company" id="company" value="<%= question.get('company') %>">
   </p>
   <% if (!compact) { %>
@@ -22,44 +22,44 @@
     <input type="text" name="url" id="url" value="<%= question.get('url') %>">
   </p>
   <p>
-    <label>Location</label>
+    <label>Lugar</label>
     <input type="text" name="location" id="location" value="<%= question.get('location') %>">    
   </p>
   <p>
-    <label>Industry</label>
+    <label>Industria</label>
     <select name="industry" id="industry">
-      <option value="">Select your industry</option>
-      <option value="Communications & Media">Communications &amp; Media</option>
-      <option value="Distribution & Retail">Distribution &amp; Retail</option>
-      <option value="Energy & Chemicals">Energy &amp; Chemicals</option>
-      <option value="Financial Services">Financial Services</option>
-      <option value="Healthcare">Healthcare</option>
-      <option value="High Tech Hardware">High Tech Hardware</option>
-      <option value="High Tech Software & Service">High Tech Software &amp; Service</option>
-      <option value="Insurance">Insurance</option>
-      <option value="Life Sciences">Life Sciences</option>
-      <option value="Manufacturing">Manufacturing</option>
-      <option value="Nonprofit , Education & Public sector">Nonprofit , Education &amp; Public sector</option>
-      <option value="Travel & Transportation">Travel &amp; Transportation</option>
+      <option value="">Selecciona tu Industria</option>
+      <option value="Communications & Media">Comunicación &amp; Medios</option>
+      <option value="Distribution & Retail">Distribución &amp; Venta al Detalle</option>
+      <option value="Energy & Chemicals">Energía &amp; Quimicos</option>
+      <option value="Financial Services">Servicios Financieros</option>
+      <option value="Healthcare">Cuidado de la salud</option>
+      <option value="High Tech Hardware">Alta Tecnología (Hardware)</option>
+      <option value="High Tech Software & Service">Alta Tecnología (Software) &amp; Servicio</option>
+      <option value="Insurance">Aseguradoras</option>
+      <option value="Life Sciences">Ciencias Sociales</option>
+      <option value="Manufacturing">Manufactura</option>
+      <option value="Nonprofit , Education & Public sector">Sin fines de lucro , Educación &amp; Sector Público</option>
+      <option value="Travel & Transportation">Viajes &amp; Transportes</option>
     </select>
   </p>
   <p>
-    <label>How funded</label>
+    <label>Fuente de Financiamiento</label>
     <select name="funded" id="funded">
-      <option value="">Select funding stage</option>
-      <option value="Self-funded/Friends & Family">Self-funded/Friends &amp; Family</option>
-      <option value="Angel investment">Angel investment</option>
-      <option value="Venture capital - A round">Venture capital - A round</option>
-      <option value="Venture capital - B round">Venture capital - B round</option>
-      <option value="Venture capital - C round">Venture capital - C round</option>
-      <option value="Partner/ Corporate">Partner/ Corporate</option>
-      <option value="Private placement">Private placement</option>
-      <option value="Other">Other</option>
+      <option value="">Selecciona tus fuentes de financiamiento</option>
+      <option value="Self-funded/Friends & Family">Dinero propio o de familia</option>
+      <option value="Angel investment">Angel Inversionista</option>
+      <option value="Venture capital - A round">Capital de Riezgo - A</option>
+      <option value="Venture capital - B round">Capital de Riezgo - B</option>
+      <option value="Venture capital - C round">Capital de Riezgo - C</option>
+      <option value="Partner/ Corporate">Alianza Corporativa</option>
+      <option value="Private placement">Prestamos de banco</option>
+      <option value="Other">Otro</option>
     </select>
   </p>
   <% } %>
   <p>
-    <label class="big">Your Question</label>
+    <label class="big">Tus Preguntas</label>
     <textarea name="question" id="question">
 </textarea>
   </p>

@@ -21,7 +21,7 @@
   </head>
 
   <body id="<%= content_for?(:body_class) ? yield(:body_class) : "body" %>">
-  <div data-active="<%= header_active %>"></div>
+  <%= render(:partial => "/layouts/header") %>
 
     <div id="wrapper" class="container-fluid">
       <div id="main">

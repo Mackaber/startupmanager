@@ -1,27 +1,27 @@
 <ul class="topul">
   <li class="first">
     <h2>
-      Projects
+      Proyectos
     </h2>
   </li>
 </ul>
 <div class="projects-sidebar">
   <div class="all-projects">
-    <a href="#">All Projects <span></span></a>
+    <a href="#">Todos los Proyector <span></span></a>
   </div>
   <% _.each(_.sortBy(organizations, function(organization) { return (organization.get("name").toLowerCase()) }), function(organization) { %>
   <ul class="group">
     <li>
       <div class="projest-label">
-        <a href="#" class="organization" data-model-id="<%= organization.id %>">ORG: <%= organization.get("name") %> <span></span></a>
+        <a href="#" class="organization" data-model-id="<%= organization.id %>">Org: <%= organization.get("name") %> <span></span></a>
       </div>
       <ul>
         <% var p = _.sortBy(projects.filter(function(project) { return project.get("organization_id") == organization.id }), function(project) { return project.get("name").toLowerCase() }); %>
         <% _.each(p, function(project) { %>
         <li class="project" data-model-id="<%= project.id %>">
           <% recent_canvas = (project.get('canvas_updated_at') && project.get('canvas_updated_at').compareTo(weekAgo) > 0); %>
-          <a href="#" class="<%= project.get('color_code') %>-dot" data-title-placement="right" title="<%=  project.get('color_code') == 'red' ? 'No activity in past two weeks' :  project.get('color_code') == 'yellow' ? 'No activity in last week' : 'This project has recent activity in the past week' %>"></a>
-          <a href="<%= project.get('canvas_url') %>" class="canvas <%= recent_canvas ? 'pro-can-on' : 'pro-can-off' %>" title="<%= recent_canvas ? 'New canvas updates within the last 7 days' : 'No canvas updates in last 7 days' %>" data-title-placement="right">
+          <a href="#" class="<%= project.get('color_code') %>-dot" data-title-placement="right" title="<%=  project.get('color_code') == 'red' ? 'Sin actividad en 2 semanas' :  project.get('color_code') == 'yellow' ? 'Sin actividad hace una semana' : 'Este proyecto ha tenido actividad en la última semana' %>"></a>
+          <a href="<%= project.get('canvas_url') %>" class="canvas <%= recent_canvas ? 'pro-can-on' : 'pro-can-off' %>" title="<%= recent_canvas ? 'Actualización del Canvas en los últimos 7 días' : 'Sin actualización del Canvas en los últimos 7 días' %>" data-title-placement="right">
           <a href="#"><%= project.get("name") %></a>
           <a href="#" class="updates-count"><span></span></a>
         </li>

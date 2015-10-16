@@ -2,21 +2,21 @@
 <div class="body-wrapper">
   <div class="box-wrapper">
     <div class="info-bar">
-      Plans and Payment Info
+      Planes e información de pago
     </div>
     <div class="form-body">
       <% if (organization.get("locked")) { %>
         <div class="admin-info">
-          <p><strong>Your free trial has expired. Submit a credit card to activate your account.</strong></p>
+          <p><strong>Tu prueba gratis se ha terminado. Agrega los datos de tu tarjeta de crédito para activar tu cuenta.</strong></p>
         </div>
       <% } %>
       <div class="accountinfo">
         <% if (level) { %>
           <h2>
-            Your Plan:
+            Tu Plan:
             <%= level.get("name") %>
             <% if (organization.get("subscription_price") == 0) { %>
-              (FREE)
+              (GRATIS)
             <% } else { %>
               ($<%= organization.get("subscription_price").toFixed(0) %>/<%= organization.get("subscription_yearly") ? "year" : "month" %>)
             <% } %>
@@ -25,15 +25,15 @@
           <% if (organization.get("subscription_yearly")) { %>
             <a href="#" class="yearly">
               <small>
-                Back to monthly billing
+                Regresar a pago mensual
               </small>
             </a>
           <% } else if (level.get("yearly_price") != null) { %>
             <a href="#" class="yearly">
               <small>
-                Save
+                Guardar
                 <%= ((1-(level.get("yearly_price") / (level.get("monthly_price")*12)))*100).toFixed(0) %>%
-                by paying
+                pagando
                 $<%= level.get("yearly_price") %> for 12 months
               </small>
             </a>
@@ -41,11 +41,11 @@
           <br class="spacer"/>
           <a class="cancel-account" href="#">or cancel account</a>
         <% } else { %>
-            <h2>Your Plan: Free Trial (FREE)</h2>
+            <h2>Tu plan:: Periodo de prueba (GRATIS)</h2>
         <% } %>
         <div class="cc">
           <% if (organization.get("cc_last4")) { %>
-            <label>We have the following card on file:</label>
+            <label>Tenemos la siguiente tarjeta guardada:</label>
             <span><%= organization.get("cc_type")%> ************<%= organization.get("cc_last4") %> (exp. <%= organization.get("cc_exp_month") %>/<%= organization.get("cc_exp_year") %>)</span>
             <button class="btn signup-bttn edit">Edit</button>
           <% } %>
@@ -53,16 +53,16 @@
       </div>      
       <% if (organization.get("trial_remaining_days")) { %>
         <div class="price-box <% if (!organization.get("subscription_level_id")) { %> price-box-blue <% } %>">
-          <h3><strong>Free Trial (<%= organization.get("trial_remaining_days") %> days remaining)</strong></h3>
+          <h3><strong>Prueba Gratis (<%= organization.get("trial_remaining_days") %> days remaining)</strong></h3>
           <p>
           <% if (organization.get("subscription_level_id")) { %>
-            Your billing period will begin on <%= organization.get("trial_end_date").toDateString() %>
+            El periodo de pago iniciará en <%= organization.get("trial_end_date").toDateString() %>
           <% } else { %>
-            Unlimited use during free trial
+            Uso ilimitado durante periodo de prueba
           <% } %>
           </p>
           <div class="price-bttn">                    
-            <a href="#">Your Plan</a>
+            <a href="#">Tu Plan</a>
           </div>
         </div>
       <% } %>
@@ -74,20 +74,20 @@
           <ul>
             <li>
               <% if (plan.get("max_projects") == 1) { %>
-                1 project
+                1 proyecto
               <% } else if (plan.get("max_projects")) { %>
-                <%= plan.get("max_projects") %> projects
+                <%= plan.get("max_projects") %> proyectos
               <% } else { %>
-                Unlimited projects
+                Proyectos ilimitados
               <% } %>
             </li>
             <li class="collab">
               <% if (plan.get("max_members") == 1) { %>
-                1 collaborator
+                1 colaborador
               <% } else if (plan.get("max_members")) { %>
-                <%= plan.get("max_members") %> collaborators
+                <%= plan.get("max_members") %> colaboradores
               <% } else { %>
-                Unlimited collaborators
+                Colaboradores ilimitados
               <% } %>
             </li>
             <li class="storage">
@@ -96,57 +96,57 @@
               <% } else { %>
                 <%= plan.get("max_storage_mb") %> mb
               <% } %>
-              file storage
+              Espacio para archivos
             </li>
             <li class="email">
               <% if (plan.get("support_chat") && plan.get("support_phone")) { %>
-                Email, chat, and phone
+                Email, chat, y telefono
               <% } else if (plan.get("support_chat")) { %>
-                Email and chat
+                Email y chat
               <% } else { %>
                 Email
               <% } %>
-              Support
+              Soporte
             </li>
           </ul>
           <div class="price-bttn">
             <% if (plan.get("monthly_price")) { %>
               <span class="price-text">
-                $<%= plan.get("monthly_price").toFixed(0) %><small>per month</small>
+                $<%= plan.get("monthly_price").toFixed(0) %><small>al mes</small>
               </span>
-              <a href="#">Select</a>
+              <a href="#">Seleccionar</a>
               <% if (plan.get("yearly_price")) { %>
                 <p>
-                  or $<%= plan.get("yearly_price").toFixed(0) %> for 12 months (<%= ((1-(plan.get("yearly_price")/(12*plan.get("monthly_price"))))*100).toFixed(0) %>% discount)
+                  o $<%= plan.get("yearly_price").toFixed(0) %> por 12 meses (<%= ((1-(plan.get("yearly_price")/(12*plan.get("monthly_price"))))*100).toFixed(0) %>% discount)
                 </p>
               <% } %>
             <% } else if (plan.get("monthly_price") == 0) { %>
               <span class="price-text">
-                FREE
+                GRATIS
               </span>
-              <a href="#">Select</a>
+              <a href="#">Seleccionar</a>
             <% } else { %>
-              <a href="#">Contact Sales</a>
+              <a href="#">Contactar Ventas</a>
             <% } %>
           </div>
         </div>
       <% }); %>
     </div>
     <div class="info-bar">
-      Payment History <!-- <button class="btn small">export as CSV</button> -->
+      Historial de Pago <!-- <button class="btn small">export as CSV</button> -->
     </div>
     <div class="form-body">
       <table border="0" cellspacing="0" cellpadding="0" class="project-table">
         <thead>
           <tr>
             <th width="276">
-              Transaction Number
+              Número de Transacción
             </th>
             <th width="112" class="ct">
-              Charge Date
+              Fecha del cargo
             </th>
             <th width="158" class="ct">
-              Charge Amount
+              Cantidad
             </th>
             <th width="158" class="rt">
               &nbsp;
@@ -173,29 +173,29 @@
             <% }); %>
           <% } else { %>
             <tr>
-              <td>(No data to display)</td>
+              <td>(No hay datos que mostrar)</td>
             </tr>
           <% } %>
         </tbody>
       </table>
     </div>
     <div class="info-bar">
-      Payment FAQ
+      Preguntas Frecuentes del Pago
     </div>
     <div class="form-body last">
       <p>
-        <strong>When do you charge my credit card?</strong>
-        We charge all customers on the 1st of each month.  
-        If you sign up in the middle of a month, we bill you for the pro-rated monthly amount.  
-        If you upgrade or downgrade your plan we issue a similar pro-rated charge or credit for the remainder of that month.
+        <strong>¿Cuándo se hace el cobro a mi tarjeta?</strong>
+        El primer día de cada mes.
+          Si te inscribiste en la mitad del mes se te cargará solo la mitad por ese primer mes.
+          Si cambias de plan se te acumulará o cargará la diferencia prorateada de lo restante del mes.
       </p>
       <p>
-        <strong>What types of payments do you support?</strong><br>
-        We accept all Visa, Mastercard, American Express, Discover, JCB, and Diners Club cards.
+        <strong>¿Qué tipos de pagos aceptan?</strong><br>
+        Aceptamos Visa, Mastercard, American Express.
       </p>
       <p>
-        <strong>I'm located outside of the US, can I pay in a foreign currency?</strong><br>
-        Yes. However all currencies are converted to US dollars at prevailing exchange rates so your bill may fluctuate depending on the current rate.
+        <strong>¿Puedo pagar en cualquier moneda?</strong><br>
+        Si. Pero para facilitar la transacción convertimos tu tipo de cambio a Dolares al tipo de cambio que esté vigente en el momento, así que puede variar.
       </p>
     </div>
   </div>

@@ -1,9 +1,9 @@
 <div class="body-wrapper">
   <div class="box-wrapper">
     <div class="info-bar paym-info-bar">
-      Organization: <span><%= organization.get("name") %> (<%= organization.organizationMembers().length %> members)</span> 
+      Organización: <span><%= organization.get("name") %> (<%= organization.organizationMembers().length %> members)</span>
       <% if (organization.currentMember().get("level") == "Admin" && organization.subscriptionLevel()) { %>
-        Subscription Plan:
+        Plan de Suscripción:
         <%= organization.subscriptionLevel().get("name") %>
       <% } %>
     </div>  

@@ -43,7 +43,7 @@
         <%= blog_post.get("title") %>     
       </a>
       <span class="manage">
-        <button class="btn small edit">Edit</button><button class="btn small danger delete">Delete</button>
+        <button class="btn small edit">Edit</button><button class="btn small danger delete">Borrar</button>
       </span>
       <div class="status">
         <% if (blog_post.get("the_ask")) { %>
@@ -63,15 +63,15 @@
     </p>
     <div class="expanded-content expand-section expand-journal">
       <% if (blog_post.get("description")) { %>
-        <h4>UPDATE DETAILS</h4>
+        <h4>ACTUALIZAR DETALLES</h4>
         <div class="description"><%- blog_post.get("description") %></div>
       <% } %>
-      <h4>ATTACHMENTS</h4>
+      <h4>ADJUNTOS</h4>
       <div class="attachments"></div>
       <div class="upload"></div>
-      <h4>COMMENTS</h4>
+      <h4>COMENTARIOS</h4>
       <div class="comments"></div>
-      <h4>PERMALINK URL</h4>
+      <h4>DIRECCIÓN URL</h4>
       <div class="permalink"></div>
     </div>
   </div>

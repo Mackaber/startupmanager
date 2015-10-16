@@ -1,16 +1,15 @@
-<% title("LeanLaunchLab - Sign In") %>
-<% body_class("login") %>
+<% title("Spartans Online Academy - Entrar") %>
 
-<div class="body-wrapper">
-  <div class="login-header">
-    <%= image_tag("v2/login-icon.gif", :alt => "") %>LOGIN
-  </div>
-  <div class="login-body">
-    <%= form_for(resource, :as => resource_name, :url => session_path(resource_name), :html => {:class => "sign-in-form"}) do |f| %>
-      <%= f.email_field :email, :placeholder => "Email" %>
-      <%= f.password_field :password, :placeholder => "Password" %>
-      <a href="/users/password/new" class="forget">forgot password?</a>
-      <button class="btn login">login</button>
+<div class="container text-center">
+    <h2 class="form-signin-heading">Entrar a tu cuenta</h2>
+    <%= form_for(resource, :as => resource_name, :url => session_path(resource_name), :html => {:class => "form-signin"}) do |f| %>
+        <div class="form-group">
+        <%= f.email_field :email, :placeholder => "Email", :html => {:class => "form-control"} %>
+          </div>
+          <div class="form-group">
+          <%= f.password_field :password, :placeholder => "Contraseña", :html => {:class => "form-control"} %>
+            </div>
+      <p><a href="/users/password/new"  class="forget">¿Olvidaste tu Contraseña?</a></p>
+      <button class="btn btn-lg btn-primary">Entrar</button>
     <% end %>
-  </div>
 </div>

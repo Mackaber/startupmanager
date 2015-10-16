@@ -29,6 +29,7 @@
       </div>
     </div>
     <div class="col-md-3">
+      <h3>CREA TU CUENTA</h3>
         <%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => {:class => "sign-up-form"}) do |f| %>
           <p>
             <label>Nombre</label>
@@ -54,12 +55,10 @@
             <small>Nombre de tu compañia, grupo, universidad, incubadora o asociación</small>
           </p>
           <% end %>
-          <p>
+          <p style="padding-bottom: 25px">
             <input type="submit" class="btn btn-success" value="Entrena con Nosotros">
           </p>
-          <p>
-            <small>Es obligatorio que hayas asistido a alguno de nuestros talleres de entrenamiento incial para que tengas los conceptos básicos.</small>
-          </p>
+          <p><small>Es obligatorio que hayas asistido a alguno de nuestros talleres de entrenamiento incial para que tengas los conceptos básicos.</small></p>
           <p>
             Al suscribirte estás aceptando los<%= link_to 'Terminos y Condiciones', terms_url, :target=>"_blank" %> y la <%= link_to 'Politica de Privacidad', privacy_url, :target=>"_blank" %>.
           </p>

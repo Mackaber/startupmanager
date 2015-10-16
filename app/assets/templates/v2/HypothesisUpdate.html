@@ -1,20 +1,20 @@
 <p class="hypothesis-title">
   <span class="cal">
     <% if (hypothesis.get("status") == "") { %>
-      Created<br>
-      on <%= hypothesis.get("created_at").toString("MMM d, yyyy") %>
+      Creado<br>
+      el <%= hypothesis.get("created_at").toString("MMM d, yyyy") %>
     <% } else if (hypothesis.get("status") == "started") { %>
       Started Testing<br>
-      on <%= hypothesis.get("completed_at").toString("MMM d, yyyy") %>
+      el <%= hypothesis.get("completed_at").toString("MMM d, yyyy") %>
     <% } else if (hypothesis.get("status") == "valid") { %>
       Validated<br/>
-      on <%= hypothesis.get("completed_at").toString("MMM d, yyyy") %>
+      el <%= hypothesis.get("completed_at").toString("MMM d, yyyy") %>
     <% } else if (hypothesis.get("status") == "invalid") { %>
       Invalidated<br/>
-      on <%= hypothesis.get("completed_at").toString("MMM d, yyyy") %>
+      el <%= hypothesis.get("completed_at").toString("MMM d, yyyy") %>
     <% } else if (hypothesis.get("status") == "unknown") { %>
       Unknown<br/>
-      on <%= hypothesis.get("completed_at").toString("MMM d, yyyy") %>
+      el <%= hypothesis.get("completed_at").toString("MMM d, yyyy") %>
     <% } %> 
   </span>
   <a href="#">
@@ -22,14 +22,14 @@
       <span class="new">New</span>
     <% } %>
     <% if (hypothesis.get("canvas_box")) { %>
-      <span><%= hypothesis.get("canvas_box") %> Hypothesis</span>
+      <span><%= hypothesis.get("canvas_box") %> Hipothesis</span>
     <% } %>
     <%= hypothesis.get("title") %>
   </a>
 </p>
 
 <p class="details">
-  in 
+  en
   <a href="<%= hypothesis.project().get('plan_url') %>"><%= hypothesis.project().get("name") %></a>
   <% if (hypothesis.member()) { %>
     (<%= hypothesis.member().user().get("name") %>)
@@ -42,7 +42,7 @@
 
 <% if (hypothesis.experiments.length > 0) { %>
   <h4 class="expriment">
-    Experiments
+    Experimentos
   </h4>
   <div class="pad20">
     <p>
@@ -55,7 +55,7 @@
 
 <% if (hypothesis.questions.length > 0) { %>
   <h4 class="key-met">
-    Key Metrics
+    Metricas Clave
   </h4>
   <div class="pad20">
     <p>
@@ -79,9 +79,9 @@
   </div>
 <% } %>
 
-<h4>Attachments</h4>
+<h4>Archivos adjuntos</h4>
 <div class="attachments"></div>
 <div class="upload"></div>
 
-<h4>Comments</h4>
+<h4>Comentarios</h4>
 <div class="comments"></div>

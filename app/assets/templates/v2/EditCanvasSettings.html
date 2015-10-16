@@ -1,25 +1,25 @@
 <form class="canvas-settings form-stacked">
   <fieldset>
     <div class="clearfix">
-      <label>Canvas Version</label>
+      <label>Versión del Canvas</label>
       <br/>
       <input type="radio" name="canvas_startup_headers" value="false" id="canvas_startup_headers_false" <%= !project.get("canvas_startup_headers") ? " checked='checked'" : "" %> />
-      <label for="canvas_startup_headers_false">Classic - Original canvas headers</label>
+      <label for="canvas_startup_headers_false">Business Model Canvas (Osterwalder)</label>
       <br/>
       <input type="radio" name="canvas_startup_headers" value="true" id="canvas_startup_headers_true" <%= project.get("canvas_startup_headers") ? " checked='checked'" : "" %>/>
-      <label for="canvas_startup_headers_true">Lean Canvas - Modified canvas headers for startup activities</label>
+      <label for="canvas_startup_headers_true">Lean Canvas (Ash Maurya)</label>
     </div>
     <div class="clearfix">
       <input type="checkbox" name="canvas_include_plan_default" id="canvas_include_plan_default" <%= project.get("canvas_include_plan_default") ? " checked='checked'" : "" %> />
-      <label for="canvas_include_plan_default">Include canvas items in plan by default</label>
+      <label for="canvas_include_plan_default">Incluir artículos del canvas en el plan de manera predeterminada</label>
     </div>
     <div class="clearfix">
       <input type="checkbox" name="canvas_highlight_new" id="canvas_highlight_new" <%= project.get("canvas_highlight_new") ? " checked='checked'" : "" %> />
-      <label for="canvas_highlight_new">Highlight new canvas items with red text</label>
+      <label for="canvas_highlight_new">Resaltar los nuevos artículos en texto rojo</label>
     </div>
   </fieldset>
   <div class="actions">
-    <button class="btn small save">Update</button>
-    <button class="btn small cancel">Cancel</button>
+    <button class="btn small save">Actualizar</button>
+    <button class="btn small cancel">Cancelar</button>
   </div>
 </form>

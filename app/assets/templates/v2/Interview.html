@@ -8,7 +8,7 @@
           (<%= blog_post.get("text1") %>)
         <% } %>
         <% if (blog_post.get("date")) {%>
-          on
+          en
           <%= blog_post.get("date").toString("MMM d, yyyy") %>
         <% } %>
       </a>
@@ -26,7 +26,7 @@
     <!-- <span class="view"><a href="#">5 views</a></span> -->
     <!-- <span class="attach"><a href="#">2</a></span> -->
     <% if (blog_post.comments.length > 0) { %>
-      <span class="comment" title="<%= blog_post.comments.map(function(c) { return c.member().user().get("name") + "<br/>" + c.get("created_at").toString("ddd MMM d, yyyy") + " at " + c.get("created_at").toString("h:mmtt").toLowerCase() + "<br/>" + c.get('body') + "<br/>"}).join("<br/>") %>"><a href="#" class="expand-comments"><%= blog_post.comments.length %> comment<%= blog_post.comments.length > 1 ? "s" : "" %></a></span>
+      <span class="comment" title="<%= blog_post.comments.map(function(c) { return c.member().user().get("name") + "<br/>" + c.get("created_at").toString("ddd MMM d, yyyy") + " al " + c.get("created_at").toString("h:mmtt").toLowerCase() + "<br/>" + c.get('body') + "<br/>"}).join("<br/>") %>"><a href="#" class="expand-comments"><%= blog_post.comments.length %> comment<%= blog_post.comments.length > 1 ? "s" : "" %></a></span>
     <% } %>
     <% if (blog_post.attachments.length > 0) { %>
       <span class="attach" title="<%= blog_post.attachments.map(function(a) { return a.get("name") + "<br/>" }) %>"><a href="#" class="expand-attachments"><%= blog_post.attachments.length %></a></span>
@@ -42,7 +42,7 @@
         <%= blog_post.get("title") %>     
       </a>
       <span class="manage">
-        <button class="btn small edit">Edit</button><button class="btn small danger delete">Delete</button>
+        <button class="btn small edit">Editar</button><button class="btn small danger delete">Borrar</button>
       </span>
       <div class="status">
         <% if (blog_post.get("the_ask")) { %>
@@ -69,15 +69,15 @@
     </p>
     <div class="expanded-content expand-section expand-journal">
       <% if (blog_post.get("description")) { %>
-        <h4>INTERVIEW DETAILS</h4>
+        <h4>DETALLES DE ENTREVISTAS</h4>
         <div class="description"><%- blog_post.get("description") %></div>
       <% } %>
-      <h4>ATTACHMENTS</h4>
+      <h4>ARCHIVOS ADJUNTOS</h4>
       <div class="attachments"></div>
       <div class="upload"></div>
-      <h4>COMMENTS</h4>
+      <h4>COMENTARIOS</h4>
       <div class="comments"></div>
-      <h4>PERMALINK URL</h4>
+      <h4>URL</h4>
       <div class="permalink"></div>
     </div>
   </div>

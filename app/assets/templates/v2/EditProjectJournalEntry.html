@@ -2,31 +2,31 @@
   <fieldset>
     <div class="urgent clearfix">
       <input type="checkbox" id="urgent" name="urgent" <% if (blog_post.get("urgent")) { %>checked="checked"<% } %>></input>
-      <label for="urgent">Mark as urgent</label>
-      <span class="help-block">Urgent items are emailed with Subject prefix: "URGENT".</span>
+      <label for="urgent">Marcar como Urgente</label>
+      <span class="help-block">Los artículos marcados como Urgente son enviados por email con el prefijo: "URGENTE".</span>
       <span class="help-block error"></span>
     </div>
     <div class="clearfix">
-      <label for="title">Title<span class="help-inline">(required)</span></label>
+      <label for="title">Título<span class="help-inline">(required)</span></label>
       <input type="text" class="span8" id="title" name="title" data-maxsize="140" data-output="title-length" value="<%= blog_post.get('title') %>"></input>
-      <span class="help-inline" id="title-length"></span><span class="help-inline">/ 140 chars</span>
+      <span class="help-inline" id="title-length"></span><span class="help-inline">/ 140 caracteres</span>
       <span class="help-block error"></span>
     </div>
     <div class="clearfix">
-      <label for="description">Description</label>
+      <label for="description">Descripción</label>
       <textarea class="span7" id="description_<%= blog_post.id %>" name="description"><%= blog_post.get("description") %></textarea>
       <span class="help-block error"></span>
     </div>    
     <div class="clearfix">
-      <label for="the_ask">The Ask</label>
+      <label for="the_ask">Siguiente Paso</label>
       <input type="text" class="span8" id="the_ask" name="the_ask" data-maxsize="140" data-output="the_ask-length" value="<%= blog_post.get("the_ask") %>"></input>
-      <span class="help-inline" id="the_ask-length"></span><span class="help-inline">/ 140 chars</span>
-      <span class="help-block">Enter an action item or question for your team members.  Use @ to tag someone.</span>
+      <span class="help-inline" id="the_ask-length"></span><span class="help-inline">/ 140 caracteres</span>
+      <span class="help-block">Introduce una acción o pregunta para un miembro del equipo.  Usa @ para tagear a alguien..</span>
       <span class="help-block error"></span>
     </div>
   </fieldset>
   <div class="actions">
-    <button class="btn small publish"><%= blog_post.isNew() ? "Publish" : "Save" %> Update</button>
-    <button class="btn small cancel">Cancel</button>
+    <button class="btn small publish"><%= blog_post.isNew() ? "Publicar" : "Guardar" %> Actualizar</button>
+    <button class="btn small cancel">Cancelar</button>
   </div>
 </form>

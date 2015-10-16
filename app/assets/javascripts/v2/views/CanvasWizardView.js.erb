@@ -2,15 +2,15 @@ lll.views.CanvasWizardView = Backbone.View.extend({
   
   categories: [
     null,
+    "key_partners",
     "customer_segments",
     "value_propositions",
-    "channels",
-    "customer_relationships",
-    "revenue_stream",
-    "key_resources",
     "key_activities",
-    "key_partners",
-    "cost_structure"    
+    "channels",
+    "revenue_stream",
+    "cost_structure",
+    "key_resources",
+    "customer_relationships"
   ],
   
   events: {
@@ -29,63 +29,63 @@ lll.views.CanvasWizardView = Backbone.View.extend({
       null,
       new lll.views.ListView({
         collection: new (Backbone.Collection.extend({model: lll.models.CanvasItem}))(),
-        placeholder: "Enter Customer Segment",
+        placeholder: "Agrega Problemas",
         saveNew: false,
         addExplicit: true,
         manage: true
       }),
       new lll.views.ListView({
         collection: new (Backbone.Collection.extend({model: lll.models.CanvasItem}))(),
-        placeholder: "Enter Value Proposition",
+        placeholder: "Agrega Segmentos de Clientes",
         saveNew: false,
         addExplicit: true,
         manage: true
       }),
       new lll.views.ListView({
         collection: new (Backbone.Collection.extend({model: lll.models.CanvasItem}))(),
-        placeholder: "Enter Channel",
+        placeholder: "Agregar Propuesta Única de Valor",
         saveNew: false,
         addExplicit: true,
         manage: true
       }),
       new lll.views.ListView({
         collection: new (Backbone.Collection.extend({model: lll.models.CanvasItem}))(),
-        placeholder: "Enter Customer Relationship",
+        placeholder: "Agregar Solución",
         saveNew: false,
         addExplicit: true,
         manage: true
       }),
       new lll.views.ListView({
         collection: new (Backbone.Collection.extend({model: lll.models.CanvasItem}))(),
-        placeholder: "Enter Revenue Stream",
+        placeholder: "Agregar Canales",
         saveNew: false,
         addExplicit: true,
         manage: true
       }),
       new lll.views.ListView({
         collection: new (Backbone.Collection.extend({model: lll.models.CanvasItem}))(),
-        placeholder: "Enter Key Resource",
+        placeholder: "Agregar Flujos de Ingreso",
         saveNew: false,
         addExplicit: true,
         manage: true
       }),
       new lll.views.ListView({
         collection: new (Backbone.Collection.extend({model: lll.models.CanvasItem}))(),
-        placeholder: "Enter Key Activity",
+        placeholder: "Agregar Estructura de Costos",
         saveNew: false,
         addExplicit: true,
         manage: true
       }),
       new lll.views.ListView({
         collection: new (Backbone.Collection.extend({model: lll.models.CanvasItem}))(),
-        placeholder: "Enter Key Partnership",
+        placeholder: "Agregar Métricas Clave",
         saveNew: false,
         addExplicit: true,
         manage: true
       }),
       new lll.views.ListView({
         collection: new (Backbone.Collection.extend({model: lll.models.CanvasItem}))(),
-        placeholder: "Enter Cost",
+        placeholder: "Agregar Ventaja Competitiva",
         saveNew: false,
         addExplicit: true,
         manage: true

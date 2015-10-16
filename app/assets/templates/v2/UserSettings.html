@@ -1,27 +1,27 @@
 <h1>
-  Settings
+  Ajustes de Usuario
 </h1>
 <ul class="toplink">
   <li>
-    <a href="/settings/profile" class="selected">Profile</a>
+    <a href="/settings/profile" class="selected">Perfil</a>
   </li>
   <li>
-    <a href="/settings/notifications">Email Preferences</a>
+    <a href="/settings/notifications">Preferencias de Email</a>
   </li>
 </ul><br class="spacer">
 <div class="body-wrapper">
   <div class="box-wrapper">
     <h3>
-      UPDATE YOUR PROFILE
+      ACTUALIZA TU PERFIL
     </h3>
     <div class="info-bar">
-      <img class="basic" alt="">BASIC INFO
+      <img class="basic" alt="">INFORMACIÓN BÁSICA
     </div>
     <div class="form-body">
       <div class="name-email">
         <form class="form">
           <p class="row">
-            <label for="name">Name</label>
+            <label for="name">Nombre</label>
             <input name="name" id="name" type="text" value="<%= user.get('name') %>" />
             <span class="help-block error"></span>
           </p>
@@ -31,21 +31,21 @@
             <span class="help-block error"></span>
           </p>
           <p class="row">
-            <label for="time_zone">Time Zone</label>
+            <label for="time_zone">Zona Horaria</label>
             <select name="time_zone" id="time_zone"></select>
             <span class="help-block error"></span>
           </p>
           <p class="row">
-            <label for="home_page">Default Page</label>
+            <label for="home_page">Página predeterminada</label>
             <select name="home_page" id="home_page">
-              <option value="/projects">Dashboard</option>
-              <option value="/projects/last_canvas">Last viewed canvas</option>
-              <option value="/projects/last">Last viewed plan</option>
+              <option value="/projects">Panel de Control</option>
+              <option value="/projects/last_canvas">Canvas visto por última vez</option>
+              <option value="/projects/last">Plan visto por última vez</option>
             </select>
             <span class="help-block error"></span>
           </p>
           <p class="row">
-            <button class="btn save">save</button>
+            <button class="btn save">guardar</button>
           </p>
         </form>
       </div>
@@ -66,23 +66,23 @@
     </div>
     -->
     <div class="info-bar">
-      <img class="password" alt="">CHANGE PASSWORD
+      <img class="password" alt="">CAMBIAR CONTRASEÑA
     </div>
     <div class="form-body last">
       <div class="name-email">
         <form class="form password">
           <p class="row">
-            <label for="current_password">Current Password</label> 
+            <label for="current_password">Contraseña actual</label>
             <input name="current_password" id="current_password" type="password" autocomplete="off" />
             <span class="help-block error"></span>
           </p>
           <p class="row">
-            <label for="password">New Password</label> 
+            <label for="password">Nueva Contraseña</label>
             <input name="password" id="password" type="password" autocomplete="off" />
             <span class="help-block error"></span>
           </p>
           <p class="row">
-            <label for="password_confirmation">New Password Again</label> 
+            <label for="password_confirmation">Repetir Nueva Contraseña</label>
             <input name="password_confirmation" id="password_confirmation" type="password" autocomplete="off" />
             <span class="help-block error"></span>
           </p>

@@ -1,14 +1,14 @@
 #populate box categories
 if Box.all.empty?
-  Box.create(:name => "key_partners",           :label => 'Key Partners')
-  Box.create(:name => "key_activities",         :label => 'Key Activities')
-  Box.create(:name => "key_resources",          :label => 'Key Resources')
-  Box.create(:name => "value_propositions",     :label => 'Value Propositions')
-  Box.create(:name => "customer_relationships", :label => 'Cust. Relationships')
-  Box.create(:name => "channels",               :label => 'Channels')
-  Box.create(:name => "customer_segments",      :label => 'Cust. Segments')
-  Box.create(:name => "cost_structure",         :label => 'Cost Structure')
-  Box.create(:name => "revenue_stream",         :label => 'Revenue Stream')
+  Box.create(:name => "key_partners",           :label => 'Problema')
+  Box.create(:name => "key_activities",         :label => 'Solución')
+  Box.create(:name => "key_resources",          :label => 'Métricas Clave')
+  Box.create(:name => "value_propositions",     :label => 'Propuesta Única de Valor')
+  Box.create(:name => "customer_relationships", :label => 'Ventaja Competitiva')
+  Box.create(:name => "channels",               :label => 'Canales')
+  Box.create(:name => "customer_segments",      :label => 'Segmentos de Clientes')
+  Box.create(:name => "cost_structure",         :label => 'Estructura de Costos')
+  Box.create(:name => "revenue_stream",         :label => 'Flujo de Ingresos')
 end
 
 if ItemStatus.all.empty?

@@ -1,13 +1,13 @@
 <form class="edit-canvas-item form-stacked">
   <fieldset>
     <div class="clearfix">
-      <label for="title">Title<span class="help-inline">(required)</span></label>
+      <label for="title">Título<span class="help-inline">(required)</span></label>
       <input type="text" class="span8" id="title" name="title" data-maxsize="75" data-output="title-length" value="<%= canvas_item.get('title') %>" autocomplete="off"/>
-      <span class="help-inline" id="title-length"></span><span class="help-inline">/ 75 chars</span>
+      <span class="help-inline" id="title-length"></span><span class="help-inline">/ 75 caracteres</span>
       <span class="help-block error"></span>
     </div>
     <div class="clearfix">
-      <label for="description">Description</label>
+      <label for="description">Descripción</label>
       <textarea class="span7" id="description" name="description" autocomplete="off"><%= canvas_item.get("description") %></textarea>
       <span class="help-block error"></span>
     </div>
@@ -21,25 +21,25 @@
       <a href="#" class="purple"><img/></a>
     </div>
     <div class="clearfix state">
-      <label for="display_color">Mark As</label>
+      <label for="display_color">Marcar como</label>
       <br/>
       <input type="radio" name="state" value="unknown" id="state_hypothesis" <%= canvas_item.get('status') == 'unknown' ? 'checked=checked' : '' %>/>
-      <label for="state_hypothesis">Hypothesis</label>
+      <label for="state_hypothesis">Hipothesis</label>
       <input type="radio" name="state" value="valid" id="state_valid" <%= canvas_item.get('status') == 'valid' ? 'checked=checked' : '' %>/>
-      <label for="state_valid"><img/> Validated</label>
+      <label for="state_valid"><img/> Validado</label>
       <input type="radio" name="state" value="invalid" id="state_invalid" <%= canvas_item.get('status') == 'invalid' ? 'checked=checked' : '' %>/>
-      <label for="state_invalid"><img/> Invalidated</label>
+      <label for="state_invalid"><img/> Invalidado</label>
     </div>
     <div class="clearfix include">
       <input type="checkbox" name="plan" id="plan" <%= canvas_item.get('include_in_plan') ? 'checked=checked' : '' %>/>
-      <label for="plan">Include in Plan</label>
+      <label for="plan">Incluir en el Plan</label>
     </div>
   </fieldset>
   <div class="actions">
-    <button class="btn small save"><%= canvas_item.isNew() ? "Create" : "Update" %></button>
-    <button class="btn small cancel">Cancel</button>
+    <button class="btn small save"><%= canvas_item.isNew() ? "Crear" : "Actualizar" %></button>
+    <button class="btn small cancel">Cancelar</button>
     <% if (!canvas_item.isNew()) { %>
-      <button class="btn small danger delete">Delete</button>
+      <button class="btn small danger delete">Borrar</button>
     <% } %>
   </div>
 </form>

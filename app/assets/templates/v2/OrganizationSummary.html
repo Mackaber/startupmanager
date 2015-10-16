@@ -1,54 +1,54 @@
 <div class="body-wrapper">
   <div class="box-wrapper">
     <div class="info-bar">
-      Summary
+      Resumen
     </div>
     <div class="form-body">
       <% if (organization.get("locked")) { %>
         <div class="admin-info">
           <p>
-            <strong>This organization is in read-only mode</strong>
+            <strong>Esta organización está en modo de solo de lectura</strong>
         </div>
       <% } %>
       <% if (organization.currentMember().get("level") == "Admin") { %>
         <div class="admin-info">
           <p>
-            <strong>You are an admin within this organization</strong> (Admins can add and remove members from any project in the organization and admins are responsible for billing)
+            <strong>Tú eres una administrador en esta organización</strong> (Administradores puedes agregar y quitar miembros de cualquier proyecto y son responsables de los pagos)
           </p>
         </div>
       <% } %>
       <% if (organization.get("trial_remaining_days") && !organization.get("subscription_level_id")) { %>
         <div class="admin-info">
           <p>
-            <strong>You have <%= organization.get("trial_remaining_days") %> days remaining in your free trial</strong>
+            <strong>Tú tienes <%= organization.get("trial_remaining_days") %> dias restantes de tu prueba gratis</strong>
           </p>
         </div>
       <% } %>
       <p>
-        <strong><%= organization.projects().length %> projects in org</strong>
+        <strong><%= organization.projects().length %> proyectos en la Organización</strong>
       </p>
       <p>
-        <strong><%= organization.organizationMembers().length %> members in this org</strong>
+        <strong><%= organization.organizationMembers().length %> miembros en esta Organización</strong>
       </p>
     </div>
     <div class="info-bar">
-      Projects in this organization <button class="btn small new-project">+ Create a new Project</button>
+      Proyectos en esta organización <button class="btn small new-project">+ Crear nuevo proyecto</button>
     </div>
     <div class="form-body last">
       <table border="0" cellspacing="0" cellpadding="0" class="project-table">
         <thead>
           <tr>
             <th width="252">
-              Project Name
+              Nombre del Proyecto
             </th>
             <th width="76" class="ct">
-              Members
+              Miembros
             </th>
             <th width="165" class="ct">
-              Created
+              Creado
             </th>
             <th width="182" class="ct">
-              Last Updated
+              Última actualización
             </th>
             <th class="rt">
               &nbsp;
@@ -72,7 +72,7 @@
             </td>
             <td class="rt">
               <% if (organization.currentMember().get("level") == "Admin") { %>
-                <button class="btn danger delete small">Delete</button>
+                <button class="btn danger delete small">Borrar</button>
               <% } else { %>
                 &nbsp;
               <% } %>

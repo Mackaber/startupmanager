@@ -1,76 +1,39 @@
 <div class="step step0">
-  <h1>Welcome to LeanLaunchLab!</h1>
+  <h1>Bienvenido a Spartans Online Academy</h1>
   <form class="form-stacked">
     <fieldset>
-      <legend>Let&rsquo;s get started by creating a new project.</legend>
+      <legend>Empecemos a crear tu primer proyecto de emprenidmiento.</legend>
       <br class="spacer"/>
       <div class="clearfix">
-        <label for="name">Project Name</label>
+        <label for="name">Nombre del Proyecto</label>
         <div class="input">
           <input id="name" name="name" type="text" value="<%= project.get('name') %>"/>
         </div>
       </div>
       <div class="clearfix">
-        <label for="name">Elevator Pitch</label>
+        <label for="name">Pitch de Elevador</label>
         <div class="input">
           <textarea id="pitch" name="pitch" data-maxsize="140" data-output="pitch-length"><%= project.get('pitch') %></textarea>
           <span class="help-block">
-            What does your product or service do, in 140 chars or less
+            ¿Cómo describes tu negocio en un tweet o menos?
             <span class="length">
-              <span class="help-inline" id="pitch-length"></span><span class="help-inline">/ 140 chars</span>
+              <span class="help-inline" id="pitch-length"></span><span class="help-inline">/ 140 caracteres</span>
             </span>
           </span>
         </div>
       </div>
       <div class="examples">
-        <label>Examples:</label>
+        <label>Ejemplo:</label>
         <ul>
-          <li>&ldquo;Quora for legal advice&rdquo;</li>
-          <li>&ldquo;Fun, safe, mobile apps for kids&rdquo;</li>
-          <li>&ldquo;Matching engineers with startups&rdquo;</li>
-          <li>&ldquo;Appsumo for weddings&rdquo;</li>
+          <li>&ldquo;AirBnB para mascotas&rdquo;</li>
+          <li>&ldquo;Uber de comida siempre lista&rdquo;</li>
+          <li>&ldquo;Financiamiento para startups por crowdfunding&rdquo;</li>
+          <li>&ldquo;Aplicaciones educativas para niños&rdquo;</li>
         </ul>
       </div>
       <div class="actions">
         <div class="next">
-          <button class="btn large">Next</button>
-          <div>Define Customer Segments</div>
-        </div>
-      </div>
-    </fieldset>
-  </form>
-</div>
-<div class="step step1">
-  <h1>
-    Customer Segments
-    <ol><li title="Customer Segments">1</li><li title="Value Propositions">2</li><li title="Channels">3</li><li title="Customer Relationships">4</li><li title="Revenue Streams">5</li><li title="Key Resources">6</li><li title="Key Activities">7</li><li title="Key Partnerships">8</li><li title="Cost Structure">9</li></ol>
-  </h1>
-  <form class="form-stacked">
-    <fieldset>
-      <legend>Which groups of people or organizations are you trying to serve?</legend>
-      <br class="spacer"/>
-      <div class="tip">TIP: Most projects have 3-5 customer segments</div>
-      <br class="spacer"/>
-      <div class="clearfix">
-      </div>
-      <div class="examples">
-        <label>Examples:</label>
-        <ul>
-          <li>Google: Internet users, advertisers</li>
-          <li>LinkedIn: Professionals, Recruiters, Advertisers</li>
-          <li>Amazon: Online shoppers, retailers</li>
-          <li>Zynga: Casual gamers, merchants</li>
-          <li>LeanLaunchLab: Entrepreneurs, Investors, Universities</li>
-        </ul>
-      </div>
-      <div class="actions">
-        <div class="prev">
-          <button class="btn large">Back</button>
-          <div>Elevator Pitch</div>
-        </div>
-        <div class="next">
-          <button class="btn large">Next</button>
-          <div>Value Propositions</div>
+          <button class="btn large">Siguiente</button>
         </div>
       </div>
     </fieldset>
@@ -78,35 +41,31 @@
 </div>
 <div class="step step2">
   <h1>
-    Value Propositions
-    <ol><li title="Customer Segments">1</li><li title="Value Propositions">2</li><li title="Channels">3</li><li title="Customer Relationships">4</li><li title="Revenue Streams">5</li><li title="Key Resources">6</li><li title="Key Activities">7</li><li title="Key Partnerships">8</li><li title="Cost Structure">9</li></ol>
+    Segmentos de Clientes y Primeros Consumidores
+      <ol><li title="Problema">1</li><li title="Segmentos de Clientes">2</li><li title="Propuesta Única de Valor">3</li><li title="Solución">4</li><li title="Canales">5</li><li title="Flujos de Ingreso">6</li><li title="Estructura de Costos">7</li><li title="Métricas Clave">8</li><li title="Ventaja Competitiva">9</li></ol>
   </h1>
   <form class="form-stacked">
     <fieldset>
-      <legend>What value are you delivering?  What problems are you solving for your customers?</legend>
+      <legend>¿Qué personas tienen el problema que estás tratando de resolver?</legend>
       <br class="spacer"/>
-      <div class="tip">TIP: Most projects have 2-3 value propositions</div>
+      <div class="tip">TIP: Elige los 3 tipos de clientes más importantes</div>
       <br class="spacer"/>
       <div class="clearfix">
       </div>
       <div class="examples">
-        <label>Examples:</label>
+        <label>Ejemplos:</label>
         <ul>
-          <li>Google: Fast accurate search results, targeted ads</li>
-          <li>LinkedIn: make it easy to network with other professionals</li>
-          <li>Amazon: buy anything online</li>
-          <li>Zynga: fun games with friends</li>
-          <li>LeanLaunchLab: makes it easy for startups to practice lean startup principles</li>
+          <li>Ejecutivos; Clase alta; Personas amantes de la tecnología (UBER)</li>
+          <li>Personas que necesitan una página web (WIX)</li>
+          <li>Personas que gustan de conocer lo “especial” de nuevas ciudades (AirBnB)</li>
         </ul>
       </div>
       <div class="actions">
         <div class="prev">
-          <button class="btn large">Back</button>
-          <div>Customer Segments</div>
+          <button class="btn large">Regresar</button>
         </div>
         <div class="next">
-          <button class="btn large">Next</button>
-          <div>Channels</div>
+          <button class="btn large">Siguiente</button>
         </div>
       </div>
     </fieldset>
@@ -114,67 +73,32 @@
 </div>
 <div class="step step3">
   <h1>
-    Channels
-    <ol><li title="Customer Segments">1</li><li title="Value Propositions">2</li><li title="Channels">3</li><li title="Customer Relationships">4</li><li title="Revenue Streams">5</li><li title="Key Resources">6</li><li title="Key Activities">7</li><li title="Key Partnerships">8</li><li title="Cost Structure">9</li></ol>
+    Propuesta Única de Valor
+      <ol><li title="Problema">1</li><li title="Segmentos de Clientes">2</li><li title="Propuesta Única de Valor">3</li><li title="Solución">4</li><li title="Canales">5</li><li title="Flujos de Ingreso">6</li><li title="Estructura de Costos">7</li><li title="Métricas Clave">8</li><li title="Ventaja Competitiva">9</li></ol>
   </h1>
   <form class="form-stacked">
     <fieldset>
-      <legend>How will your product be distributed and sold?</legend>
+      <legend>Mensaje convincente, único y claro que indica por qué eres diferente y vale la pena comprar</legend>
       <br class="spacer"/>
-      <div class="tip">TIP: Most projects have 1-2 channels</div>
+      <div class="tip">TIP: Piensa en 1-2 PUV a validar</div>
       <br class="spacer"/>
       <div class="clearfix">
       </div>
       <div class="examples">
-        <label>Examples:</label>
+        <label>Ejempos:</label>
         <ul>
-          <li>Google: google.com</li>
-          <li>Apple: retails stores, Apple stores, apple.com, iTunes</li>
-          <li>Salesforce: salesforce.com, direct sales</li>
-          <li>Microsoft: resellers, microsoft.com, retail stores</li>
-          <li>LeanLaunchLab: leanlaunchlab.com</li>
+          <li>Tu viaje a sólo un clic. Transporte en minutos. (UBER)</li>
+          <li>Rendimiento y diseño al borde de lo imposible (Mac)</li>
+          <li>Nuestra casa es tu casa. (AirBnB)</li>
+          <li>Obtén la mejor ruta, todos los días, con la ayuda en tiempo real de otros conductores. (Waze)</li>
         </ul>
       </div>
       <div class="actions">
         <div class="prev">
-          <button class="btn large">Back</button>
-          <div>Value Propositions</div>
+          <button class="btn large">Regresar</button>
         </div>
         <div class="next">
-          <button class="btn large">Next</button>
-          <div>Customer Relationships</div>
-        </div>
-      </div>
-    </fieldset>
-  </form>
-</div>
-<div class="step step4">
-  <h1>   
-    Customer Relationships 
-    <ol><li title="Customer Segments">1</li><li title="Value Propositions">2</li><li title="Channels">3</li><li title="Customer Relationships">4</li><li title="Revenue Streams">5</li><li title="Key Resources">6</li><li title="Key Activities">7</li><li title="Key Partnerships">8</li><li title="Cost Structure">9</li></ol>
-  </h1>
-  <form class="form-stacked">
-    <fieldset>
-      <legend>How will you create demand for your product, retain existing customers, and grow your customer base?</legend>
-      <br class="spacer"/>
-      <div class="tip">TIP: Most projects have 1-3 customer relationships</div>
-      <br class="spacer"/>
-      <div class="clearfix">
-      </div>
-      <div class="examples">
-        <label>Examples:</label>
-        <ul>
-          <li>Online ads, SEO, loyalty programs, customer surveys, referrals, dedicated customer support</li>
-        </ul>
-      </div>
-      <div class="actions">
-        <div class="prev">
-          <button class="btn large">Back</button>
-          <div>Channels</div>
-        </div>
-        <div class="next">
-          <button class="btn large">Next</button>
-          <div>Revenue Streams</div>
+          <button class="btn large">Siguiente</button>
         </div>
       </div>
     </fieldset>
@@ -182,31 +106,63 @@
 </div>
 <div class="step step5">
   <h1>
-    Revenue Streams  
-    <ol><li title="Customer Segments">1</li><li title="Value Propositions">2</li><li title="Channels">3</li><li title="Customer Relationships">4</li><li title="Revenue Streams">5</li><li title="Key Resources">6</li><li title="Key Activities">7</li><li title="Key Partnerships">8</li><li title="Cost Structure">9</li></ol>
+    Canales
+      <ol><li title="Problema">1</li><li title="Segmentos de Clientes">2</li><li title="Propuesta Única de Valor">3</li><li title="Solución">4</li><li title="Canales">5</li><li title="Flujos de Ingreso">6</li><li title="Estructura de Costos">7</li><li title="Métricas Clave">8</li><li title="Ventaja Competitiva">9</li></ol>
   </h1>
   <form class="form-stacked">
     <fieldset>
-      <legend>The cash you generate from each customer segment. Show me the money!</legend>
+      <legend>¿Cómo comunicas la Propuesta Única de Valor a tus Clientes?</legend>
       <br class="spacer"/>
-      <div class="tip">TIP: Most projects have 1-2 revenue streams</div>
+      <div class="tip">TIP: Piensa en la mayor cantidad de canales, recuerda que solo son hipótesis</div>
       <br class="spacer"/>
       <div class="clearfix">
       </div>
       <div class="examples">
-        <label>Examples:</label>
+        <label>Ejemplos:</label>
         <ul>
-          <li>Usage fees, subscription fees, freemium, rental fees, licensing fees, brokerage fees, advertising</li>
+          <li>Remarketing; Blogs; Redes Sociales (AirBnB)</li>
+          <li>Conferencias; Mailing (Mac)</li>
+          <li>Aplicación móvil (UBER)</li>
         </ul>
       </div>
       <div class="actions">
         <div class="prev">
-          <button class="btn large">Back</button>
-          <div>Customer Relationships</div>
+          <button class="btn large">Regresar</button>
         </div>
         <div class="next">
-          <button class="btn large">Next</button>
-          <div>Key Resources</div>
+          <button class="btn large">Siguiente</button>
+        </div>
+      </div>
+    </fieldset>
+  </form>
+</div>
+<div class="step step9">
+  <h1>   
+    Ventaja Competitiva
+      <ol><li title="Problema">1</li><li title="Segmentos de Clientes">2</li><li title="Propuesta Única de Valor">3</li><li title="Solución">4</li><li title="Canales">5</li><li title="Flujos de Ingreso">6</li><li title="Estructura de Costos">7</li><li title="Métricas Clave">8</li><li title="Ventaja Competitiva">9</li></ol>
+  </h1>
+  <form class="form-stacked">
+    <fieldset>
+      <legend>Es una ventaja competitiva real si es algo que vale la pena copiar pero dificilmente lo será</legend>
+      <br class="spacer"/>
+      <div class="tip">TIP: Esta es complicada pero trata de pensar: si te robaran tu idea ¿Aún tienes negocio?</div>
+      <br class="spacer"/>
+      <div class="clearfix">
+      </div>
+      <div class="examples">
+        <label>Ejemplo:</label>
+        <ul>
+          <li>Excelente experiencia de usuario (Mac)</li>
+            <li>Inventario nulo de vehículos (UBER)</li>
+            <li>Inventario nulo de propiedades; Experiencia del cliente única (AirBnB)</li>
+        </ul>
+      </div>
+      <div class="actions">
+        <div class="prev">
+          <button class="btn large">Regresar</button>
+        </div>
+        <div class="next">
+            <button class="btn large primary">Continuar con los experimentos</button>
         </div>
       </div>
     </fieldset>
@@ -214,136 +170,159 @@
 </div>
 <div class="step step6">
   <h1>
-    Key Resources
-    <ol><li title="Customer Segments">1</li><li title="Value Propositions">2</li><li title="Channels">3</li><li title="Customer Relationships">4</li><li title="Revenue Streams">5</li><li title="Key Resources">6</li><li title="Key Activities">7</li><li title="Key Partnerships">8</li><li title="Cost Structure">9</li></ol>
+    Flujos de Ingreso
+      <ol><li title="Problema">1</li><li title="Segmentos de Clientes">2</li><li title="Propuesta Única de Valor">3</li><li title="Solución">4</li><li title="Canales">5</li><li title="Flujos de Ingreso">6</li><li title="Estructura de Costos">7</li><li title="Métricas Clave">8</li><li title="Ventaja Competitiva">9</li></ol>
   </h1>
   <form class="form-stacked">
     <fieldset>
-      <legend>What assets do you need to make your business model work?  These assets can be physical, financial, intellectual, or human.</legend>
+      <legend>¿Cómo generas dinero?</legend>
       <br class="spacer"/>
-      <div class="tip">TIP: Most projects have 1-3 key resources</div>
+      <div class="tip">TIP: La mayoría de los proyectos tienen 1 o 2 flujos de ingreso</div>
       <br class="spacer"/>
       <div class="clearfix">
       </div>
       <div class="examples">
-        <label>Examples:</label>
+        <label>Ejemlos:</label>
         <ul>
-          <li>Google: top tier engineering talent</li>
-          <li>Walmart: distribution centers</li>
-          <li>Nike: Nike Brand</li>
-          <li>Pfizer: Researchers and Scientists</li>
-          <li>Any Bank or Financial Institution: cash, lines of credit</li>
+          <li>Comisiones por renta (AirBnB)</li>
+            <li>Venta de productos, servicios complementarios como Apple Music (Mac)</li>
+            <li>Porcentaje del precio de cada viaje (UBER)</li>
         </ul>
       </div>
       <div class="actions">
         <div class="prev">
-          <button class="btn large">Back</button>
-          <div>Revenue Streams</div>
+          <button class="btn large">Regresar</button>
         </div>
         <div class="next">
-          <button class="btn large">Next</button>
-          <div>Key Activities</div>
-        </div>
-      </div>
-    </fieldset>
-  </form>
-</div>
-<div class="step step7">
-  <h1>    
-    Key Activities
-    <ol><li title="Customer Segments">1</li><li title="Value Propositions">2</li><li title="Channels">3</li><li title="Customer Relationships">4</li><li title="Revenue Streams">5</li><li title="Key Resources">6</li><li title="Key Activities">7</li><li title="Key Partnerships">8</li><li title="Cost Structure">9</li></ol>
-  </h1>
-  <form class="form-stacked">
-    <fieldset>
-      <legend>What do you need to do in order to deliver your Value Propositions?</legend>
-      <br class="spacer"/>
-      <div class="tip">TIP: Most projects have 1-3 key activities</div>
-      <br class="spacer"/>
-      <div class="clearfix">
-      </div>
-      <div class="examples">
-        <label>Examples:</label>
-        <ul>
-          <li>Google: recruit top engineering talent</li>
-          <li>Apple: hardware design, marketing</li>
-          <li>Nike: endorse superstars</li>
-        </ul>
-      </div>
-      <div class="actions">
-        <div class="prev">
-          <button class="btn large">Back</button>
-          <div>Key Resources</div>
-        </div>
-        <div class="next">
-          <button class="btn large">Next</button>
-          <div>Key Partnerships</div>
+          <button class="btn large">Siguiente</button>
         </div>
       </div>
     </fieldset>
   </form>
 </div>
 <div class="step step8">
-  <h1> 
-    Key Partnerships   
-    <ol><li title="Customer Segments">1</li><li title="Value Propositions">2</li><li title="Channels">3</li><li title="Customer Relationships">4</li><li title="Revenue Streams">5</li><li title="Key Resources">6</li><li title="Key Activities">7</li><li title="Key Partnerships">8</li><li title="Cost Structure">9</li></ol>
+  <h1>
+    Métricas Clave
+      <ol><li title="Problema">1</li><li title="Segmentos de Clientes">2</li><li title="Propuesta Única de Valor">3</li><li title="Solución">4</li><li title="Canales">5</li><li title="Flujos de Ingreso">6</li><li title="Estructura de Costos">7</li><li title="Métricas Clave">8</li><li title="Ventaja Competitiva">9</li></ol>
   </h1>
   <form class="form-stacked">
     <fieldset>
-      <legend>What partnerships do you need to reach customers or deliver a Value Proposition?</legend>
+      <legend>Busca los número clave que te digan cómo está funcionando tu negocio en tiempo real, antes de obtener informes de ventas</legend>
       <br class="spacer"/>
-      <div class="tip">TIP: Most projects have 0-2 key partnerships</div>
+      <div class="tip">TIP: Adquisición, Activación, Retención, Referencia y Retorno son métricas clave usadas para aplicaciones web pero aplican para otro tipo de negocios</div>
       <br class="spacer"/>
       <div class="clearfix">
       </div>
       <div class="examples">
-        <label>Examples:</label>
+        <label>Ejemplos:</label>
         <ul>
-          <li>Microsoft: resellers</li>
-          <li>Apple: record labels, hardware manufacturers</li>
-          <li>Zynga: Facebook</li>
+          <li>Viajes al mes; Adquisición de nuevos usuarios; Recomendaciones(UBER)</li>
+          <li>Reservaciones al mes; Recomendaciones; Nuevas propiedades; (AirBnB)</li>
+          <li>Nuevos usuarios; No. de usuarios que subieron de nivel (WIX)</li>
+
         </ul>
       </div>
       <div class="actions">
         <div class="prev">
-          <button class="btn large">Back</button>
-          <div>Key Activities</div>
+          <button class="btn large">Regresar</button>
         </div>
         <div class="next">
-          <button class="btn large">Next</button>
-          <div>Cost Structure</div>
+          <button class="btn large">Siguiente</button>
         </div>
       </div>
     </fieldset>
   </form>
 </div>
-<div class="step step9">
-  <h1>
-    Cost Structure
-    <ol><li title="Customer Segments">1</li><li title="Value Propositions">2</li><li title="Channels">3</li><li title="Customer Relationships">4</li><li title="Revenue Streams">5</li><li title="Key Resources">6</li><li title="Key Activities">7</li><li title="Key Partnerships">8</li><li title="Cost Structure">9</li></ol>
+<div class="step step4">
+  <h1>    
+    Solución
+      <ol><li title="Problema">1</li><li title="Segmentos de Clientes">2</li><li title="Propuesta Única de Valor">3</li><li title="Solución">4</li><li title="Canales">5</li><li title="Flujos de Ingreso">6</li><li title="Estructura de Costos">7</li><li title="Métricas Clave">8</li><li title="Ventaja Competitiva">9</li></ol>
   </h1>
   <form class="form-stacked">
     <fieldset>
-      <legend>List all of the costs incurred by your business.</legend>
+      <legend>Como todo lo que tienes hasta el momento son hipotesis, no recomiendo extralimitarse en definir una solución en este momento, seguramente cambiará.</legend>
       <br class="spacer"/>
-      <div class="tip">TIP: Only list significant costs</div>
+      <div class="tip">TIP: Crea una solución hipotetica para cada problema.</div>
       <br class="spacer"/>
       <div class="clearfix">
       </div>
       <div class="examples">
-        <label>Examples:</label>
+        <label>Ejemplos:</label>
         <ul>
-          <li>Apple: people, marketing/sales, manufacturing</li>
-          <li>Starbucks: people, coffee beans, retail stores</li>
+          <li>Catálogo web de propiedades(AirBnB)</li>
+          <li>Aplicación de GPS con CrowSourcing (Waze)</li>
+          <li>Aplicación para pedir transporte de lujo (UBER)</li>
         </ul>
       </div>
       <div class="actions">
         <div class="prev">
-          <button class="btn large">Back</button>
-          <div>Key Partnerships</div>
+          <button class="btn large">Regresar</button>
         </div>
         <div class="next">
-          <button class="btn large primary">Go to Next Tab</button>
-          <div>The Plan</div>
+          <button class="btn large">Siguiente</button>
+        </div>
+      </div>
+    </fieldset>
+  </form>
+</div>
+<div class="step step1">
+  <h1> 
+    Problemas
+    <ol><li title="Problema">1</li><li title="Segmentos de Clientes">2</li><li title="Propuesta Única de Valor">3</li><li title="Solución">4</li><li title="Canales">5</li><li title="Flujos de Ingreso">6</li><li title="Estructura de Costos">7</li><li title="Métricas Clave">8</li><li title="Ventaja Competitiva">9</li></ol>
+  </h1>
+  <form class="form-stacked">
+    <fieldset>
+      <legend>Problemas por resolver para el segmento de clientes</legend>
+      <br class="spacer"/>
+      <div class="tip">TIP: describe los 1-3 principales problemas que se necesitan resolver para cada segmento de clientes</div>
+      <br class="spacer"/>
+      <div class="clearfix">
+      </div>
+      <div class="examples">
+        <label>Ejemplos:</label>
+        <ul>
+          <li>Las personas no saben programar y los que encuentran son muy caros (WIX)</li>
+          <li>Es imposible vivir una nueva ciudad como un nativo de ésta (AirBnB)</li>
+          <li>El transporte público es inseguro, viejo, caro y con mal servicio (UBER)</li>
+        </ul>
+      </div>
+      <div class="actions">
+        <div class="prev">
+          <button class="btn large">Regresar</button>
+        </div>
+        <div class="next">
+          <button class="btn large">Siguiente</button>
+        </div>
+      </div>
+    </fieldset>
+  </form>
+</div>
+<div class="step step7">
+  <h1>
+    Estructura de Costos
+      <ol><li title="Problema">1</li><li title="Segmentos de Clientes">2</li><li title="Propuesta Única de Valor">3</li><li title="Solución">4</li><li title="Canales">5</li><li title="Flujos de Ingreso">6</li><li title="Estructura de Costos">7</li><li title="Métricas Clave">8</li><li title="Ventaja Competitiva">9</li></ol>
+  </h1>
+  <form class="form-stacked">
+    <fieldset>
+      <legend>Los costos que te generará entregar la solución a tus clientes.</legend>
+      <br class="spacer"/>
+      <div class="tip">TIP: Solo enlista los más significativos.</div>
+      <br class="spacer"/>
+      <div class="clearfix">
+      </div>
+      <div class="examples">
+        <label>Ejemplos:</label>
+        <ul>
+          <li>Marketing, sueldos (AirBnB)</li>
+          <li>Sueldos, Mantenimiento, Servidores (UBER)</li>
+        </ul>
+      </div>
+      <div class="actions">
+        <div class="prev">
+          <button class="btn large">Regresar</button>
+        </div>
+        <div class="next">
+            <button class="btn large">Siguiente</button>
         </div>
       </div>
     </fieldset>
