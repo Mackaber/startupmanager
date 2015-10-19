@@ -12,14 +12,9 @@
         <% if current_user %>
                 <li ><a href="/projects" title="Maneja varios proyectos de manera sencilla">Panel de Proyectos</a></li>
                 <li ><a href="/projects/last">Proyecto</a></li>
-                <li class="dropdown">
-                  <a href="#" class="dropdown-toggle"><%= current_user.name %></a>
-                  <ul class="dropdown-menu">
-                    <li ><a href="/organizations/last">Administrar cuenta</a></li>
-                    <li ><a href="/settings/profile">Cambiar datos de cuenta</a></li>
-                    <li><a href="/users/sign_out">Salir</a></li>
-                  </ul>
-                </li>
+                <li ><a href="/organizations/last">Administrar cuenta</a></li>
+                <li ><a href="/settings/profile"><%= current_user.name %></a></li>
+                <li><a href="/users/sign_out">Salir</a></li>
             <%  else  %>
                 <li><a href="/users/sign_up">Inscribirse</a></li>
                 <li><a href="/users/sign_in">Entrar</a></li>
