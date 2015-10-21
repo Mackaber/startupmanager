@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <title>LeanLaunchLab</title>
+  <title>Spartans Academy</title>
   <style type="text/css">.ExternalClass {
     display: block !important;
   }</style>
@@ -22,7 +22,7 @@
         <tr>
           <td>
             <a href="#" style="text-decoration: none;">
-              <font face="Arial, Helvetica, sans-serif" size="5" color="#313143" style="font-size: 25px; line-height:27px; font-weight:bold;">LEAN<font color="#bebec6">LAUNCH</font>LAB</font></a>
+              <font face="Arial, Helvetica, sans-serif" size="5" color="#313143" style="font-size: 25px; line-height:27px; font-weight:bold;">SPARTANS <font color="#db2409">ACADEMY</font></a>
           </td>
         </tr>
         <tr>
@@ -45,12 +45,10 @@
                     <tr>
                       <td>
                         <font face="Arial,Helvetica, sans-serif" size="2" color="#303042" style="font-size:14px; line-height:28px;">
-                          <h3>Hi <%= @member.user.name %>,</h3>
-                          <p><i><%= @owner_user.name %></i> just added you to project <i><%= @member.project.name %></i> in
-                            LeanLaunchLab.
-                          </p>
+                          <h3>Hola <%= @member.user.name %>,</h3>
+                          <p><i><%= @owner_user.name %></i> acaba de añadirte a un proyecto <i><%= @member.project.name %></i> en Spartans Academy.</p>
                           <p>
-                            LeanLaunchLab helps teams practice lean startup principles and communicate progress with advisors, investors, and managers.
+                            En Spartans Academy ayudamos a emprendedores a disminuir sus probabilidades de fracaso con nuestro entrenamiento, metodologia y seguimiento.
                           </p>
                         </font></td>
                     </tr>
@@ -71,7 +69,7 @@
                             <td align="center" width="197" height="47" valign="middle">
                               <a style="text-decoration: none;" href="<%= project_url(@member.project, :mid => @member.join_code) %>">
                                 <font color="#313143" size="4" style="font-size:18px; line-height:20px; font-weight:bold;" face="Arial,Helvetica, sans-serif">
-                                  View Project
+                                  Ver Proyecto
                                 </font>
                               </a></td>
                             <td bgcolor="#d8cc00" style="font-size: 0;line-height: 0;" width="1">&nbsp;</td>
@@ -87,12 +85,11 @@
                     </tr>
                     <tr>
                       <td>
-                        <font face="Arial,Helvetica, sans-serif" size="2" color="#303042" style="font-size:14px; line-height:28px;">Thanks,<br>The LeanLaunchLab
-                          Team</font>
+                        <font face="Arial,Helvetica, sans-serif" size="2" color="#303042" style="font-size:14px; line-height:28px;">Gracias,<br>El Equipo de Spartans Academy</font>
                         <br></br>
                         __
                         <br></br>
-                        If you were added in error, click <a href="<%= remove_project_member_url(@member.project, @member, :mid => @member.join_code).html_safe %>">here</a> to remove yourself.                        
+                        Si crees que te agregaron por error da click <a href="<%= remove_project_member_url(@member.project, @member, :mid => @member.join_code).html_safe %>">aquí</a> para eliminarte.
                       </td>
                     </tr>
                     <tr>

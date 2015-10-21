@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <title>LeanLaunchLab</title>
+  <title>Spartans Academy</title>
   <style type="text/css">.ExternalClass {
     display: block !important;
   }</style>
@@ -22,7 +22,7 @@
         <tr>
           <td>
             <a href="#" style="text-decoration: none;">
-              <font face="Arial, Helvetica, sans-serif" size="5" color="#313143" style="font-size: 25px; line-height:27px; font-weight:bold;">LEAN<font color="#bebec6">LAUNCH</font>LAB</font></a>
+              <font face="Arial, Helvetica, sans-serif" size="5" color="#313143" style="font-size: 25px; line-height:27px; font-weight:bold;">SPARTANS<font color="#bebec6">ACADEMY</font></a>
           </td>
         </tr>
         <tr>
@@ -45,9 +45,8 @@
                     <tr>
                       <td>
                         <font face="Arial,Helvetica, sans-serif" size="2" color="#303042" style="font-size:14px; line-height:28px;">
-                          <h3>Hi <%= @member.user.name %>,</h3>
-                          <p><i><%= @owner_user.name %></i> just added you to project <i><%= @member.project.name %></i> in
-                            LeanLaunchLab.
+                          <h3>Hola <%= @member.user.name %>,</h3>
+                          <p><i><%= @owner_user.name %></i> te acaba de agregar al proyecto <i><%= @member.project.name %></i> en Spartans Academy.
                           </p>
                         </font></td>
                     </tr>
@@ -84,12 +83,11 @@
                     </tr>
                     <tr>
                       <td>
-                        <font face="Arial,Helvetica, sans-serif" size="2" color="#303042" style="font-size:14px; line-height:28px;">Thanks,<br>The LeanLaunchLab
-                          Team</font>
+                        <font face="Arial,Helvetica, sans-serif" size="2" color="#303042" style="font-size:14px; line-height:28px;">Gracias,<br>El Equipo de Spartans Academy</font>
                           <br></br>                        
                           __
                           <br></br>
-                          If you were added in error, click <a href="<%= remove_project_member_url(@member.project, @member, :mid => @member.join_code).html_safe %>">here</a> to remove yourself.                        
+                          Si te agregaron por error da click <a href="<%= remove_project_member_url(@member.project, @member, :mid => @member.join_code).html_safe %>">aquí</a> para eliminarte.
                       </td>
                     </tr>
                     <tr>

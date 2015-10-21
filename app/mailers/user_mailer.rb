@@ -4,7 +4,7 @@ class UserMailer < ActionMailer::Base
     @member = member
     @owner_user = owner_user
     mail(:to => member.user.email,
-         :subject => "#{@owner_user.name} invited you to #{@member.project.name}"
+         :subject => "#{@owner_user.name} te ha invitado a #{@member.project.name}"
     )
   end
 
@@ -12,9 +12,9 @@ class UserMailer < ActionMailer::Base
     @member = member
     @owner_user = owner_user
     @url = member.user.has_changed_password? ? project_url(@member.project, :mid => @member.join_code) : new_user_password_url(:mid => @member.join_code)
-    @label = member.user.has_changed_password ? "View Project" : "Create Password"
+    @label = member.user.has_changed_password ? "Ver proyecto" : "Definir Contraseña"
     mail(:to => member.user.email,
-         :subject => "#{@owner_user.name} added you to project #{@member.project.name}"
+         :subject => "#{@owner_user.name} te ha agregado al proyecto #{@member.project.name}"
     )
   end
   
@@ -22,9 +22,9 @@ class UserMailer < ActionMailer::Base
     @member = member
     @owner_user = owner_user
     @url = member.user.has_changed_password? ? project_url(@member.project, :mid => @member.join_code) : new_user_password_url(:mid => @member.join_code)
-    @label = member.user.has_changed_password ? "View Project" : "Create Password"
+    @label = member.user.has_changed_password ? "Ver Proyecto" : "Definir Contraseña"
     mail(:to => member.user.email,
-         :subject => "#{@owner_user.name} added you to project #{@member.project.name}"
+         :subject => "#{@owner_user.name} te ha agregado al proyecto #{@member.project.name}"
     )
   end
 
@@ -36,7 +36,7 @@ class UserMailer < ActionMailer::Base
     @update_count = update_count
     @update_authors = update_authors
     mail(:to => member.user.email,
-         :subject => "Friendly Reminder to Confirm Your Account"
+         :subject => "Te recordamos que confirmes tu cuenta"
     ) do |format|
       format.html { render :layout => "standard_email" }
     end
@@ -46,16 +46,16 @@ class UserMailer < ActionMailer::Base
     @member = member
     @owner_user = owner_user
     @url = member.user.has_changed_password? ? project_url(@member.project, :mid => @member.join_code) : new_user_password_url(:mid => @member.join_code)
-    @label = member.user.has_changed_password ? "View Project" : "Create Password"
+    @label = member.user.has_changed_password ? "Ver Proyecto" : "Definir Contraseña"
     mail(:to => member.user.email,
-         :subject => "You have been reactivated on #{member.project.name}"
+         :subject => "Has sido reactivado en el proyecto #{member.project.name}"
     )
   end
 
   def welcome(user)
     @name = user.name
     mail(:to => user.email,
-         :subject => "Getting Started with LeanLaunchLab"
+         :subject => "Comienza tu experiencia en Spartans Academy"
     )
   end
 
@@ -63,7 +63,7 @@ class UserMailer < ActionMailer::Base
     @name = user.name
     @project_list = user.live_projects.map(&:name).join(', ')
     mail(:to => user.email,
-         :subject => "Do you need help with LeanLaunchLab?"
+         :subject => "¿Necesitas ayuda para mejorar tu experiencia en Spartans Academy?"
     ) do |format|
       format.html { render :layout => "standard_email" }
     end
@@ -73,7 +73,7 @@ class UserMailer < ActionMailer::Base
     @name = member.user.name
     @project_name = member.project.name
     mail(:to => member.user.email,
-         :subject => "Reminder to update #{@project_name} in LeanLaunchLab"
+         :subject => "Recordatorio de tu proyecto #{@project_name} en Spartans Academy"
     ) do |format|
       format.html { render :layout => "standard_email" }
     end

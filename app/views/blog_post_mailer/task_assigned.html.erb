@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <title>LeanLaunchLab</title>
+  <title>Spartans Academy</title>
   <style type="text/css">.ExternalClass {
-    display: block !important;
+      display: block !important;
   }</style>
 </head>
 <body leftmargin="0" rightmargin="0" topmargin="0" bottommargin="0" bgcolor="#f8f8f8">
@@ -12,6 +12,7 @@
   <tr>
     <td colspan="3" bgcolor="#83c149" style="font-size: 0;line-height: 0;" height="5">&nbsp;</td>
   </tr>
+  <%= render(:partial => "reply_instructions") %>
   <tr>
     <td width="50%"></td>
     <td>
@@ -21,8 +22,7 @@
         </tr>
         <tr>
           <td>
-            <a href="<%= root_url %>" style="text-decoration: none;">
-              <font face="Arial, Helvetica, sans-serif" size="5" color="#313143" style="font-size: 25px; line-height:27px; font-weight:bold;">LEAN<font color="#bebec6">LAUNCH</font>LAB</font></a>
+            <a href="#" style="text-decoration: none;"><font face="Arial, Helvetica, sans-serif" size="5" color="#313143" style="font-size: 25px; line-height:27px; font-weight:bold;">SPARTANS<font color="#db2506"> ACADEMY</font></a>
           </td>
         </tr>
         <tr>
@@ -45,9 +45,9 @@
                     <tr>
                       <td>
                         <font face="Arial,Helvetica, sans-serif" size="2" color="#303042" style="font-size:14px; line-height:28px;">
-                          <h3>Hi <%= @task.assigned_to_member.user.name %>,</h3>
+                          <h3>Hola <%= @task.assigned_to_member.user.name %>,</h3>
                           <p>
-                            <%= @assigned_by_user ? @assigned_by_user : "?" %> just assigned a task to you: 
+                            <%= @assigned_by_user ? @assigned_by_user : "?" %> acaba de asignarte una tarea:
                             <a href="<%= @task.url %>"><%= @task %></a>
                           </p>
                         </font>
@@ -59,7 +59,7 @@
                     <tr>
                       <td>
                         <font face="Arial,Helvetica, sans-serif" size="2" color="#303042" style="font-size:14px; line-height:28px;">
-                          - The LeanLaunchLab Team
+                          - El Equipo de Spartans Academy
                         </font>
                       </td>
                     </tr>

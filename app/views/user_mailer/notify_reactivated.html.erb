@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <title>LeanLaunchLab</title>
+  <title>Spartans Academy</title>
   <style type="text/css">.ExternalClass {
     display: block !important;
   }</style>
@@ -44,9 +44,9 @@
                     <tr>
                       <td>
                         <font face="Arial,Helvetica, sans-serif" size="2" color="#303042" style="font-size:14px; line-height:28px;">
-                          <h3>Hi <%= @member.user.name %>,</h3>
+                          <h3>Hola <%= @member.user.name %>,</h3>
 
-                          <p>You have been reactivated on project <%= @member.project.name %>
+                          <p>Te han reactivado en el proyecto <%= @member.project.name %>
                           </p>
                         </font></td>
                     </tr>
@@ -84,12 +84,11 @@
                     </tr>
                     <tr>
                       <td>
-                        <font face="Arial,Helvetica, sans-serif" size="2" color="#303042" style="font-size:14px; line-height:28px;">Thanks,<br>The LeanLaunchLab
-                          Team</font>
+                        <font face="Arial,Helvetica, sans-serif" size="2" color="#303042" style="font-size:14px; line-height:28px;">Gracias,<br>Equipo de Spartans Academy</font>
                         <br></br>
                         __
                         <br></br>
-                        If you were added in error, click <a href="<%= remove_project_member_url(@member.project, @member, :mid => @member.join_code).html_safe %>">here</a> to remove yourself.                        
+                        Si crees que es un error, da click <a href="<%= remove_project_member_url(@member.project, @member, :mid => @member.join_code).html_safe %>">aquí</a> para eliminarte tu mismo del proyecto.
                       </td>
                     </tr>
                     <tr>

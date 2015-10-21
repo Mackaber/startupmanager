@@ -19,7 +19,7 @@ class AdminMailer < ActionMailer::Base
     @organization = organization
     mail(
       :to => ENV["EMAIL_SUPPORT"], 
-      :subject => "Missing credit card for billable organization #{organization.to_param}"
+      :subject => "Falta tarjeta de crédito para cobro #{organization.to_param}"
     )
   end
 

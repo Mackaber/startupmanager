@@ -4,7 +4,7 @@ class ProjectMailer < ActionMailer::Base
     @member = member
     mail(
       :to => member.user.email,
-      :subject => "Your Next Step: Invite Team Members"        
+      :subject => "Tu siguiente paso: Invita a tu Equipo"
     )
   end
   
@@ -12,7 +12,7 @@ class ProjectMailer < ActionMailer::Base
     @member = member
     mail(
       :to => member.user.email,
-      :subject => "Your Next Step: Store a Customer Interview"        
+      :subject => "Tu siguiente paso: Sube una Entrevista con un Cliente"
     )
   end
   
@@ -20,7 +20,7 @@ class ProjectMailer < ActionMailer::Base
     @member = member
     mail(
       :to => member.user.email,
-      :subject => "Your Next Step: Validate a Hypothesis"        
+      :subject => "Tu siguiente paso: Valida una Hipotesis"
     )
   end
   
@@ -28,7 +28,7 @@ class ProjectMailer < ActionMailer::Base
     @member = member
     mail(
       :to => member.user.email,
-      :subject => "Your Next Step: Test a Hypothesis"        
+      :subject => "Tu siguiente pso: Prueba una Hipotesis"
     )
   end
   
@@ -36,7 +36,7 @@ class ProjectMailer < ActionMailer::Base
     @member = member
     mail(
       :to => member.user.email,
-      :subject => "Your Next Step: Create a Hypothesis"        
+      :subject => "Tu siguiente paso: Crea una Hipothesis"
     )
   end
   
@@ -44,7 +44,7 @@ class ProjectMailer < ActionMailer::Base
     @member = member
     mail(
       :to => member.user.email,
-      :subject => "Your Next Step: Fill Out the Canvas"        
+      :subject => "Tu siguiente paso: Llena tu Canvas"
     )
   end 
   

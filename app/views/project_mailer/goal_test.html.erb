@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <title>LeanLaunchLab</title>
+  <title>Spartans Academy</title>
   <style type="text/css">.ExternalClass {
     display: block !important;
   }</style>
@@ -22,7 +22,7 @@
         <tr>
           <td>
             <a href="<%= root_url %>" style="text-decoration: none;">
-              <font face="Arial, Helvetica, sans-serif" size="5" color="#313143" style="font-size: 25px; line-height:27px; font-weight:bold;">LEAN<font color="#bebec6">LAUNCH</font>LAB</font></a>
+              <font face="Arial, Helvetica, sans-serif" size="5" color="#313143" style="font-size: 25px; line-height:27px; font-weight:bold;">SPARTANS<font color="#dc2508"> ACADEMY</font></a>
           </td>
         </tr>
         <tr>
@@ -45,12 +45,12 @@
                     <tr>
                       <td>
                         <font face="Arial,Helvetica, sans-serif" size="2" color="#303042" style="font-size:14px; line-height:28px;">
-                          <h3>Dear <%= @member.user.name %>,</h3>
+                          <h3>Estimado <%= @member.user.name %>,</h3>
                           <p>
                             <% count = @member.project.hypotheses.where(:item_status_id => nil).count %>
-                            There <%= count == 1 ? "is" : "are" %> <%= pluralize(count, "hypothesis") %> in the "To-Do" section of your Plan in project <%= @member.project.name %>.  The next step is to identify the riskiest hypotheses about your business and start testing those first.
+                            Hay <%= count == 1 ? "is" : "are" %> <%= pluralize(count, "hypothesis") %> en la sección de "En-Progreso" en tu proyecto <%= @member.project.name %>.  El Siguiente paso es identificar las hipotesis más riesgosas de tu modelo de negocios y comenzar a validarlas.
                           </p>
-                            This step is critical so let us know if you need help.  You can reply to this email or use the chat widget when you login.                            
+                            Este paso es crítico así que si necesitas ayuda déjanos saberlo.  Puedes contestar este corre y de inmediato te contestaremos.
                           </p>
                         </font></td>
                     </tr>
@@ -71,7 +71,7 @@
                             <td align="center" width="197" height="47" valign="middle">
                               <a style="text-decoration: none;" href="<%= project_url(@member.project) %>">
                                 <font color="#313143" size="4" style="font-size:18px; line-height:20px; font-weight:bold;" face="Arial,Helvetica, sans-serif">
-                                  View Your Project
+                                  Ver tu Proyecto
                                 </font>
                               </a></td>
                             <td bgcolor="#d8cc00" style="font-size: 0;line-height: 0;" width="1">&nbsp;</td>
@@ -88,8 +88,8 @@
                     <tr>
                       <td>
                         <font face="Arial,Helvetica, sans-serif" size="2" color="#303042" style="font-size:14px; line-height:28px;">
-                          Cheers,<br/>
-                          The LeanLaunchLab Team
+                          Saludos,<br/>
+                          El Equipo de Spartans Academy
                         </font>
                       </td>
                     </tr>

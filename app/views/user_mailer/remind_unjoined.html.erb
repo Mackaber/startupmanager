@@ -4,18 +4,17 @@
   </tr>
   <tr>
     <td><font face="Arial,Helvetica, sans-serif" size="2" color="#303042" style="font-size:14px; line-height:22px;">
-      <h3>Hey There <%= @member_name %>,</h3>
+      <h3>Hola de nuevo <%= @member_name %>,</h3>
 
-       <p><i><%= @owner_name %></i> invited you to project <i>
+       <p><i><%= @owner_name %></i> te invitó a un proyecto <i>
         <%= @member_project %></i>
-        a few days ago but you haven't confirmed your account yet. LeanLaunchLab is a simple way for startups to track
-        and share their progress with their advisors and investors.
+        hace algunos dias pero no has confirmado tu cuenta aún. En Spartans Academy podrás dar seguimiento
+        a tu proyecto junto con todo tu equipo y nuestros asesores.
       </p>
 
       <% if @update_count > 0 %>
         <p>
-          There are already <%= @update_count %> new updates posted by <%= @update_authors %>. Confirm your
-          account to read them.
+          Ya hay <%= @update_count %> actualizaciónes creadas por <%= @update_authors %>. Confirma tu cuenta para que veas qué son.
         </p>
       <% end %>
     </font></td>
@@ -37,7 +36,7 @@
           <td align="center" width="197" height="47" valign="middle">
             <a style="text-decoration: none;" href="<%= join_project_url(@join_code) %>">
               <font color="#313143" size="4" style="font-size:18px; line-height:16px; font-weight:bold;" face="Arial,Helvetica, sans-serif">
-                Confirm Account
+                Confirma tu Cuenta
               </font>
             </a>
           </td>
@@ -55,9 +54,9 @@
   <tr>
     <td>
       <font face="Arial,Helvetica, sans-serif" size="2" color="#303042" style="font-size:14px; line-height:28px;">
-        Thanks,
+        Gracias,
         <br>
-        LeanLaunchLab Team
+        Equipo de Spartans Academy
       </font>
     </td>
   </tr>

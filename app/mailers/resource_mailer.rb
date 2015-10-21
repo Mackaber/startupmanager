@@ -15,7 +15,7 @@ class ResourceMailer < ActionMailer::Base
       @subject = "Banking Question from #{@name}"
       @subject << " (#{@company})" unless @company.blank?
       mail(
-        :to => "cwalsh@svb.com",
+        :to => "hola@impactum.mx",
         :bcc => ENV["EMAIL_SUPPORT"],
         :subject => "LLL Mail: #{@subject}"
       )
@@ -23,7 +23,7 @@ class ResourceMailer < ActionMailer::Base
       @subject = "Finance Question from #{@name}"
       @subject << " (#{@company})" unless @company.blank?
       mail(
-        :to => "leanlaunchlab@roseryan.com",
+        :to => "hola@impactum.mx",
         :bcc => ENV["EMAIL_SUPPORT"],
         :subject => "LLL Mail: #{@subject}"
       )
@@ -31,7 +31,7 @@ class ResourceMailer < ActionMailer::Base
       @subject = "Legal Question from #{@name}"
       @subject << " (#{@company})" unless @company.blank?
       mail(
-        :to => "john.park@morganlewis.com",
+        :to => "hola@impactum.mx",
         :bcc => ENV["EMAIL_SUPPORT"],
         :subject => "LLL Mail: #{@subject}"
       )

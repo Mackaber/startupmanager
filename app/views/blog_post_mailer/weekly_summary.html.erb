@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <title>LeanLaunchLab</title>
+  <title>Spartans Academy</title>
   <style type="text/css">.ExternalClass{width:100% !important;}</style>
 </head>
 <body leftmargin="0" marginwidth="0" topmargin="0" marginheight="0" bgcolor="#f8f8f8">
@@ -18,14 +18,16 @@
             <td>
               <table width="100%" cellpadding="0" cellspacing="0" border="0">
                 <tr>
-                  <td valign="top" style="line-height:35px;"><font face="Arial, Helvetica, sans-serif" color="#313143" size="6" style="font-size:30px; line-height:35px;"><strong><a style="text-decoration:none; color:#313143;" href="<%= root_url %>"><font color="#313143">LEAN<font color="#bebec6">LAUNCH</font>LAB</font></a></strong> </font></td>
+                  <td>
+                    <a href="#" style="text-decoration: none;"><font face="Arial, Helvetica, sans-serif" size="5" color="#313143" style="font-size: 25px; line-height:27px; font-weight:bold;">SPARTANS<font color="#db2506"> ACADEMY</font></a>
+                  </td>
                   <td valign="bottom" align="right" style="line-height:28px;"><font face="Arial, Helvetica, sans-serif" color="#303042" size="2" style="font-size:16px; line-height:28px;"><%= @end_at.strftime("%A %B %e, %Y") %></font></td>
                 </tr>
               </table>
             </td>
           </tr>
           <tr><td style="font-size:0; line-height:0;" height="20" ></td></tr>
-          <tr><td><font face="Arial, Helvetica, sans-serif" color="#303042" size="3" style="font-size:18px; line-height:23px;"><strong><font size="4" style="font-size:20px; line-height:23px;"><a style="text-decoration:none; color:#303042;" href="<%= projects_url %>"><font color="#303042">Weekly Scorecard</font> </a></font></strong> Week ending <%= @end_at.strftime("%B %e") %> </font></td></tr>
+          <tr><td><font face="Arial, Helvetica, sans-serif" color="#303042" size="3" style="font-size:18px; line-height:23px;"><strong><font size="4" style="font-size:20px; line-height:23px;"><a style="text-decoration:none; color:#303042;" href="<%= projects_url %>"><font color="#303042">Resumen Semanal</font> </a></font></strong> Semana terminando <%= @end_at.strftime("%B %e") %> </font></td></tr>
           <% @projects.each do |p| %>
           <tr><td height="10"></td></tr>
           <tr>
@@ -72,7 +74,7 @@
                                               <tr><td><font face="Arial, Helvetica, sans-serif" color="#303042" size="7" style="font-size:60px; line-height:63px;"><strong><%= p[:project].hypotheses.where(:item_status_id => ItemStatus.cached_find_by_status("started").id).count %></strong> </font></td></tr>
                                             </table>
                                           </td>
-                                          <td width="114" align="right"><font face="Arial, Helvetica, sans-serif" color="#303042" size="3" style="font-size:18px; line-height:21px;"><strong><a style="text-decoration:none; color:#303042;" href="<%= project_url(p[:project]) %>"><font color="#303042">Hypothesis Being Tested</font></a></strong></font></td>
+                                          <td width="114" align="right"><font face="Arial, Helvetica, sans-serif" color="#303042" size="3" style="font-size:18px; line-height:21px;"><strong><a style="text-decoration:none; color:#303042;" href="<%= project_url(p[:project]) %>"><font color="#303042">Hipótesis siendo probadas</font></a></strong></font></td>
                                         </tr>
                                         <tr><td colspan="2" height="13"></td></tr>
                                         <tr>
@@ -84,7 +86,7 @@
                                                     <tr><td colspan="3" height="1" bgcolor="#edecb6"></td></tr>
                                                     <tr>
                                                       <td width="1" height="29" bgcolor="#edecb6"></td>
-                                                      <td align="center" style="text-align:center;"><font face="Arial, Helvetica, sans-serif" color="#888888" size="2" style="font-size:12px; line-height:15px;"><%= p[:project].hypotheses.where(:item_status_id => ItemStatus.cached_find_by_status("started").id).where(["completed_at BETWEEN ? AND ?", @start_at, @end_at]).count %> last week </font></td>
+                                                      <td align="center" style="text-align:center;"><font face="Arial, Helvetica, sans-serif" color="#888888" size="2" style="font-size:12px; line-height:15px;"><%= p[:project].hypotheses.where(:item_status_id => ItemStatus.cached_find_by_status("started").id).where(["completed_at BETWEEN ? AND ?", @start_at, @end_at]).count %> semana pasada </font></td>
                                                       <td width="1" height="29" bgcolor="#edecb6"></td>
                                                     </tr>
                                                     <tr><td colspan="3" height="1" bgcolor="#edecb6"></td></tr>
@@ -120,7 +122,7 @@
                                               <tr><td align="center" style="text-align:center;"><font face="Arial, Helvetica, sans-serif" color="#303042" size="7" style="font-size:60px; line-height:63px;"><strong><%= p[:project].hypotheses.where(:item_status_id => ItemStatus.cached_find_by_status("valid").id).count %></strong> </font></td></tr>
                                             </table>
                                           </td>
-                                          <td width="114" align="right"><font face="Arial, Helvetica, sans-serif" color="#303042" size="3" style="font-size:18px; line-height:21px;"><strong><a style="text-decoration:none; color:#303042;" href="<%= project_url(p[:project]) %>"><font color="#303042">Hypotheses Validated</font></a></strong></font></td>
+                                          <td width="114" align="right"><font face="Arial, Helvetica, sans-serif" color="#303042" size="3" style="font-size:18px; line-height:21px;"><strong><a style="text-decoration:none; color:#303042;" href="<%= project_url(p[:project]) %>"><font color="#303042">Hipótesis Validadas</font></a></strong></font></td>
                                         </tr>
                                         <tr><td colspan="2" height="13"></td></tr>
                                         <tr>
@@ -132,7 +134,7 @@
                                                     <tr><td colspan="3" height="1" bgcolor="#d0e0b8"></td></tr>
                                                     <tr>
                                                       <td width="1" height="29" bgcolor="#d0e0b8"></td>
-                                                      <td align="center" style="text-align:center;"><font face="Arial, Helvetica, sans-serif" color="#888888" size="2" style="font-size:12px; line-height:15px;"><%= p[:project].hypotheses.where(:item_status_id => ItemStatus.cached_find_by_status("valid").id).where(["completed_at BETWEEN ? AND ?", @start_at, @end_at]).count %> last week </font></td>
+                                                      <td align="center" style="text-align:center;"><font face="Arial, Helvetica, sans-serif" color="#888888" size="2" style="font-size:12px; line-height:15px;"><%= p[:project].hypotheses.where(:item_status_id => ItemStatus.cached_find_by_status("valid").id).where(["completed_at BETWEEN ? AND ?", @start_at, @end_at]).count %> semana pasada </font></td>
                                                       <td width="1" height="29" bgcolor="#d0e0b8"></td>
                                                     </tr>
                                                     <tr><td colspan="3" height="1" bgcolor="#d0e0b8"></td></tr>
@@ -168,7 +170,7 @@
                                               <tr><td align="center" style="text-align:center;"><font face="Arial, Helvetica, sans-serif" color="#303042" size="7" style="font-size:60px; line-height:63px;"><strong><%= p[:project].hypotheses.where(:item_status_id => ItemStatus.cached_find_by_status("invalid").id).count %></strong> </font></td></tr>
                                             </table>
                                           </td>
-                                          <td width="114" align="right"><font face="Arial, Helvetica, sans-serif" color="#303042" size="3" style="font-size:18px; line-height:21px;"><strong><a style="text-decoration:none; color:#303042;" href="<%= project_url(p[:project]) %>"><font color="#303042">Hypotheses Invalidated</font></a></strong></font></td>
+                                          <td width="114" align="right"><font face="Arial, Helvetica, sans-serif" color="#303042" size="3" style="font-size:18px; line-height:21px;"><strong><a style="text-decoration:none; color:#303042;" href="<%= project_url(p[:project]) %>"><font color="#303042">Hipótesis Invalidadas</font></a></strong></font></td>
                                         </tr>
                                         <tr><td colspan="2" height="13"></td></tr>
                                         <tr>
@@ -180,7 +182,7 @@
                                                     <tr><td colspan="3" height="1" bgcolor="#f0d9cc"></td></tr>
                                                     <tr>
                                                       <td width="1" height="29" bgcolor="#f0d9cc"></td>
-                                                      <td align="center" style="text-align:center;"><font face="Arial, Helvetica, sans-serif" color="#888888" size="2" style="font-size:12px; line-height:15px;"><%= p[:project].hypotheses.where(:item_status_id => ItemStatus.cached_find_by_status("invalid").id).where(["completed_at BETWEEN ? AND ?", @start_at, @end_at]).count %> last week </font></td>
+                                                      <td align="center" style="text-align:center;"><font face="Arial, Helvetica, sans-serif" color="#888888" size="2" style="font-size:12px; line-height:15px;"><%= p[:project].hypotheses.where(:item_status_id => ItemStatus.cached_find_by_status("invalid").id).where(["completed_at BETWEEN ? AND ?", @start_at, @end_at]).count %> semana pasada </font></td>
                                                       <td width="1" height="29" bgcolor="#f0d9cc"></td>
                                                     </tr>
                                                     <tr><td colspan="3" height="1" bgcolor="#f0d9cc"></td></tr>
@@ -207,33 +209,33 @@
                       <tr><td height="15"></td></tr>
                       <% if p[:recent].empty? %>
                       <tr><td height="12"></td></tr>
-                      <tr><td><font face="Arial, Helvetica, sans-serif" color="#303042" size="3" style="font-size:18px; line-height:22px;"><strong>No Recent Activity</strong> </font></td></tr>
+                      <tr><td><font face="Arial, Helvetica, sans-serif" color="#303042" size="3" style="font-size:18px; line-height:22px;"><strong>No hay Actividad Reciente</strong> </font></td></tr>
                       <tr><td height="4"></td></tr>
-                      <tr><td><font face="Arial, Helvetica, sans-serif" color="#333333" size="2" style="font-size:16px; line-height:20px;"><a style="text-decoration:none; color:#2a5dc4;" href="<%= project_url(p[:project]) %>"><font color="#2a5dc4">Login</font></a> and start testing a new hypothesis </font></td></tr>
+                      <tr><td><font face="Arial, Helvetica, sans-serif" color="#333333" size="2" style="font-size:16px; line-height:20px;"><a style="text-decoration:none; color:#2a5dc4;" href="<%= project_url(p[:project]) %>"><font color="#2a5dc4">Login</font></a> y empieza a probar nuevas hipótesis </font></td></tr>
                       <% else %>
-                      <tr><td><font face="Arial, Helvetica, sans-serif" color="#303042" size="3" style="font-size:18px; line-height:22px;"><strong>Recent Activity</strong> </font></td></tr>
+                      <tr><td><font face="Arial, Helvetica, sans-serif" color="#303042" size="3" style="font-size:18px; line-height:22px;"><strong>Actividad Reciente</strong> </font></td></tr>
                       <% p[:recent].each do |thing| %>
                       <tr><td height="15"></td></tr>
                       <% if thing.is_a?(BlogPost) && thing.post_type == "interview" %>
-                      <tr><td><font face="Arial, Helvetica, sans-serif" color="#999999" size="2" style="font-size:12px; line-height:15px;">Customer Interview on <%= thing.published_at.strftime("%a %b %e, %Y") %> by <%= thing.member.user.name %></font></td></tr>
+                      <tr><td><font face="Arial, Helvetica, sans-serif" color="#999999" size="2" style="font-size:12px; line-height:15px;">Entrevista de Cliente en <%= thing.published_at.strftime("%a %b %e, %Y") %> por <%= thing.member.user.name %></font></td></tr>
                       <tr><td><font face="Arial, Helvetica, sans-serif" color="#333333" size="2" style="font-size:16px; line-height:20px;"><a style="text-decoration:none; color:#333333;" href="<%= thing.url %>"><font color="#333333">Interview with <%= thing.subject %><%= thing.text1 ? " (#{thing.text1})" : "" %></font></a> </font></td></tr>
                       <% elsif thing.is_a?(BlogPost) && thing.post_type != "interview" %>
-                      <tr><td><font face="Arial, Helvetica, sans-serif" color="#999999" size="2" style="font-size:12px; line-height:15px;">Journal Update on <%= thing.published_at.strftime("%a %b %e, %Y") %> by <%= thing.member.user.name %></font></td></tr>
+                      <tr><td><font face="Arial, Helvetica, sans-serif" color="#999999" size="2" style="font-size:12px; line-height:15px;">Entrada en el Diario por <%= thing.published_at.strftime("%a %b %e, %Y") %> por <%= thing.member.user.name %></font></td></tr>
                       <tr><td><font face="Arial, Helvetica, sans-serif" color="#333333" size="2" style="font-size:16px; line-height:20px;"><a style="text-decoration:none; color:#333333;" href="<%= thing.url %>"><font color="#333333"><%= thing.subject %></font></a> </font></td></tr>
                       <% elsif thing.is_a?(Hypothesis) && thing.item_status.nil? %>
-                      <tr><td><font face="Arial, Helvetica, sans-serif" color="#999999" size="2" style="font-size:12px; line-height:15px;">New Hypothesis on <%= thing.created_at.strftime("%a %b %e, %Y") %><%= thing.created_by_member ? " by #{thing.created_by_member.user.name}" : "" %></font></td></tr>
+                      <tr><td><font face="Arial, Helvetica, sans-serif" color="#999999" size="2" style="font-size:12px; line-height:15px;">Nueva Hipótesis en <%= thing.created_at.strftime("%a %b %e, %Y") %><%= thing.created_by_member ? " por #{thing.created_by_member.user.name}" : "" %></font></td></tr>
                       <tr><td><font face="Arial, Helvetica, sans-serif" color="#333333" size="2" style="font-size:16px; line-height:20px;"><a style="text-decoration:none; color:#333333;" href="<%= thing.url %>"><font color="#333333"><%= thing.title %></font></a> </font></td></tr>
                       <% elsif thing.is_a?(Hypothesis) && thing.item_status == ItemStatus.cached_find_by_status("started") %>
-                      <tr><td><font face="Arial, Helvetica, sans-serif" color="#999999" size="2" style="font-size:12px; line-height:15px;">Hypothesis Being Tested <% if thing.completed_at %> on <%= thing.completed_at.strftime("%a %b %e, %Y") %><% end %><%= thing.created_by_member ? " by #{thing.created_by_member.user.name}" : "" %></font></td></tr>
+                      <tr><td><font face="Arial, Helvetica, sans-serif" color="#999999" size="2" style="font-size:12px; line-height:15px;">Hipotesis Siendo Probadas <% if thing.completed_at %> on <%= thing.completed_at.strftime("%a %b %e, %Y") %><% end %><%= thing.created_by_member ? " por #{thing.created_by_member.user.name}" : "" %></font></td></tr>
                       <tr><td><font face="Arial, Helvetica, sans-serif" color="#333333" size="2" style="font-size:16px; line-height:20px;"><a style="text-decoration:none; color:#333333;" href="<%= thing.url %>"><font color="#333333"><%= thing.title %></font></a> </font></td></tr>
                       <% elsif thing.is_a?(Hypothesis) && thing.item_status == ItemStatus.cached_find_by_status("valid") %>
-                      <tr><td><font face="Arial, Helvetica, sans-serif" color="#999999" size="2" style="font-size:12px; line-height:15px;">Hypothesis Validated on <%= thing.completed_at.strftime("%a %b %e, %Y") %><%= thing.created_by_member ? " by #{thing.created_by_member.user.name}" : "" %></font></td></tr>
+                      <tr><td><font face="Arial, Helvetica, sans-serif" color="#999999" size="2" style="font-size:12px; line-height:15px;">Hipotesis Validadas en <%= thing.completed_at.strftime("%a %b %e, %Y") %><%= thing.created_by_member ? " por #{thing.created_by_member.user.name}" : "" %></font></td></tr>
                       <tr><td><font face="Arial, Helvetica, sans-serif" color="#333333" size="2" style="font-size:16px; line-height:20px;"><a style="text-decoration:none; color:#333333;" href="<%= thing.url %>"><font color="#333333"><%= thing.title %></font></a> </font></td></tr>
                       <% elsif thing.is_a?(Hypothesis) && thing.item_status == ItemStatus.cached_find_by_status("invalid") %>
-                      <tr><td><font face="Arial, Helvetica, sans-serif" color="#999999" size="2" style="font-size:12px; line-height:15px;">Hypothesis Invalidated on <%= thing.completed_at.strftime("%a %b %e, %Y") %><%= thing.created_by_member ? " by #{thing.created_by_member.user.name}" : "" %></font></td></tr>
+                      <tr><td><font face="Arial, Helvetica, sans-serif" color="#999999" size="2" style="font-size:12px; line-height:15px;">Hipotesis Invalidadas en <%= thing.completed_at.strftime("%a %b %e, %Y") %><%= thing.created_by_member ? " por #{thing.created_by_member.user.name}" : "" %></font></td></tr>
                       <tr><td><font face="Arial, Helvetica, sans-serif" color="#333333" size="2" style="font-size:16px; line-height:20px;"><a style="text-decoration:none; color:#333333;" href="<%= thing.url %>"><font color="#333333"><%= thing.title %></font></a> </font></td></tr>
                       <% elsif thing.is_a?(Hypothesis) && thing.item_status == ItemStatus.cached_find_by_status("unknown") %>
-                      <tr><td><font face="Arial, Helvetica, sans-serif" color="#999999" size="2" style="font-size:12px; line-height:15px;">Hypothesis Unknown on <%= thing.completed_at.strftime("%a %b %e, %Y") %><%= thing.created_by_member ? " by #{thing.created_by_member.user.name}" : "" %></font></td></tr>
+                      <tr><td><font face="Arial, Helvetica, sans-serif" color="#999999" size="2" style="font-size:12px; line-height:15px;">Hipótesis desconocidas en <%= thing.completed_at.strftime("%a %b %e, %Y") %><%= thing.created_by_member ? " por #{thing.created_by_member.user.name}" : "" %></font></td></tr>
                       <tr><td><font face="Arial, Helvetica, sans-serif" color="#333333" size="2" style="font-size:16px; line-height:20px;"><a style="text-decoration:none; color:#333333;" href="<%= thing.url %>"><font color="#333333"><%= thing.title %></font></a> </font></td></tr>
                       <% end %>
                       <% end %>
@@ -248,7 +250,7 @@
                               <td width="127" align="center" style="text-align:center;">
                                 <font face="Arial, Helvetica, sans-serif" color="#000000" size="2" style="font-size:14px; line-height:17px;">
                                   <a style="text-decoration:none; color:#000;" href="<%= project_url(p[:project]) %>">
-                                    <font color="#000000">View <%= p[:project].name %></font>
+                                    <font color="#000000">Ver <%= p[:project].name %></font>
                                   </a>
                                 </font>
                               </td>
@@ -272,7 +274,7 @@
           <tr><td height="20"></td></tr>
           <tr><td height="1" bgcolor="#e8e8e8"></td></tr>
           <tr><td height="10"></td></tr>
-          <tr><td style="line-height:15px;"><font face="Arial, Helvetica, sans-serif" color="#333333" size="2" style="font-size:12px; line-height:15px;">To modify your email preferences, click <a style="text-decoration:underline; color:#369;" href="<%= notifications_settings_url %>"><font color="#336699">here</font></a> </font></td></tr>
+          <tr><td style="line-height:15px;"><font face="Arial, Helvetica, sans-serif" color="#333333" size="2" style="font-size:12px; line-height:15px;">Para modificar tus preferencias de correos da click <a style="text-decoration:underline; color:#369;" href="<%= notifications_settings_url %>"><font color="#336699">aquí</font></a> </font></td></tr>
           <tr><td height="20"></td></tr>
         </table>
       </td>

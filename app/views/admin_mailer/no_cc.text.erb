@@ -1,8 +1,8 @@
-<%= @organization %> (<%= @organization.organization_members.count %> members, <%= @organization.projects.count %> projects)
+<%= @organization %> (<%= @organization.organization_members.count %> miembros, <%= @organization.projects.count %> proyectos)
 
-is billable but has no credit card on file
+Tiene adeudo pero no tiene datos de pago
 
-Admins:
+Administradores:
 
 <% @organization.organization_members.where(:level => "Admin").each do |organization_member| %>
   <%= organization_member.user.email %>

@@ -6,7 +6,7 @@ class OrganizationMailer < ActionMailer::Base
     @charge = charge
     @time = Time.now.in_time_zone(charge.organization.cc_user.setting.time_zone)
     mail(:to => charge.organization.cc_user.email,
-      :subject => "LeanLaunchLab Payment Receipt"        
+      :subject => "Recibo de pago de Spartans Academy"
     )
   end
     
@@ -14,7 +14,7 @@ class OrganizationMailer < ActionMailer::Base
     @time = Time.now.in_time_zone(organization_member.user.setting.time_zone)
     @organization_member = organization_member
     mail(:to => organization_member.user.email,
-      :subject => "LeanLaunchLab Payment Receipt"        
+      :subject => "Recibo de pago de Spartans Academy"
     )
   end
   

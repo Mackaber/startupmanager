@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <title>LeanLaunchLab</title>
+  <title>Spartans Academy</title>
   <style type="text/css">.ExternalClass {
-    display: block !important;
+      display: block !important;
   }</style>
 </head>
 <body leftmargin="0" rightmargin="0" topmargin="0" bottommargin="0" bgcolor="#f8f8f8">
@@ -21,8 +21,7 @@
         </tr>
         <tr>
           <td>
-            <a href="<%= root_url %>" style="text-decoration: none;">
-              <font face="Arial, Helvetica, sans-serif" size="5" color="#313143" style="font-size: 25px; line-height:27px; font-weight:bold;">LEAN<font color="#bebec6">LAUNCH</font>LAB</font></a>
+            <a href="#" style="text-decoration: none;"><font face="Arial, Helvetica, sans-serif" size="5" color="#313143" style="font-size: 25px; line-height:27px; font-weight:bold;">SPARTANS<font color="#db2409">ACADEMY</font></a>
           </td>
         </tr>
         <tr>
@@ -45,21 +44,21 @@
                     <tr>
                       <td>
                         <font face="Arial,Helvetica, sans-serif" size="2" color="#303042" style="font-size:14px; line-height:28px;">
-                          <h3>Dear <%= @user.name %>,</h3>
+                          <h3>Estimado <%= @user.name %>,</h3>
                           <p>
-                            Your trial for <%= @organization %>
-                            is expiring in <%= pluralize((@organization.trial_end_date - Date.today + 1).to_i, "day") %>
-                            on <%= @organization.trial_end_date.strftime("%A %B %d") %>.
-                            Upgrade in the next 24 hours and receive a special discount of
+                            Tu prueba para <%= @organization %>
+                            expirará en <%= pluralize((@organization.trial_end_date - Date.today + 1).to_i, "dias") %>
+                            en <%= @organization.trial_end_date.strftime("%A %B %d") %>.
+                            Paga por tu asesoría en las siguientes 24 horas y recibe un descuento de
                             <%= @organization.promotion.monthly_discount_percent %>%
-                            for the next <%= @organization.promotion.months %> months.
+                            por los próximos <%= @organization.promotion.months %> meses.
                           </p>
                           <p>                          
-                            Your current usage indicates that you require our <%= @recommended %> Plan.
+                            Tu uso actual dice que requieres nuestro <%= @recommended %> Plan.
                             <% if @recommended.monthly_price %>
-                              The normal price for this plan is <%= number_to_currency(@recommended.monthly_price) %>/month but upgrade in the next 24 hours and get it for <%= number_to_currency(@recommended.monthly_price * (100 - @organization.promotion.monthly_discount_percent)/100.0) %>.
+                              El precio normal de ese plan es <%= number_to_currency(@recommended.monthly_price) %>/al mes pero paga en 24 horas y tomalo por <%= number_to_currency(@recommended.monthly_price * (100 - @organization.promotion.monthly_discount_percent)/100.0) %>.
                             <% else %>
-                              Please contact <%= ENV['EMAIL_SUPPORT'] %> to discuss pricing.
+                              Por favor contacta <%= ENV['EMAIL_SUPPORT'] %> si tienes dudas del precio.
                             <% end %>
                           </p>
                         </font></td>
@@ -81,7 +80,7 @@
                             <td align="center" width="197" height="47" valign="middle">
                               <a style="text-decoration: none;" href="<%= payment_organization_url(@organization) %>">
                                 <font color="#313143" size="4" style="font-size:18px; line-height:20px; font-weight:bold;" face="Arial,Helvetica, sans-serif">
-                                  Upgrade Now
+                                  Pagar Ahora
                                 </font>
                               </a></td>
                             <td bgcolor="#d8cc00" style="font-size: 0;line-height: 0;" width="1">&nbsp;</td>
@@ -97,7 +96,7 @@
                     </tr>
                     <tr>
                       <td>
-                        <font face="Arial,Helvetica, sans-serif" size="2" color="#303042" style="font-size:14px; line-height:28px;">The LeanLaunchLab Team</font>
+                        <font face="Arial,Helvetica, sans-serif" size="2" color="#303042" style="font-size:14px; line-height:28px;">El Equipo de Spartans Academy</font>
                       </td>
                     </tr>
                     <tr>

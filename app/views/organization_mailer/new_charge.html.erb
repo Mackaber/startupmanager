@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <title>LeanLaunchLab</title>
+  <title>Spartans Academy</title>
   <style type="text/css">.ExternalClass {
-    display: block !important;
+      display: block !important;
   }</style>
 </head>
 <body leftmargin="0" rightmargin="0" topmargin="0" bottommargin="0" bgcolor="#f8f8f8">
@@ -21,7 +21,7 @@
         </tr>
         <tr>
           <td>
-            <a href="#" style="text-decoration: none;"><font face="Arial, Helvetica, sans-serif" size="5" color="#313143" style="font-size: 25px; line-height:27px; font-weight:bold;">LEAN<font color="#bebec6">LAUNCH</font>LAB</font></a>
+            <a href="#" style="text-decoration: none;"><font face="Arial, Helvetica, sans-serif" size="5" color="#313143" style="font-size: 25px; line-height:27px; font-weight:bold;">SPARTANS<font color="#db2409">ACADEMY</font></a>
           </td>
         </tr>
         <tr>
@@ -45,18 +45,18 @@
                     <tr>
                       <td>
                         <font face="Arial,Helvetica, sans-serif" size="2" color="#303042" style="font-size:14px; line-height:17px;">
-                          <h3 style="padding-top: 10px">LeanLaunchLab Receipt - <%= @time.strftime("%B %d, %Y %I:%M%p") %></h3>
+                          <h3 style="padding-top: 10px">Recibo de Spartans Academy - <%= @time.strftime("%B %d, %Y %I:%M%p") %></h3>
 
                           <p style="padding-left:8px;">                            
-                            Name: <%= @charge.organization.cc_user.name %><br/>
-                            Organization: <%= @charge.organization %><br/>
-                            Amount: <%= number_to_currency(@charge.amount) %> USD<br/>
-                            Charged to: <%= @charge.organization.cc_type %> ending in <%= @charge.organization.cc_last4 %>
+                            Nombre: <%= @charge.organization.cc_user.name %><br/>
+                            Organización: <%= @charge.organization %><br/>
+                            Cantidad: <%= number_to_currency(@charge.amount) %> USD<br/>
+                            Cargado a: <%= @charge.organization.cc_type %> ending in <%= @charge.organization.cc_last4 %>
                           </p>
                           <p style="padding-left:8px;">  
-                            LeanLaunchLab<br/>
-                            246 2nd St Suite 701<br/>
-                            San Francisco, CA 94105
+                            Spartans Academy<br/>
+                            Parque Tecnológico<br/>
+                            San Luis Potosí, SLP, 78218
                           </p>
                         </font></td>
                     </tr>

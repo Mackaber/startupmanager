@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <title>LeanLaunchLab</title>
+  <title>Spartans Academy</title>
   <style type="text/css">.ExternalClass {
-    display: block !important;
+      display: block !important;
   }</style>
 </head>
 <body leftmargin="0" rightmargin="0" topmargin="0" bottommargin="0" bgcolor="#f8f8f8">
@@ -22,7 +22,7 @@
         </tr>
         <tr>
           <td>
-            <a href="<%= root_url %>" style="text-decoration: none;"><font face="Arial, Helvetica, sans-serif" size="5" color="#313143" style="font-size: 25px; line-height:27px; font-weight:bold;">LEAN<font color="#bebec6">LAUNCH</font>LAB</font></a>
+            <a href="#" style="text-decoration: none;"><font face="Arial, Helvetica, sans-serif" size="5" color="#313143" style="font-size: 25px; line-height:27px; font-weight:bold;">SPARTANS<font color="#db2506"> ACADEMY</font></a>
           </td>
         </tr>
         <tr>
@@ -49,7 +49,7 @@
                           <p>
                             <%= @hypothesis.audits.last.user %>
                             <%= @new_record ? 'created a new' : 'updated a' %>
-                            hypothesis in
+                            hipothesis en
                             <%= link_to(@hypothesis.project, project_url(@hypothesis.project)) %>:
                             <br/>
                             <%= link_to(@hypothesis, @hypothesis.url) %>
@@ -57,7 +57,7 @@
                                                     
                           <% if @hypothesis.item_status %>
                             <p>
-                              Status:
+                              Estatus:
                               <em><%= @hypothesis.item_status %></em>
                             </p>
                           <% end %>
@@ -73,8 +73,7 @@
                     </tr>
                     <tr>
                       <td>
-                        <font face="Arial,Helvetica, sans-serif" size="2" color="#303042" style="font-size:11px; line-height:28px;">___<br/>To
-                          modify your email settings, click <%= link_to "here", notifications_settings_url %></font></td>
+                        <font face="Arial,Helvetica, sans-serif" size="2" color="#303042" style="font-size:11px; line-height:28px;">___<br/>Para cambiar tus ajustes de correos, click <%= link_to "aquí", notifications_settings_url %></font></td>
                     </tr>
                     <tr>
                       <td height="27">&nbsp;</td>

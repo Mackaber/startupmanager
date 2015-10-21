@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <title>LeanLaunchLab</title>
+  <title>Spartans Academy</title>
   <style type="text/css">.ExternalClass {
     display: block !important;
   }</style>
@@ -22,7 +22,7 @@
         </tr>
         <tr>
           <td>
-            <a href="#" style="text-decoration: none;"><font face="Arial, Helvetica, sans-serif" size="5" color="#313143" style="font-size: 25px; line-height:27px; font-weight:bold;">LEAN<font color="#bebec6">LAUNCH</font>LAB</font></a>
+            <a href="#" style="text-decoration: none;"><font face="Arial, Helvetica, sans-serif" size="5" color="#313143" style="font-size: 25px; line-height:27px; font-weight:bold;">SPARTANS<font color="#dc2506">ACADEMY</font></a>
           </td>
         </tr>
         <tr>
@@ -50,7 +50,7 @@
                           <p>
                             <%= @blog_post.member.user %>
                             <%= @new_record ? 'created a new' : 'updated an' %>
-                            interview in
+                            entrevista en
                             <%= link_to(@blog_post.project, project_url(@blog_post.project)) %>:
                             <br/>
                             <%= link_to(@blog_post, @blog_post.url) %>
@@ -61,7 +61,7 @@
                           <% end %>
 
                           <% if @blog_post.date %>
-                            Interview Date:
+                            Fecha de entrevista:
                             <strong>
                               <%= @blog_post.date.strftime("%B %e, %Y") %>
                             </strong>
@@ -75,8 +75,7 @@
                     </tr>
                     <tr>
                       <td>
-                        <font face="Arial,Helvetica, sans-serif" size="2" color="#303042" style="font-size:11px; line-height:28px;">___<br/>To
-                          modify your email settings, click <%= link_to "here", notifications_settings_url %></font></td>
+                        <font face="Arial,Helvetica, sans-serif" size="2" color="#303042" style="font-size:11px; line-height:28px;">___<br/>Para cambiar tus ajustes de correos, click <%= link_to "aquí", notifications_settings_url %></font></td>
                     </tr>
                     <tr>
                       <td height="27">&nbsp;</td>

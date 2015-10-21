@@ -39,7 +39,7 @@
                                     </strong>
                                     <% if hypothesis.canvas_item %>
                                       &nbsp; 
-                                      <%= hypothesis.canvas_item.box.label %> Hypothesis <br />
+                                      <%= hypothesis.canvas_item.box.label %> Hipothesis <br />
                                     <% end %>
                                   </font>
                                 </td>
@@ -48,12 +48,12 @@
                               <tr>
                                 <td style="line-height:17px;">
                                   <font face="Arial, Helvetica, sans-serif" color="#888888" size="2" style="font-size:14px; line-height:17px;">
-                                    Hypothesis in 
+                                    Hipothesis en
                                     <a style="text-decoration:none; color:#0033FF;" href="<%= project_url(hypothesis.project) %>">
                                       <font color="#0033FF"><%= hypothesis.project.name %></font>
                                     </a>
                                     <% if (m = hypothesis.created_by_member) %>
-                                      by <%= m.user.name %>
+                                      por <%= m.user.name %>
                                     <% end %>
                                   </font>
                                 </td>
@@ -64,16 +64,16 @@
                           <td align="right" style="line-height:18px;">
                             <font face="Arial, Helvetica, sans-serif" color="#999999" size="2" style="font-size:14px; line-height:18px;">
                               <% if hypothesis.item_status == ItemStatus.cached_find_by_status("started") %>
-                              Started Testing <br />
+                              Empezaron a probarse <br />
                               <% elsif hypothesis.item_status == ItemStatus.cached_find_by_status("valid") %> 
-                              Validated
+                              Validadas
                               <% elsif hypothesis.item_status == ItemStatus.cached_find_by_status("invalid") %> 
-                              Invalidated
+                              Invalidadas
                               <% elsif hypothesis.item_status == ItemStatus.cached_find_by_status("unknown") %> 
-                              Unknown
+                              Desconocido
                               <% end %>
                               <% if hypothesis.completed_at %>
-                                on 
+                                en
                                 <%= hypothesis.completed_at.strftime("%b %d, %Y") %>
                               <% end %>
                             </font>
@@ -91,19 +91,19 @@
               <td style="line-height:20px;">
                 <font face="Arial, Helvetica, sans-serif" color="#626262" size="2" style="font-size:14px; line-height:20px;">
                   <% unless hypothesis.experiments.empty? %>
-                  <strong>Experiments</strong> <br />
+                  <strong>Experimentos</strong> <br />
                   <% hypothesis.experiments.sort_by{|x| x.position || 0}.each_with_index do |e,i| %>
                   <%= i+1 %>. <%= e.title %> <br />
                   <% end %>
                   <% end %>
                   <% unless hypothesis.questions.empty? %>
-                  <strong>Key Metrics</strong> <br />
+                  <strong>Metricas Clave</strong> <br />
                   <% hypothesis.questions.sort_by{|x| x.position || 0}.each_with_index do |e,i| %>
                   <%= i+1 %>. <%= e.title %> <br />
                   <% end %>
                   <% end %>
                   <% unless hypothesis.tasks.empty? %>
-                  <strong>Tasks</strong> <br />
+                  <strong>Tareas</strong> <br />
                   <% hypothesis.tasks.sort_by{|x| x.position || 0}.each_with_index do |e,i| %>
                   <%= i+1 %>. <%= e.title %> <br />
                   <% end %>
@@ -117,7 +117,7 @@
             <tr>
               <td style="line-height:18px;">
                 <font face="Arial, Helvetica, sans-serif" color="#626262" size="2" style="font-size:14px; line-height:18px;">
-                  <strong>Attachments</strong> <br />
+                  <strong>Archivos Adjuntos</strong> <br />
                   <% hypothesis.attachments.sort_by{|x| x.created_at}.each do |attachment| %>
                   <a style="text-decoration:none; color:#0033FF;" href="<%= project_attachment_url(hypothesis.project, attachment) %>">
                     <font color="#0033FF"><%= attachment.data_file_name %></font>
@@ -130,7 +130,7 @@
             <% end %>
             <% unless hypothesis.comments.empty? %>
             <tr><td height="10"></td></tr>
-            <tr><td style="line-height:16px;"><font face="Arial, Helvetica, sans-serif" color="#626262" size="2" style="font-size:14px; line-height:16px;"><strong>Comments</strong> <br /></font></td></tr>
+            <tr><td style="line-height:16px;"><font face="Arial, Helvetica, sans-serif" color="#626262" size="2" style="font-size:14px; line-height:16px;"><strong>Comentarios</strong> <br /></font></td></tr>
             <% hypothesis.comments.sort_by{|x| x.created_at}.each do |comment| %>
             <tr>
               <td style="line-height:15px;">
@@ -154,7 +154,7 @@
                   <tr>
                     <td width="1" bgcolor="#a1a1a1" height="30"></td>
                     <td width="21" height="30"></td>
-                    <td><font face="Arial, Helvetica, sans-serif" color="#000000" size="2" style="font-size:14px; line-height:17px;"><a style="text-decoration:none; color:#000;" href="<%= hypothesis.url %>"><font color="#000000">Post a Comment</font></a> </font></td>
+                    <td><font face="Arial, Helvetica, sans-serif" color="#000000" size="2" style="font-size:14px; line-height:17px;"><a style="text-decoration:none; color:#000;" href="<%= hypothesis.url %>"><font color="#000000">Publicar un Comentario</font></a> </font></td>
                     <td width="21" height="30"></td>
                     <td width="1" bgcolor="#a1a1a1" height="30"></td>
                   </tr>

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <title>LeanLaunchLab</title>
+  <title>Spartans Academy</title>
   <style type="text/css">.ExternalClass{width:100% !important;}</style>
 </head>
 <body leftmargin="0" marginwidth="0" topmargin="0" marginheight="0" bgcolor="#f8f8f8">
@@ -18,14 +18,14 @@
             <td>
               <table width="100%" cellpadding="0" cellspacing="0" border="0">
                 <tr>
-                  <td valign="top" style="line-height:35px;"><font face="Arial, Helvetica, sans-serif" color="#313143" size="6" style="font-size:30px; line-height:35px;"><strong><a style="text-decoration:none; color:#313143;" href="<%= root_url %>"><font color="#313143">LEAN<font color="#bebec6">LAUNCH</font>LAB</font></a></strong> </font></td>
+                  <td valign="top" style="line-height:35px;"><font face="Arial, Helvetica, sans-serif" color="#313143" size="6" style="font-size:30px; line-height:35px;"><strong><a style="text-decoration:none; color:#313143;" href="<%= root_url %>"><font color="#313143">SPARTANS<font color="#db2506">ACADEMY</font></a></strong> </font></td>
                   <td valign="bottom" align="right" tyle="<lh>28</lh>"><font face="Arial, Helvetica, sans-serif" color="#303042" size="2" style="font-size:16px; line-height:28px;"><%= @end_at.strftime("%A %B %e, %Y") %></font></td>
                 </tr>
               </table>
             </td>
           </tr>
           <tr><td style="font-size:0; line-height:0;" height="18" ></td></tr>
-          <tr><td style="line-height:20px;"><font face="Arial, Helvetica, sans-serif" color="#303042" size="3" style="font-size:16px; line-height:20px;"><strong>Summary</strong> </font></td></tr>
+          <tr><td style="line-height:20px;"><font face="Arial, Helvetica, sans-serif" color="#303042" size="3" style="font-size:16px; line-height:20px;"><strong>Resumen</strong> </font></td></tr>
           <tr>
             <td>
               <font face="Arial, Helvetica, sans-serif" color="#303042" size="2" style="font-size:14px; line-height:20px;">
@@ -34,9 +34,9 @@
                   <font color="#0033FF"><%= p[:project].name %></font>
                 </a>
                 <% if p[:last_activity_at] %>
-                No activity for <%= ((@end_at - p[:last_activity_at]) / 86400).round %> days
+                Sin actividad por <%= ((@end_at - p[:last_activity_at]) / 86400).round %> días
                 <% else %>
-                [<%= p[:started_hypotheses].length + p[:completed_hypotheses].length %> hypotheses, <%= p[:updates].length %> updates, <%= p[:interviews].length %> interviews] 
+                [<%= p[:started_hypotheses].length + p[:completed_hypotheses].length %> hipótesis, <%= p[:updates].length %> actualizaciones, <%= p[:interviews].length %> entrevistas]
                 <% end %>
                 <br />
                 <% end %>
@@ -61,7 +61,7 @@
           </tr>
           <tr><td height="4" bgcolor="#313143"></td></tr>
           <tr><td height="14"></td></tr>
-          <tr><td style="line-height:17px;"><font face="Arial, Helvetica, sans-serif" color="#313143" size="2" style="font-size:14px; line-height:17px;"><strong>Recent Journal Updates and Interviews</strong> </font></td></tr>
+          <tr><td style="line-height:17px;"><font face="Arial, Helvetica, sans-serif" color="#313143" size="2" style="font-size:14px; line-height:17px;"><strong>Actualizaciones recientes en el Diario y en las Entrevistas</strong> </font></td></tr>
           <tr><td height="3"></td></tr>
           <% if p[:blog_posts].empty? %>
           <tr>
@@ -74,7 +74,7 @@
                   <td width="576" valign="top">
                     <table width="100%" cellpadding="0" cellspacing="0" border="0">
                       <tr><td height="10"></td></tr>
-                      <tr><td style="line-height:20px;"><font face="Arial, Helvetica, sans-serif" color="#ef0101" size="2" style="font-size:16px; line-height:20px;"><strong>No new updates or interviews</strong> </font></td></tr>
+                      <tr><td style="line-height:20px;"><font face="Arial, Helvetica, sans-serif" color="#ef0101" size="2" style="font-size:16px; line-height:20px;"><strong>Sin actualizaciones ni entrevistas</strong> </font></td></tr>
                       <tr><td height="10"></td></tr>
                       <tr>
                         <td>
@@ -83,7 +83,7 @@
                             <tr>
                               <td width="1" bgcolor="#a1a1a1" height="30"></td>
                               <td width="21" height="30"></td>
-                              <td><font face="Arial, Helvetica, sans-serif" color="#000000" size="2" style="font-size:14px; line-height:17px;"><a style="text-decoration:none; color:#000;" href="<%= journal_project_url(p[:project]) %>"><font color="#000000">Create an Update</font></a> </font></td>
+                              <td><font face="Arial, Helvetica, sans-serif" color="#000000" size="2" style="font-size:14px; line-height:17px;"><a style="text-decoration:none; color:#000;" href="<%= journal_project_url(p[:project]) %>"><font color="#000000">Crear una actualización</font></a> </font></td>
                               <td width="21" height="30"></td>
                               <td width="1" bgcolor="#a1a1a1" height="30"></td>
                             </tr>
@@ -121,11 +121,11 @@
                               <td style="line-height:15px;">
                                 <% unless (comments = blog_post.comments.where(["created_at BETWEEN ? AND ?", @start_at, @end_at])).empty? %>                                
                                 <font face="Arial, Helvetica, sans-serif" color="#ef0101" size="2" style="font-size:12px; line-height:15px;">
-                                  (NEW COMMENTS from <%= comments.collect{|x| x.member.user.name}.uniq.sort.join(", ") %>) 
+                                  (NUEVO COMENTARIO de <%= comments.collect{|x| x.member.user.name}.uniq.sort.join(", ") %>)
                                 </font>
                                 <% end %>
                               </td>
-                              <td align="right" style="line-height:17px;"><font face="Arial, Helvetica, sans-serif" color="#838383" size="2" style="font-size:14px; line-height:17px;">Created on <%= blog_post.published_at.strftime("%b %e, %Y") %> </font></td>
+                              <td align="right" style="line-height:17px;"><font face="Arial, Helvetica, sans-serif" color="#838383" size="2" style="font-size:14px; line-height:17px;">Creado en <%= blog_post.published_at.strftime("%b %e, %Y") %> </font></td>
                             </tr>
                           </table>
                         </td>
@@ -143,17 +143,17 @@
                         <td style="line-height:17px;">
                           <font face="Arial, Helvetica, sans-serif" color="#888888" size="2" style="font-size:14px; line-height:17px;">
                             <% if blog_post.post_type == "interview" %>
-                            New Interview in 
+                            Nueva entrevista en
                             <a style="text-decoration:none; color:#0033FF;" href="<%= interviews_project_url(blog_post.project) %>">
                               <font color="#0033FF"><%= blog_post.project.name %></font>
                             </a>
                             <% else %>
-                            New Update in 
+                            Nueva actualización en
                             <a style="text-decoration:none; color:#0033FF;" href="<%= journal_project_url(blog_post.project) %>">
                               <font color="#0033FF"><%= blog_post.project.name %></font>
                             </a>
                             <% end %>
-                            by
+                            por
                             <%= blog_post.member.user.name %>
                           </font>
                         </td>
@@ -167,7 +167,7 @@
                               <td width="5" height="28"></td>
                               <td style="line-height:17px;">
                                 <font face="Arial, Helvetica, sans-serif" color="#888888" size="2" style="font-size:14px; line-height:17px;">
-                                  The Ask 
+                                  La Pregunta
                                   <font color="#313143"><%= blog_post.the_ask %></font>
                                 </font>
                               </td>
@@ -192,7 +192,7 @@
                       <tr>
                         <td style="line-height:18px;">
                           <font face="Arial, Helvetica, sans-serif" color="#626262" size="2" style="font-size:14px; line-height:18px;">
-                            <strong>Attachments</strong> <br />
+                            <strong>Adjuntos</strong> <br />
                             <% blog_post.attachments.sort_by{|x| x.created_at}.each do |attachment| %>
                             <a style="text-decoration:none; color:#0033FF;" href="<%= project_attachment_url(blog_post.project, attachment.id) %>">
                               <font color="#0033FF"><%= attachment.data_file_name %></font>
@@ -205,7 +205,7 @@
                       <% end %>
                       <% unless blog_post.comments.empty? %>
                       <tr><td height="10"></td></tr>
-                      <tr><td style="line-height:16px;"><font face="Arial, Helvetica, sans-serif" color="#626262" size="2" style="font-size:14px; line-height:16px;"><strong>Comments</strong> <br /></font></td></tr>
+                      <tr><td style="line-height:16px;"><font face="Arial, Helvetica, sans-serif" color="#626262" size="2" style="font-size:14px; line-height:16px;"><strong>Comentarios</strong> <br /></font></td></tr>
                       <% blog_post.comments.sort_by{|x| x.created_at}.each do |comment| %>
                       <tr>
                         <td style="line-height:15px;">
@@ -229,7 +229,7 @@
                             <tr>
                               <td width="1" bgcolor="#a1a1a1" height="30"></td>
                               <td width="21" height="30"></td>
-                              <td><font face="Arial, Helvetica, sans-serif" color="#000000" size="2" style="font-size:14px; line-height:17px;"><a style="text-decoration:none; color:#000;" href="<%= blog_post.url %>"><font color="#000000">Post a Comment</font></a> </font></td>
+                              <td><font face="Arial, Helvetica, sans-serif" color="#000000" size="2" style="font-size:14px; line-height:17px;"><a style="text-decoration:none; color:#000;" href="<%= blog_post.url %>"><font color="#000000">Subir un Comentario</font></a> </font></td>
                               <td width="21" height="30"></td>
                               <td width="1" bgcolor="#a1a1a1" height="30"></td>
                             </tr>
@@ -250,7 +250,7 @@
           <tr><td height="20"></td></tr>
           <% end %>
           <% end %>
-          <tr><td style="line-height:17px;"><font face="Arial, Helvetica, sans-serif" color="#313143" size="2" style="font-size:14px; line-height:17px;"><strong>Hypotheses Being Tested</strong> </font></td></tr>
+          <tr><td style="line-height:17px;"><font face="Arial, Helvetica, sans-serif" color="#313143" size="2" style="font-size:14px; line-height:17px;"><strong>Hipótesis siendo probadas</strong> </font></td></tr>
           <tr><td height="6"></td></tr>
           <% if p[:started_hypotheses].empty? %>
           <tr>
@@ -263,7 +263,7 @@
                   <td width="576" valign="top">
                     <table width="100%" cellpadding="0" cellspacing="0" border="0">
                       <tr><td height="10"></td></tr>
-                      <tr><td style="line-height:20px;"><font face="Arial, Helvetica, sans-serif" color="#ef0101" size="2" style="font-size:16px; line-height:20px;"><strong>No hypotheses being tested currently</strong> </font></td></tr>
+                      <tr><td style="line-height:20px;"><font face="Arial, Helvetica, sans-serif" color="#ef0101" size="2" style="font-size:16px; line-height:20px;"><strong>Ninguna hipótesis esta siendo probada</strong> </font></td></tr>
                       <tr><td height="10"></td></tr>
                       <tr>
                         <td>
@@ -275,7 +275,7 @@
                               <td>
                                 <font face="Arial, Helvetica, sans-serif" color="#000000" size="2" style="font-size:14px; line-height:17px;">
                                   <a style="text-decoration:none; color:#000;" href="<%= project_url(p[:project]) %>">
-                                    <font color="#000000">Test something</font>
+                                    <font color="#000000">Prueba una hipostesis</font>
                                   </a>
                                 </font>
                               </td>
@@ -302,7 +302,7 @@
           <%= render(:partial => "daily_summary_hypothesis", :locals => {:hypothesis => hypothesis}) %>
           <% end %>
           <% end %>
-          <tr><td style="line-height:17px;"><font face="Arial, Helvetica, sans-serif" color="#313143" size="2" style="font-size:14px; line-height:17px;"><strong>Recently Validated / Invalidated Hypotheses</strong> </font></td></tr>
+          <tr><td style="line-height:17px;"><font face="Arial, Helvetica, sans-serif" color="#313143" size="2" style="font-size:14px; line-height:17px;"><strong>Hipotesis recientemente Validadas / Invalidadas</strong> </font></td></tr>
           <tr><td height="6"></td></tr>
           <% if p[:completed_hypotheses].empty? %>
           <tr>
@@ -315,7 +315,7 @@
                   <td width="576" valign="top">
                     <table width="100%" cellpadding="0" cellspacing="0" border="0">
                       <tr><td height="10"></td></tr>
-                      <tr><td style="line-height:20px;"><font face="Arial, Helvetica, sans-serif" color="#ef0101" size="2" style="font-size:16px; line-height:20px;"><strong>No hypotheses validated recently</strong> </font></td></tr>
+                      <tr><td style="line-height:20px;"><font face="Arial, Helvetica, sans-serif" color="#ef0101" size="2" style="font-size:16px; line-height:20px;"><strong>No has validado ningúna hipótesis recientemente</strong> </font></td></tr>
                       <tr><td height="10"></td></tr>
                       <tr>
                         <td>
@@ -327,7 +327,7 @@
                               <td>
                                 <font face="Arial, Helvetica, sans-serif" color="#000000" size="2" style="font-size:14px; line-height:17px;">
                                   <a style="text-decoration:none; color:#000;" href="<%= project_url(p[:project]) %>">
-                                    <font color="#000000">Validate a hypothesis</font>
+                                    <font color="#000000">Validar una Hipótesis</font>
                                   </a>
                                 </font>
                               </td>
@@ -358,7 +358,7 @@
           <tr><td height="11"></td></tr>
           <tr><td height="1" bgcolor="#e8e8e8"></td></tr>
           <tr><td height="6"></td></tr>
-          <tr><td style="line-height:15px;"><font face="Arial, Helvetica, sans-serif" color="#333333" size="2" style="font-size:12px; line-height:15px;">To modify your email preferences, click <a style="text-decoration:underline; color:#369;" href="<%= notifications_settings_url %>"><font color="#336699">here</font></a> </font></td></tr>
+          <tr><td style="line-height:15px;"><font face="Arial, Helvetica, sans-serif" color="#333333" size="2" style="font-size:12px; line-height:15px;">Para modificar tus preferencias de correo da click <a style="text-decoration:underline; color:#369;" href="<%= notifications_settings_url %>"><font color="#336699">aquí</font></a> </font></td></tr>
           <tr><td height="20"></td></tr>
         </table>
       </td>
