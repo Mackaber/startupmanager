@@ -1,3 +1,4 @@
+# encoding: utf-8
 class OrganizationMailer < ActionMailer::Base
   
   include ActionView::Helpers::TextHelper

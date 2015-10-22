@@ -1,3 +1,4 @@
+# encoding: utf-8
 class ResourceMailer < ActionMailer::Base
   
   def question(type, name, email, company, url, location, industry, funded, question_p)
