@@ -192,13 +192,13 @@ lll.views.HypothesisView = Backbone.View.extend(lll.views.HypothesisContainer).e
       e.html("<button class='btn small start'>START</button>");
     } else if (self.model.get("status") == "started") {
       var s = ""
-      s += "<button class='btn small validate'>VALIDATE</button>";
-      s += "<button class='btn small invalidate'>INVALIDATE</button>";
-      s += "<button class='btn small unknown'>UNKNOWN</button>";
+      s += "<button class='btn small validate'>VALIDADO</button>";
+      s += "<button class='btn small invalidate'>INVALIDADO</button>";
+      s += "<button class='btn small unknown'>DESCONOCIDO</button>";
       e.html(s);
     } else if (self.model.get("status") == "valid") {
       var s = "";
-      s += "<span class='label validated'>VALIDATED";
+      s += "<span class='label validated'>VALIDADO";
       if (self.model.get("completed_at")) {
         s += "<br/>" + self.model.get("completed_at").toString("MMM d, yyyy");
       }
@@ -206,7 +206,7 @@ lll.views.HypothesisView = Backbone.View.extend(lll.views.HypothesisContainer).e
       e.html(s);
     } else if (self.model.get("status") == "invalid") {
       var s = "";
-      s += "<span class='label invalid'>INVALIDATED";
+      s += "<span class='label invalid'>INVALIDADO";
       if (self.model.get("completed_at")) {
         s += "<br/>" + self.model.get("completed_at").toString("MMM d, yyyy");
       }
@@ -214,7 +214,7 @@ lll.views.HypothesisView = Backbone.View.extend(lll.views.HypothesisContainer).e
       e.html(s);
     } else if (self.model.get("status") == "unknown") {
       s = "";
-      s += "<span class='label unknown'>UNKNOWN";
+      s += "<span class='label unknown'>DESCONOCIDO";
       if (self.model.get("completed_at")) {
         s += "<br/>" + self.model.get("completed_at").toString("MMM d, yyyy");
       }
@@ -234,12 +234,12 @@ lll.views.HypothesisView = Backbone.View.extend(lll.views.HypothesisContainer).e
     var e = self.$("> .hypothesis-heading > .collapsed .experiments");
     e.empty();
     if (self.experiments.length == 0) {
-      e.html("<div><img class='experiment'/> <a href='#' class='expand-experiment'>Define experiments to test this</a></div>");
+      e.html("<div><img class='experiment'/> <a href='#' class='expand-experiment'>Define experimentos para probar esto</a></div>");
     } else if (self.experiments.length == 1) {
       e.html("<div><img class='experiment'/> " + _.escapeHTML(self.experiments.at(0).get('title')) + "</div>");
     } else {
       s = "<div><img class='experiment'/> ";
-      s += self.experiments.length + " Experiments";
+      s += self.experiments.length + " Experimentos";
       s += " <span class='show'><a href='#' class='show-experiments' title='";
       s += self.experiments.map(function(e) { return _.escapeHTML(e.get('title')) }).join('<br/>');
       s += "'>Show</a></span>";      
@@ -256,15 +256,15 @@ lll.views.HypothesisView = Backbone.View.extend(lll.views.HypothesisContainer).e
     var e = self.$("> .hypothesis-heading > .collapsed .questions");
     e.empty();
     if (self.questions.length == 0) {
-      e.html("<div><img class='metric'/> <a href='#' class='expand-metric'>Define metrics you need to track</a></div>");
+      e.html("<div><img class='metric'/> <a href='#' class='expand-metric'>Define métricas a seguir</a></div>");
     } else if (self.questions.length == 1) {
       e.html("<div><img class='metric'/> " + _.escapeHTML(self.questions.at(0).get('title')) + "</div>");
     } else {
       s = "<div><img class='metric'/> ";
-      s += self.questions.length + " Metrics";
+      s += self.questions.length + " Metricas";
       s += " <span class='show'><a href='#' class='show-questions' title='";
       s += self.questions.map(function(e) { return _.escapeHTML(e.get('title')) }).join('<br/>');
-      s += "'>Show</a></span>";      
+      s += "'>Mostrar</a></span>";      
       s += "</div>";
       e.html(s);
     }    
@@ -277,15 +277,15 @@ lll.views.HypothesisView = Backbone.View.extend(lll.views.HypothesisContainer).e
     var e = self.$("> .hypothesis-heading > .collapsed .tasks");
     e.empty();
     if (self.tasks.length == 0) {
-      e.html("<div><img class='task'/> <a href='#' class='expand-task'>Create a checklist</a></div>");
+      e.html("<div><img class='task'/> <a href='#' class='expand-task'>Crea una lista</a></div>");
     } else if (self.tasks.length == 1) {
       e.html("<div><img class='task'/> " + _.escapeHTML(self.tasks.at(0).get('title')) + "</div>");
     } else {
       var s = "<div><img class='task'/> ";
-      s += self.tasks.length + " Tasks";
+      s += self.tasks.length + " Tareas";
       s += " <span class='show'><a href='#' class='show-tasks' title='";
       s += self.tasks.map(function(e) { return _.escapeHTML(e.get('title')) }).join('<br/>');
-      s += "'>Show</a></span>";      
+      s += "'>Mostrar</a></span>";      
       s += "</div>";
       e.html(s);
     }    

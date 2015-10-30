@@ -10,10 +10,10 @@
 
       <ul class="nav navbar-nav navbar-right">
         <% if current_user %>
-                <li ><a href="/projects" title="Maneja varios proyectos de manera sencilla">Panel de Proyectos</a></li>
-                <li ><a href="/projects/last">Proyecto</a></li>
-                <li ><a href="/organizations/last">Administrar cuenta</a></li>
-                <li ><a href="/settings/profile"><%= current_user.name %></a></li>
+                <li ><a href="/projects/last" title="Administrar el proyecto seleccionado">Ir al Proyecto</a></li>
+                <li ><a href="/organizations/last" title="Crea Proyectos y añade personas a tu organización">Administrar Organización</a></li>
+                <li ><a href="/projects" title="Maneja varios proyectos de manera sencilla">Resumen de Proyectos</a></li>
+            <li ><a href="/settings/profile" title="Cambia tu nombre y contraseña"><%= current_user.name %></a></li>
                 <li><a href="/users/sign_out">Salir</a></li>
             <%  else  %>
                 <li><a href="/users/sign_up">Inscribirse</a></li>

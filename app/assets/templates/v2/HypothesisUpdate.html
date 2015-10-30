@@ -4,25 +4,25 @@
       Creado<br>
       el <%= hypothesis.get("created_at").toString("MMM d, yyyy") %>
     <% } else if (hypothesis.get("status") == "started") { %>
-      Started Testing<br>
+      Inicio de Prueba<br>
       el <%= hypothesis.get("completed_at").toString("MMM d, yyyy") %>
     <% } else if (hypothesis.get("status") == "valid") { %>
-      Validated<br/>
+      Validado<br/>
       el <%= hypothesis.get("completed_at").toString("MMM d, yyyy") %>
     <% } else if (hypothesis.get("status") == "invalid") { %>
-      Invalidated<br/>
+      Invalidado<br/>
       el <%= hypothesis.get("completed_at").toString("MMM d, yyyy") %>
     <% } else if (hypothesis.get("status") == "unknown") { %>
-      Unknown<br/>
+      Desconocido<br/>
       el <%= hypothesis.get("completed_at").toString("MMM d, yyyy") %>
     <% } %> 
   </span>
   <a href="#">
     <% if (is_new) { %>
-      <span class="new">New</span>
+      <span class="new">Nuevo</span>
     <% } %>
     <% if (hypothesis.get("canvas_box")) { %>
-      <span><%= hypothesis.get("canvas_box") %> Hipothesis</span>
+      <span><%= hypothesis.get("canvas_box") %> Hipotesis</span>
     <% } %>
     <%= hypothesis.get("title") %>
   </a>
@@ -68,7 +68,7 @@
 
 <% if (hypothesis.tasks.length > 0) { %>
   <h4 class="task">
-    Tasks
+    Tareas
   </h4>
   <div class="pad20">
     <p>
