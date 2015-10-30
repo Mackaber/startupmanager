@@ -25,7 +25,7 @@ ActiveAdmin.setup do |config|
   # will be added to.
   #
   # eg:
-  config.default_namespace = :pieceofshit
+  config.default_namespace = :admin1ec972d2390e2c9f2a40c5cba56a581e
   #
   # This will create resources in the HelloWorld module and
   # will namespace routes to /hello_world/*

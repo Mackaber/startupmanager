@@ -1,7 +1,6 @@
 LeanLaunchLab::Application.routes.draw do
 
   devise_for :admin_users, ActiveAdmin::Devise.config
-  devise_for :admin_users, :controllers => { :sessions => "active_admin_sessions" }
   ActiveAdmin.routes(self)
 
   resources :errors, :only => [:create]
