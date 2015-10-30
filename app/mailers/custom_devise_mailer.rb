@@ -1,3 +1,4 @@
+#encoding: utf-8
 class CustomDeviseMailer < Devise::Mailer
   
   def headers_for(action)

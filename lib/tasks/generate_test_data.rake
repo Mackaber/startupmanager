@@ -1,3 +1,4 @@
+# encoding: utf-8
 # require 'faker'
 # 
 # namespace :create_test_data do

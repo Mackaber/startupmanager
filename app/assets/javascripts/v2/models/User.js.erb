@@ -11,76 +11,70 @@ lll.models.User = Backbone.Model.extend({
             minLength: 1,
             maxLength: 255
         },
-
         email: {
             required: true,
-            pattern: function (value, attr, computedState) {
-                if (/^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i.test(value)) {
-                    return 'The mail you entered is not valid';
-                }
-            }
-        },
-
-        members: function () {
-            var self = this;
-            if (!self._members) {
-                self._members = new (Backbone.Subset.extend({
-                    parent: function () {
-                        return lll.models.members;
-                    },
-                    sieve: function (member) {
-                        return (member.get("user_id") == self.id) && member.get("active");
-                    }
-                }))();
-            }
-            return self._members;
-        },
-
-        organizationMembers: function () {
-            var self = this;
-            if (!self._organizationMembers) {
-                self._organizationMembers = new (Backbone.Subset.extend({
-                    parent: function () {
-                        return lll.models.organizationMembers;
-                    },
-                    sieve: function (member) {
-                        return (member.get("user_id") == self.id);
-                    }
-                }))();
-            }
-            return self._organizationMembers;
-        },
-
-        url: function () {
-            return '/v1/users/' + this.id + '.json';
-        },
-
-        toString: function () {
-            return this.get("name");
-        },
-
-        parse: function (response) {
-            var self = this;
-            var attrs = _.clone(response);
-
-            if (attrs.last_sign_in_at) {
-                attrs.last_sign_in_at = Date.parse(attrs.last_sign_in_at);
-            }
-
-            attrs = Backbone.Model.prototype.parse.call(this, attrs);
-            // this._changed = true;
-            return attrs;
-        },
-
-        toJSON: function () {
-            var attrs = _.clone(this.attributes);
-            if (attrs.last_sign_in_at) {
-                attrs.last_sign_in_at = attrs.last_sign_in_at.toISOString();
-            }
-            return attrs;
+            pattern: /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/
         }
-    }
+    },
 
+    members: function() {
+        var self = this;
+        if (!self._members) {
+            self._members = new (Backbone.Subset.extend({
+                parent: function () {
+                    return lll.models.members;
+                },
+                sieve: function (member) {
+                    return (member.get("user_id") == self.id) && member.get("active");
+                }
+            }))();
+        }
+        return self._members;
+    },
+
+    organizationMembers: function () {
+        var self = this;
+        if (!self._organizationMembers) {
+            self._organizationMembers = new (Backbone.Subset.extend({
+                parent: function () {
+                    return lll.models.organizationMembers;
+                },
+                sieve: function (member) {
+                    return (member.get("user_id") == self.id);
+                }
+            }))();
+        }
+        return self._organizationMembers;
+    },
+
+    url: function () {
+        return '/v1/users/' + this.id + '.json';
+    },
+
+    toString: function () {
+        return this.get("name");
+    },
+
+    parse: function (response) {
+        var self = this;
+        var attrs = _.clone(response);
+
+        if (attrs.last_sign_in_at) {
+            attrs.last_sign_in_at = Date.parse(attrs.last_sign_in_at);
+        }
+
+        attrs = Backbone.Model.prototype.parse.call(this, attrs);
+        // this._changed = true;
+        return attrs;
+    },
+
+    toJSON: function () {
+        var attrs = _.clone(this.attributes);
+        if (attrs.last_sign_in_at) {
+            attrs.last_sign_in_at = attrs.last_sign_in_at.toISOString();
+        }
+        return attrs;
+    }
 });
 
 lll.models.users = new (Backbone.Collection.extend({

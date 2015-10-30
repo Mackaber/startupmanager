@@ -7,11 +7,13 @@ Encoding.default_internal = Encoding::UTF_8
 gem "rails", "3.2.8"
 gem "pg", "0.14.1"
 
+gem "net-ssh", "2.9.2"
+
 gem "absurdity", "0.2.8"
 gem "acts_as_audited", "2.1.0"
 gem "aws-sdk", "1.6.9"
 gem "cancan", "1.6.8"
-gem "ckeditor", "3.6.0"   # TODO upgrade to latest version
+gem "ckeditor", "~> 3.7.0"   # TODO upgrade to latest version
 gem "devise", "2.1.0"
 gem "dotenv-rails"
 gem "dynamic_form", "1.1.4"      # error_message_on, etc.
@@ -28,7 +30,7 @@ gem "resque", "1.23.0"
 gem "resque-scheduler", "2.0.0", :require => "resque_scheduler"
 gem "rufus-scheduler", "2.0.17"
 gem "stripe", :git => "https://github.com/stripe/stripe-ruby"
-
+gem "activeadmin", "~> 0.6.4"
 gem "rake"
 
 group :assets do

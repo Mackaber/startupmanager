@@ -1,3 +1,4 @@
+# encoding: utf-8
 class ThirdParty::Brightidea
   
   def initialize(api_key)

@@ -1,4 +1,5 @@
-class Jobs::Billing::Daily < Jobs::Job      
+#encoding: utf-8
+class Jobs::Billing::Daily < Jobs::Job
   def self.run
     today = Date.today
     

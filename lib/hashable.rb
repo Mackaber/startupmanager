@@ -1,3 +1,4 @@
+# encoding: utf-8
 module Hashable
   
   def to_hash(include_fields, omit_fields)

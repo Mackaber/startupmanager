@@ -1,3 +1,4 @@
+# encoding: utf-8
 class LllOnlyInterceptor
   
   def self.delivering_email(mail)

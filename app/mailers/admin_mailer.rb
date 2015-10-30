@@ -1,4 +1,4 @@
-# encoding: utf-8
+#encoding: utf-8
 class AdminMailer < ActionMailer::Base
   
   default :to => ENV["EMAIL_SYSTEM"]

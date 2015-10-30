@@ -1,3 +1,4 @@
+#encoding: utf-8
 module Project::Canvas
   
   # Letter-landscape (11" x 8.5") is 792x612 points, with 0,0 at the bottom-left

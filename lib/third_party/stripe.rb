@@ -1,3 +1,4 @@
+# encoding: utf-8
 class ThirdParty::Stripe
   
   # Process outstanding charges for orgs with stripe ID

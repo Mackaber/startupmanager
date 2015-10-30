@@ -1,3 +1,4 @@
+# encoding: utf-8
 module Database
   class Base 
     attr_accessor :config

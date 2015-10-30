@@ -1,4 +1,5 @@
-class Jobs::Job  
+#encoding: utf-8
+class Jobs::Job
   # extend Resque::Plugins::ExponentialBackoff
   # 
   # def self.backoff_strategy

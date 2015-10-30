@@ -1,4 +1,5 @@
-#populate box categories
+# encoding: utf-8
+# populate box categories
 if Box.all.empty?
   Box.create(:name => "key_partners",           :label => 'Problema')
   Box.create(:name => "key_activities",         :label => 'Solución')

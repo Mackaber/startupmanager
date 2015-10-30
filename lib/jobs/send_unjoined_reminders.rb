@@ -1,3 +1,4 @@
+#encoding: utf-8
 class Jobs::SendUnjoinedReminders < Jobs::Job
   def self.run
     members_unjoined = Member.unjoined_for(2)

@@ -1,4 +1,5 @@
-class Jobs::WarmCache < Jobs::Job      
+#encoding: utf-8
+class Jobs::WarmCache < Jobs::Job
   def self.run
     User.find_each do |user|
       user.to_hash

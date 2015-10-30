@@ -1,3 +1,4 @@
+# encoding: utf-8
 namespace :db do
   namespace :test do
     task :prepare => :environment do

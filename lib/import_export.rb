@@ -1,3 +1,4 @@
+# encoding: utf-8
 module ImportExport
   
   def self.included(base)

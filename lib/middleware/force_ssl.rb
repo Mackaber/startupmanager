@@ -1,3 +1,4 @@
+# encoding: utf-8
 class ForceSSL
   def initialize(app)
     @app = app

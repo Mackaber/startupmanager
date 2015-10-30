@@ -1,3 +1,4 @@
+#encoding: utf-8
 class Jobs::AttachmentUpload < Jobs::Job
     
   def self.run(member_id, item_type, item_id, file_data, file_original_filename, file_content_type) 

@@ -1,4 +1,4 @@
-# encoding: utf-8
+#encoding: utf-8
 class UserMailer < ActionMailer::Base
  
   def confirm_add_to_project(member, owner_user)

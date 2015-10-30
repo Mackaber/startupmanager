@@ -1,4 +1,4 @@
-# encoding: utf-8
+#encoding: utf-8
 class ProjectMailer < ActionMailer::Base
   
   def goal_invite(member)

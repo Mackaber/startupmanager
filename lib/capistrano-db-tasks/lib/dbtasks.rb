@@ -1,3 +1,4 @@
+# encoding: utf-8
 require 'highline'
 
 Capistrano::Configuration.instance.load do |instance|  

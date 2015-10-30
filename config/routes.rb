@@ -1,5 +1,9 @@
 LeanLaunchLab::Application.routes.draw do
-  
+
+  devise_for :admin_users, ActiveAdmin::Devise.config
+  devise_for :admin_users, :controllers => { :sessions => "active_admin_sessions" }
+  ActiveAdmin.routes(self)
+
   resources :errors, :only => [:create]
 
   post "/email" => "email#index"
@@ -11,7 +15,7 @@ LeanLaunchLab::Application.routes.draw do
   devise_scope :user do
     match "/users/password/check-email" => "custom_devise/passwords", :action => "check_email", :as => "check_email_password"
   end
-  devise_for :users, :controllers => {:confirmations => "custom_devise/confirmations", :passwords => "custom_devise/passwords", :registrations => "custom_devise/registrations", :sessions => "custom_devise/sessions"}  
+  devise_for :users, :controllers => {:confirmations => "custom_devise/confirmations", :passwords => "custom_devise/passwords", :registrations => "custom_devise/registrations", :sessions => "custom_devise/sessions"}
 
   resources :settings, :only => :update
 

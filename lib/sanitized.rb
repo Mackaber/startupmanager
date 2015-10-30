@@ -1,3 +1,4 @@
+# encoding: utf-8
 module Sanitized
   
   def self.included(base)

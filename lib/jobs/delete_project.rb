@@ -1,3 +1,4 @@
+#encoding: utf-8
 class Jobs::DeleteProject < Jobs::Job
   
   def self.run(project_id, user_id)

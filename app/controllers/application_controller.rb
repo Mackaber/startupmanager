@@ -1,10 +1,10 @@
 class ApplicationController < ActionController::Base
   
-  before_filter :require_login_and_password_change
+  # before_filter :require_login_and_password_change
   before_filter :set_json_data_before
   after_filter :set_json_data_after
-  
-  check_authorization
+
+  # check_authorization :unless => :devise_controller?
   protect_from_forgery
   
   def authenticate_user!

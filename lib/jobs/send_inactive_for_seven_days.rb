@@ -1,3 +1,4 @@
+#encoding: utf-8
 class Jobs::SendInactiveForSevenDays < Jobs::Job
   def self.run
     #UserActivity.unscoped.select("user_id, max(created_at)").group(:user_id).having("max(created_at) < date '?' ", 7.days.ago )

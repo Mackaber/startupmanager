@@ -1,3 +1,4 @@
+# encoding: utf-8
 class NotifiedTask < Rake::TaskLib
   attr_accessor :name, :block
 

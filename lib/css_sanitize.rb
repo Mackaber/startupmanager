@@ -1,3 +1,4 @@
+# encoding: utf-8
 __END__
 
 # Include this module into your ActiveRecord model.

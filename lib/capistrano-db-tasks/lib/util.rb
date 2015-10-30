@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 module Util
   def self.prompt(msg, prompt = "(y)es, (n)o ")
     ui = HighLine.new
