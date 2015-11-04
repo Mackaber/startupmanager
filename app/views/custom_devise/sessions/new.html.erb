@@ -1,13 +1,14 @@
-<% title("Spartans Online Academy - Entrar") %>
-
-<div class="container text-center">
+<% title("StartupManager - Entrar") %>
+<div class="container text-center col-md-6 col-md-offset-3">
     <h2 class="form-signin-heading">Entrar a tu cuenta</h2>
-    <%= form_for(resource, :as => resource_name, :url => session_path(resource_name), :html => {:class => "form-signin"}) do |f| %>
+    <%= form_for(resource, :as => resource_name, :url => session_path(resource_name)) do |f| %>
         <div class="form-group">
-        <%= f.email_field :email, :placeholder => "Email", :html => {:class => "form-control"} %>
+          <label>Correo Electrónico</label>
+        <%= f.email_field :email, :placeholder => "Email", :class => "form-control" %>
           </div>
           <div class="form-group">
-          <%= f.password_field :password, :placeholder => "Contraseña", :html => {:class => "form-control"} %>
+            <label>Contraseña</label>
+          <%= f.password_field :password, :placeholder => "Contraseña", :class => "form-control" %>
             </div>
       <p><a href="/users/password/new"  class="forget">¿Olvidaste tu Contraseña?</a></p>
       <button class="btn btn-lg btn-primary">Entrar</button>

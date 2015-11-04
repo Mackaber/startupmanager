@@ -14,7 +14,7 @@ describe BlogPostMailer do
       email = BlogPostMailer.mail_contents_of_blog_post(blog_post, [@admin1.user.email, @admin2.user.email].join(','))
       email.should bcc_to(@admin1.user.email, @admin2.user.email)
     end
-    it "does not send mail for LeanLaunchLab project in production environment" do
+    it "does not send mail for StartupManager project in production environment" do
       Rails.stub(:env).and_return('production')
       @project = create_lll_project
       BlogPostMailer.should_not_receive(:mail_contents_of_blog_post)
@@ -28,9 +28,9 @@ describe BlogPostMailer do
       email = BlogPostMailer.mail_contents_of_comment(comment, comment.blog_post, [@admin1.user.email, @admin2.user.email].join(','))
       email.should bcc_to(@admin1.user.email, @admin2.user.email)
     end
-    it "does not send mail for LeanLaunchLab project in production environment" do
+    it "does not send mail for StartupManager project in production environment" do
       Rails.stub(:env).and_return('production')
-      @project.update_attribute(:name, 'LeanLaunchLab')
+      @project.update_attribute(:name, 'StartupManager')
       blog_post = Factory(:blog_post, :project => @project)
       BlogPostMailer.should_not_receive(:mail_contents_of_comment)
       Factory(:comment, :member => @owner, :blog_post => blog_post)
@@ -43,12 +43,12 @@ describe BlogPostMailer do
         @email = BlogPostMailer.mail_digest(@owner.user, [@project])
       end
 
-      it "has a from name of LeanLaunchLab and a from address of notifications@leanlaunchlab.com" do
-        @email.header.fields.first.to_s.should == 'alerts@leanlaunchlab.com'
-        @email.from == 'notifications@leanlaunchlab.com'
+      it "has a from name of StartupManager and a from address of notificaciones@StartupManager.co" do
+        @email.header.fields.first.to_s.should == 'alertas@StartupManager.co'
+        @email.from == 'notificaciones@StartupManager.co'
       end
-      it "has a reply-to of notifications@leanlaunchlab.com" do
-        @email.reply_to.should == ['support@leanlaunchlab.com']
+      it "has a reply-to of notificaciones@StartupManager.co" do
+        @email.reply_to.should == ['soporte@StartupManager.co']
       end
     end
 

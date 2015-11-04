@@ -10,7 +10,7 @@ class EmailController < ApplicationController
       
     ((message.to || []) + (message.cc || [])).each do |addr|
       lhs, rhs = addr.split("@")
-      # next unless (rhs =~ /leanlaunchlab\.com$/)
+      # next unless (rhs =~ /StartupManager\.com$/)
       
       if (
         message.header["Precedence"] == "bulk" ||

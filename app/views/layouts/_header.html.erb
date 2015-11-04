@@ -1,26 +1,23 @@
-<nav class="navbar navbar-inverse navbar-static-top">
-  <div class="container-fluid">
-    <!-- Brand and toggle get grouped for better mobile display -->
+<nav class="navbar navbar-trans navbar-static-top" role="navigation">
+  <div class="container">
     <div class="navbar-header">
-      <a class="navbar-brand brand" href="/"><img src="<%= asset_path 'v2/logo.png' %>" alt="Spartans Online Academy"></a>
+      <a class="navbar-brand" href="/"><img src="<%= asset_path 'v2/logo.png' %>" alt="StartupManager"></a>
     </div>
-
-    <!-- Collect the nav links, forms, and other content for toggling -->
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-
+    <div class="navbar-collapse collapse" id="navbar-collapsible">
       <ul class="nav navbar-nav navbar-right">
         <% if current_user %>
-                <li ><a href="/projects/last" title="Administrar el proyecto seleccionado">Ir al Proyecto</a></li>
-                <li ><a href="/organizations/last" title="Crea Proyectos y añade personas a tu organización">Administrar Organización</a></li>
-                <li ><a href="/projects" title="Maneja varios proyectos de manera sencilla">Resumen de Proyectos</a></li>
+            <li ><a href="/projects/last" title="Administrar el proyecto seleccionado">Ir al Proyecto</a></li>
+            <li ><a href="/organizations/last" title="Crea Proyectos y añade personas a tu organización">Administrar Organización</a></li>
+            <li ><a href="/projects" title="Maneja varios proyectos de manera sencilla">Resumen de Proyectos</a></li>
             <li ><a href="/settings/profile" title="Cambia tu nombre y contraseña"><%= current_user.name %></a></li>
-                <li><a href="/users/sign_out">Salir</a></li>
-            <%  else  %>
-                <li><a href="/users/sign_up">Inscribirse</a></li>
-                <li><a href="/users/sign_in">Entrar</a></li>
-                <% end %>
-                </li>
-            </ul>
-        </div><!-- /.navbar-collapse -->
-    </div><!-- /.container-fluid -->
+            <li><a href="/users/sign_out">Salir</a></li>
+
+        <%  else  %>
+            <li><a href="/users/sign_up">Inscribirse</a></li>
+            <li><a href="/users/sign_in">Entrar</a></li>
+        <% end %>
+        </li>
+      </ul>
+    </div>
+  </div>
 </nav>

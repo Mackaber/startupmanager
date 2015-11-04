@@ -21,7 +21,7 @@ module Project::Canvas
       
       bounding_box [0, 35], :width => 720, :height => 36 do
         text_box "The Canvas is adapted from businessmodelgeneration.com and is licensed under the Creative Commons Attribution-Share Alike 3.0 Unported License.", :at => [0, 18], :width => 576, :align => :left, :size => 6
-        text_box "www.leanlaunchlab.com", :at => [576, 20], :width => 144, :align => :right, :size => 9
+        text_box "www.StartupManager.co", :at => [576, 20], :width => 144, :align => :right, :size => 9
       end
       
       geometry = {

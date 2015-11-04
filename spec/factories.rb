@@ -53,9 +53,9 @@ Factory.define :owner, :parent => :member_with_confirmed_user do |f|
 end
 
 Factory.define :lll_owner, :parent => :owner do |f|
-  f.project { Factory(:project, :name => "LeanLaunchLab", :created_at => Time.parse("2011-08-07 23:50:00 UTC")) }
+  f.project { Factory(:project, :name => "StartupManager", :created_at => Time.parse("2011-08-07 23:50:00 UTC")) }
   f.after_create do |m|
-    m.user.update_attributes(:name => "Ben Mappen", :email => "ben@leanlaunchlab.com")
+    m.user.update_attributes(:name => "Ben Mappen", :email => "javier@StartupManager.co")
   end
 end
 

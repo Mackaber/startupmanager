@@ -8,7 +8,7 @@ describe BlogPostsController do
 
   describe "#new" do
 
-    context 'LeanLaunchLab project' do
+    context 'StartupManager project' do
       before do
         project = create_lll_project
         @owner = project.members.first
@@ -32,7 +32,7 @@ describe BlogPostsController do
 
     end
 
-    context 'project other than LeanLaunchLab' do
+    context 'project other than StartupManager' do
 
       before do
         @owner = Factory(:owner)

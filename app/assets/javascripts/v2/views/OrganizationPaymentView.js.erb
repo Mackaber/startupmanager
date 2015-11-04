@@ -191,7 +191,7 @@ lll.views.OrganizationPaymentView = Backbone.View.extend({
         (level.get("max_projects") && self.model.projects().length > level.get("max_projects")) ||
         (level.get("max_storage_mb") && Math.ceil(level.total_attachment_size/1048476.0) > level.get("max_storage_mb"))
       ) {
-        var e = $("<p>Your current usage (projects or members) exceeds the limits for this plan.  Please remove members and/or projects before downgrading.  For help, contact <a href='mailto:support@leanlaunchlab.com'>support@leanlaunchlab.com</a>.</p>");
+        var e = $("<p>Your current usage (projects or members) exceeds the limits for this plan.  Please remove members and/or projects before downgrading.  For help, contact <a href='mailto:soporte@StartupManager.co'>soporte@StartupManager.co</a>.</p>");
         $("body").append(e);
         $(e).dialog({
           width: 400,

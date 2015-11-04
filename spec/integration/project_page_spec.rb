@@ -468,7 +468,7 @@ describe "Project page" do
           end
 
           it "changes Un-highlight Changes button to highlight Changes button when clicked" do
-            #page.execute_script("LEAN_LAUNCH_LAB.canvas_url=''") #sometimes this seems to cause js error/ capybara broken pipe
+            #page.execute_script("StartupManager.canvas_url=''") #sometimes this seems to cause js error/ capybara broken pipe
             page.find('#facebox a.highlight-changes-on').click()
             page.should have_selector('#facebox div.switcher') #causes it to wait up to two seconds for div to appear
             page.should have_selector("#facebox a.highlight-changes-off")

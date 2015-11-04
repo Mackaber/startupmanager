@@ -1,7 +1,7 @@
 # Be sure to restart your server when you modify this file.
 
 LeanLaunchLab::Application.config.session_store :cookie_store, {
-  :key => '_LeanLaunchLab_session',
+  :key => '_StartupManager_session',
   :secure => ["production", "staging"].include?(Rails.env)
 }
 

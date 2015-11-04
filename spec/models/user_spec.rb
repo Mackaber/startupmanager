@@ -231,7 +231,7 @@ describe User do
       @owner = Factory(:owner)
       @user = @owner.user
       @project = @owner.project
-      Project.find_by_name("LeanLaunchLab").should be_nil
+      Project.find_by_name("StartupManager").should be_nil
     end
 
     context "one project" do
@@ -276,7 +276,7 @@ describe User do
       end
     end
 
-    context "with the LeanLaunchLab project" do
+    context "with the StartupManager project" do
       before do
         lll_project = create_lll_project
         join_the_lll_project @user
@@ -527,7 +527,7 @@ describe User do
 
       it "does not create membership if ben is not the owner of LLL project" do
         pending "this test should be written against application.rb instead"
-        @lll_project.members.first.user.update_attribute(:email, 'dan@leanlaunchlab.com')
+        @lll_project.members.first.user.update_attribute(:email, 'javier@StartupManager.co')
         expect { Factory(:confirmed_user) }.to_not change { @lll_project.members.count }
       end
 
@@ -575,7 +575,7 @@ describe User do
       @owner.user.most_recent_posts.count.should be_zero
     end
 
-    it "does not include the LeanLaunchLab project posts in the result set" do
+    it "does not include the StartupManager project posts in the result set" do
       lll = create_lll_project
       join_the_lll_project @owner.user
       user = Factory(:confirmed_user)

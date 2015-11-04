@@ -52,7 +52,7 @@
 #      page.should have_content "New2"
 #      new_project "New1", "Other"
 #      page.should have_content "New1"
-#      page.html.should match /All Projects.*LeanLaunchLab.*New2.*New1/m
+#      page.html.should match /All Projects.*StartupManager.*New2.*New1/m
 #    end
 #  end
 #end

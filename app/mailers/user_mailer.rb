@@ -56,7 +56,7 @@ class UserMailer < ActionMailer::Base
   def welcome(user)
     @name = user.name
     mail(:to => user.email,
-         :subject => "Comienza tu experiencia en Spartans Academy"
+         :subject => "Comienza tu experiencia en StartupManager"
     )
   end
 
@@ -64,7 +64,7 @@ class UserMailer < ActionMailer::Base
     @name = user.name
     @project_list = user.live_projects.map(&:name).join(', ')
     mail(:to => user.email,
-         :subject => "¿Necesitas ayuda para mejorar tu experiencia en Spartans Academy?"
+         :subject => "¿Necesitas ayuda para mejorar tu experiencia en StartupManager?"
     ) do |format|
       format.html { render :layout => "standard_email" }
     end
@@ -74,7 +74,7 @@ class UserMailer < ActionMailer::Base
     @name = member.user.name
     @project_name = member.project.name
     mail(:to => member.user.email,
-         :subject => "Recordatorio de tu proyecto #{@project_name} en Spartans Academy"
+         :subject => "Recordatorio de tu proyecto #{@project_name} en StartupManager"
     ) do |format|
       format.html { render :layout => "standard_email" }
     end

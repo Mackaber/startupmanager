@@ -6,12 +6,12 @@ describe ActivityStreamController do
 
     describe "restricted access" do
       before do
-        @ben = Factory(:confirmed_user, :email => "ben@leanlaunchlab.com")
-        @dan = Factory(:confirmed_user, :email => "dan@leanlaunchlab.com")
-        @kai = Factory(:confirmed_user, :email => "kai@leanlaunchlab.com")
-        @lorien = Factory(:confirmed_user, :email => "lorien.henrywilkins@gmail.com")
-        @bill = Factory(:confirmed_user, :email => "bill@blazingcloud.net")
-        @lee = Factory(:confirmed_user, :email => "lee@blazingcloud.net")
+        @ben = Factory(:confirmed_user, :email => "javier+ben@StartupManager.co")
+        @dan = Factory(:confirmed_user, :email => "javier+dan@StartupManager.co")
+        @kai = Factory(:confirmed_user, :email => "javier+kai@StartupManager.co")
+        @lorien = Factory(:confirmed_user, :email => "javier+lorian@StartupManager.co")
+        @bill = Factory(:confirmed_user, :email => "javier+bill@StartupManager.co")
+        @lee = Factory(:confirmed_user, :email => "javier+lee@StartupManager.co")
       end
 
       context 'no signed in user' do

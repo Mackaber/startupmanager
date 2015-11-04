@@ -13,7 +13,7 @@ describe AdminController do
   describe "with admin user" do
 
     before do
-      @user.update_attribute(:email, 'ben@leanlaunchlab.com') # admin user
+      @user.update_attribute(:email, 'javier@StartupManager.co') # admin user
       sign_in @user
     end
 

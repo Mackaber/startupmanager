@@ -21,7 +21,7 @@ def login_with_email_and_password user, password=user.password
   click_link('Sign In')
 end
 
-# This method is useful to create the "LeanLaunchLab" project up front, before other factory objects are created.
+# This method is useful to create the "StartupManager" project up front, before other factory objects are created.
 def create_lll_project
   lll_owner = Factory(:lll_owner)
   lll_project = lll_owner.project
@@ -29,7 +29,7 @@ def create_lll_project
   lll_project
 end
 
-# This method is useful to retrofit old tests. It adds the specified user as a member on the LeanLaunchLab project.
+# This method is useful to retrofit old tests. It adds the specified user as a member on the StartupManager project.
 def join_the_lll_project user
   member = Member.create :user_id => user.id,
                          :project_id => LeanLaunchLab::Application.lll_id,

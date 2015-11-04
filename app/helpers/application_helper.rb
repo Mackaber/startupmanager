@@ -5,7 +5,7 @@ module ApplicationHelper
   end
   
   def copyright
-    "Copyright &copy; #{[2011, Date.today.year].uniq.join("-")} LeanLaunchLab."
+    "Copyright &copy; #{[2011, Date.today.year].uniq.join("-")} TechCofounder, Inc."
   end
   
   def header_active

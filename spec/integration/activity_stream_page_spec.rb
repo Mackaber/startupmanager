@@ -3,7 +3,7 @@ require "spec_helper"
 describe "Activity Stream page" do
 
   before do
-    @user = Factory(:confirmed_user, :email => "ben@leanlaunchlab.com")
+    @user = Factory(:confirmed_user, :email => "jabier@StartupManager.co")
 
     5.times do |i|
       Factory(:user_activity, :created_at => Time.now + i.minutes)
