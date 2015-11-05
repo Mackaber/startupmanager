@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     <link rel="shortcut icon" href="/favicon.ico">
-    <title>StartupManager | Entrénate de manera intensiva y profesional en emprendimiento.</title>
+    <title>StartupManager | Herramienta de administración para Startups y empresas que crean innovación.</title>
     <meta name="description" content="StartupManager: Entrénate de manera intensiva y profesional en emprendimiento.">
     <meta name="keywords" content="StartupManager: Entrénate de manera intensiva y profesional en emprendimiento.">
     <meta name="tracking_code" content="<%= tracking_code %>">
@@ -21,27 +21,29 @@
       }
     </style>
   </head>
-  <body id="landing">
-    <div id="wrapper">
-      <div id="header" data-active="<%= header_active %>"></div>
+  <body>
+      <%= render(:partial => "/layouts/header") %>
 
       <%= yield(:layout) %>
 
       <footer class="footer">
         <div class="container text-center">
-          <p class="text-muted"><%= copyright.html_safe %></p>
+          <p class="text-muted"><small><%= copyright.html_safe %></small></p>
           <p><small>
-            The Canvas is adapted from <%= link_to("businessmodelgeneration.com", "http://businessmodelgeneration.com", :target => "_blank") %> and is licensed under the Creative Commons Attribution-Share Alike 3.0 Unported License.
+            El Canvas es adaptado de <%= link_to("businessmodelgeneration.com", "http://businessmodelgeneration.com", :target => "_blank") %> y tiene licencia Creative Commons Attribution-Share Alike 3.0 Unported License.
           </small></p>
           <p>
-              <%= link_to("Terms", terms_path, :target => "_blank") %> |
-              <%= link_to("Privacy", privacy_path, :target => "_blank") %>
+              <%= link_to("Terminos", terms_path, :target => "_blank") %> |
+              <%= link_to("Privacidad", privacy_path, :target => "_blank") %>
           </p>
         </div>
       </footer>
 
-    </div>
-    <div id="fb-root"></div>
+
+      <!-- script references -->
+      <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+      <script src="js/bootstrap.min.js"></script>
+      <script src="js/scripts.js"></script>
     <%= include_gon(:camel_case => true, :namespace => 'lllData') %>
     <%= javascript_include_tag :v2 %>
     <%= yield(:scripts) %>

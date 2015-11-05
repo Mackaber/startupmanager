@@ -148,5 +148,5 @@ LeanLaunchLab::Application.routes.draw do
   match 'privacy', :controller => "static", :as => 'privacy'
   match 'terms', :controller => "static", :as => 'terms'
   
-  match "*path", :to => "default#index"
+  match "*path", :to => "default#sesions#new"
 end

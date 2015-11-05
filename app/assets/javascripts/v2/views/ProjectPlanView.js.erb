@@ -28,7 +28,7 @@ lll.views.ProjectPlanView = Backbone.View.extend({
     self.toDoView = new lll.views.ProjectPlanSectionView({
       model: self.model,
       collection: todoHypotheses,
-      title: "To Do",
+      title: "Pendientes",
       sortable: true,
       className: "column todo",
     });
@@ -45,7 +45,7 @@ lll.views.ProjectPlanView = Backbone.View.extend({
     self.inProgressView = new lll.views.ProjectPlanSectionView({
       model: self.model,
       collection: inProgressHypotheses,
-      title: "In Progress",
+      title: "En Progreso",
       sortable: true,
       className: "column in_progress"
     });
@@ -62,7 +62,7 @@ lll.views.ProjectPlanView = Backbone.View.extend({
     self.doneView = new lll.views.ProjectPlanSectionView({
       model: self.model,
       collection: doneHypotheses,
-      title: "Done",
+      title: "Terminado",
       className: "column done"
     });
     

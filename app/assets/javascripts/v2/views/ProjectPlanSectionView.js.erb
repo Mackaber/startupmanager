@@ -42,7 +42,7 @@ lll.views.ProjectPlanSectionView = Backbone.View.extend(lll.views.HypothesisCont
         title: self.options.title
       }));
       
-      if (self.options.title == "To Do") {
+      if (self.options.title == "Pendientes") {
         if (self.model.currentMember().get("can_manage_hypotheses")) {
           var newView = function() {
             var newHypothesis = new lll.models.Hypothesis({
@@ -55,7 +55,7 @@ lll.views.ProjectPlanSectionView = Backbone.View.extend(lll.views.HypothesisCont
                 newHypothesisView.destroy();
                 //self.collection.add(model);
                 newView();
-                lll.views.info("Hypothesis was added successfully");
+                lll.views.info("La Hipotesis fue añadida con éxito");
               },
               error: _.bind(self.collection.remove, self.collection)
             });
@@ -66,7 +66,7 @@ lll.views.ProjectPlanSectionView = Backbone.View.extend(lll.views.HypothesisCont
           };      
           newView();
         }
-      } else if (self.options.title == "In Progress") {
+      } else if (self.options.title == "En Progreso") {
         self.$(".left-sidebar").append(
           new lll.views.ProjectPlanInProgressPlaceholderView({
             model: self.model

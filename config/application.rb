@@ -48,7 +48,7 @@ module LeanLaunchLab
 
     # Set Time.zone default to the specified zone and make Active Record auto-convert to this zone.
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
-    config.time_zone = 'Pacific Time (US & Canada)'
+    config.time_zone = 'America/Mexico_City'
 
     # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
@@ -90,7 +90,7 @@ module LeanLaunchLab
 end
 
 ActionMailer::Base.default ({
-  :from => "\"LeanLaunchLab#{Rails.env == 'production' ? "" : " (#{Rails.env})"}\" <#{ENV['EMAIL_NOTIFICATIONS']}>",
+  :from => "\"StartupManager#{Rails.env == 'production' ? "" : " (#{Rails.env})"}\" <#{ENV['EMAIL_NOTIFICATIONS']}>",
   :return_path => ENV["EMAIL_SYSTEM"],
   :reply_to => ENV["EMAIL_SUPPORT"]
 })

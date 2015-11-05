@@ -1,68 +1,117 @@
-<div class="row">
-  <div class="container"">
-    <div class="col-md-9 text-center">
-      <div class="row">
-        <h2>PAQUETES DE CAPACITACIÓN</h2>
-        <div class="col-md-4">
-          <img src="<%= asset_path 'v2/pricing-1.png' %>">
-          <h3>Full Experience</h3>
-          <h4>Programa para salir a Mercado $1499USD/30 días</h4>
-          <p>2 días de entrenamiento estratégico intensivo para que comiences a emprender</p>
-          <p>+</p>
-          <p>2 meses en los que nos comprometemos a seguirte hasta que salgas a mercado</p>
-        </div>
-        <div class="col-md-4">
-          <img src="<%= asset_path 'v2/pricing-2.png' %>">
-          <h3>Training Experience</h3>
-          <h4>Programa de entrenamiento $299USD</h4>
-          <p>2 días de entrenamiento estratégico intensivo para que comiences a emprender </p>
-        </div>
-        <div class="col-md-4">
-          <img src="<%= asset_path 'v2/pricing-3.png' %>">
-          <h3>Hora de Asesoría</h3>
-          <h4>1 Hora de asesoría personal $150USD la hora</h4>
-          <p>Dedicaremos 1 hora a ayudarte a resolver los problemas estratégicos que presenta tu proyecto actualmente. </p>
-        </div>
-        <div class="col-md-12 text-center" style="padding-top: 25px">
-            <strong>Una vez concluyas tu entrenamiento y tu etapa de seguimiento puedes seguir usando esta plataforma por $9USD al mes</strong>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-3">
-      <h3>CREA TU CUENTA</h3>
-        <%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => {:class => "sign-up-form"}) do |f| %>
-          <p>
-            <label>Nombre</label>
-            <%= f.text_field :name %>
-          </p>
-          <p>
-            <label>Correo Electrónico</label>
-            <%= f.text_field :email %>
-          </p>
-          <p>
-            <label>Contraseña</label>
-            <%= f.password_field :password, :autocomplete => "off" %>
-          </p>
-          <p>
-            <label>Contraseña</label>
-            <%= f.password_field :password_confirmation, :autocomplete => "off" %>
-          </p>
-          <% orgs = f.object.organizations.empty? ? [Organization.new] : f.object.organizations %>
-          <%= f.fields_for(:organizations, orgs) do |of| %>
-          <p>
-            <label>Nombre de tu Organización</label>
-            <%= of.text_field :name %><br/>
-            <small>Nombre de tu compañia, grupo, universidad, incubadora o asociación</small>
-          </p>
-          <% end %>
-          <p style="padding-bottom: 25px">
-            <input type="submit" class="btn btn-success" value="Entrena con Nosotros">
-          </p>
-          <p><small>Es obligatorio que hayas asistido a alguno de nuestros talleres de entrenamiento incial para que tengas los conceptos básicos.</small></p>
-          <p>
-            Al suscribirte estás aceptando los<%= link_to 'Terminos y Condiciones', terms_url, :target=>"_blank" %> y la <%= link_to 'Politica de Privacidad', privacy_url, :target=>"_blank" %>.
-          </p>
+<section class="container-fluid text-center" id="section6">
+  <h3>CREA TU CUENTA</h3>
+  <br>
+  <div class="col-md-6 col-md-offset-3">
+    <%= form_for(resource, :as => resource_name, :url => registration_path(resource_name)) do |f| %>
+        <p>
+          <%= f.text_field :name, :class => "form-control", :placeholder => "Nombre" %>
+        </p>
+        <p>
+          <%= f.text_field :email, :class => "form-control", :placeholder => "Correo Electrónico" %>
+        </p>
+        <p>
+          <%= f.password_field :password, :autocomplete => "off", :class => "form-control", :placeholder => "Contraseña" %>
+        </p>
+        <p>
+          <%= f.password_field :password_confirmation, :autocomplete => "off", :class => "form-control", :placeholder => "Contraseña" %>
+        </p>
+        <% orgs = f.object.organizations.empty? ? [Organization.new] : f.object.organizations %>
+        <%= f.fields_for(:organizations, orgs) do |of| %>
+            <p>
+              <%= of.text_field :name, :class => "form-control", :placeholder => "Nombre de tu organización" %><br/>
+              Nombre de tu compañia, grupo, universidad, incubadora o asociación
+            </p>
         <% end %>
-    </div>
+        <p style="padding-bottom: 25px">
+          <input type="submit" class="btn btn-success btn-lg btn-block" value="Crear Cuenta">
+        </p>
+        <br>
+        <p>Al suscribirte estás aceptando los <%= link_to 'Terminos y Condiciones', terms_url, :target=>"_blank" %> y la <%= link_to 'Politica de Privacidad', privacy_url, :target=>"_blank" %>.
+        </p>
+    <% end %>
   </div>
-</div>
+
+</section>
+<section class="container-fluid" id="section5">
+  <div class="col-sm-10">
+    <div class="container">
+      <div class="row text-center">
+        <h1>Comienza a administrar tu startup con nosotros</h1>
+        <br><br>
+        <div class="col-sm-4 col-xs-12">
+          <div class="list-group">
+            <a href="#" class="list-group-item active">
+              <h2 class="list-group-item-heading">Basico</h2>
+              <h6>Para ti y tu cofounder</h6>
+            </a>
+            <a href="#" class="list-group-item">
+              <p class="list-group-item-text">Hasta 2 miembros en la plataforma</p>
+            </a>
+            <a href="#" class="list-group-item">
+              <p class="list-group-item-text">1 Proyecto</p>
+            </a>
+            <a href="#" class="list-group-item">
+              <p class="list-group-item-text">1GB de almacenamiento</p>
+            </a>
+            <a href="#" class="list-group-item">
+              <p class="list-group-item-text">Soporte básico por correo electrónico</p>
+            </a>
+            <a href="#" class="list-group-item">
+              <button class="btn btn-primary btn-lg btn-block">$149 MXN al mes</button>
+            </a>
+          </div>
+        </div><!--/left-->
+
+        <div class="col-sm-4 col-xs-12">
+          <div class="list-group text-center">
+            <a href="#" class="list-group-item active">
+              <h2 class="list-group-item-heading">Avanzado</h2>
+              <h6>Equipo Startup</h6>
+            </a>
+            <a href="#" class="list-group-item">
+              <p class="list-group-item-text">Hasta 10 miembros en la plataforma</p>
+            </a>
+            <a href="#" class="list-group-item">
+              <p class="list-group-item-text">3 Proyectos</p>
+            </a>
+            <a href="#" class="list-group-item">
+              <p class="list-group-item-text">5GB de almacenamiento</p>
+            </a>
+            <a href="#" class="list-group-item">
+              <p class="list-group-item-text">Soporte preferencial por correo electrónico</p>
+            </a>
+            <a href="#" class="list-group-item">
+              <button class="btn btn-default btn-lg btn-block">$499 MXN al mes</button>
+            </a>
+          </div>
+        </div><!--/middle-->
+
+        <div class="col-sm-4 col-xs-12">
+          <div class="list-group text-center">
+            <a href="#" class="list-group-item active">
+              <h2 class="list-group-item-heading">Empresarial</h2>
+              <h6>Para las empresas que buscan innovar</h6>
+            </a>
+            <a href="#" class="list-group-item">
+              <p class="list-group-item-text">miembros ilimitados en la plataforma</p>
+            </a>
+            <a href="#" class="list-group-item">
+              <p class="list-group-item-text">Proyectos Ilimitados</p>
+            </a>
+            <a href="#" class="list-group-item">
+              <p class="list-group-item-text">50GB de almacenamiento</p>
+            </a>
+            <a href="#" class="list-group-item">
+              <p class="list-group-item-text">Soporte preferencial por correo electrónico y teléfono</p>
+            </a>
+            <a href="#" class="list-group-item">
+              <button class="btn btn-default btn-lg btn-block">Contáctanos</button>
+            </a>
+          </div>
+        </div><!--/right-->
+
+      </div><!--/row-->
+    </div><!--/container-->
+  </div>
+</section>
+

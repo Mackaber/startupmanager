@@ -20,12 +20,12 @@ html,body {
 }
 
 .navbar-trans {
-	background-color:#279ddd;
+	background-color: #232323;
     color:#fff;
 }
 
 .navbar-trans li>a:hover,.navbar-trans li>a:focus,.navbar-trans li.active {
-	background-color:#38afef;
+	background-color:#0071bc;
 }
 
 .navbar-trans a{
@@ -41,7 +41,7 @@ html,body {
 
 section {
 	padding-top:70px;  
-    padding-bottom:50px; 
+    padding-bottom:40px;
     min-height:calc(100% - 1px);
 }
 
@@ -55,41 +55,47 @@ section {
 }
 
 a.list-group-item.active,[class*='-info'] {
-	background-color: #168ccc;
+	background-color: #0071bc;
     color:#fff;
 }
   
 #section1 {
-	background-color: #168ccc;
-    color:#dedeff;
+	background-color: #0071bc;
+    color:#ffffff;
 }
   
 #section2 {
-	background-color: #e5e5ef;
-    color:#686868;
-}
-  
-#section3 {
-	background-color: #168ccc;
-    color:#ddd;
+	background-color: #f1f1f1;
+    color:#000000;
+    padding-top: 100px;
 }
 
-#section4 {
-	background-color: #fff;
-    color:#444;
-}
 
 #section5,#section7,#section7 a {
-    color:#f5f5f5;
+    color: #000000;
+    padding-top: 100px;
 }
 
 #section6 {
-	background-color: #168ccc;
-    color:#ddd;
+	padding-top: 100px;
+    background-color: #0071bc;
+    color: #ffffff;
+}
+
+#section6 a {
+    color: #eeeeee;
+}
+
+#section8 {
+    padding-top: 100px;
+    padding-bottom: 100px;
+    background-color: #0071bc;
+    color: #ffffff;
+    min-height: 400px !important;
 }
 
 footer {
-	background-color:#494949;
+	background-color:transparent;
     color:#ddd;
     min-height:100px;
     padding-top:20px;

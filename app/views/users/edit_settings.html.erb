@@ -1,11 +1,11 @@
 <%= link_to "back to project", root_path %>
-<h1>Settings</h1>
+<h1>Ajustes</h1>
 </div>
 <div id="main">
   <div class="inner">
 
     <div class="settings-block">
-      <h2>Profile</h2>
+      <h2>Perfil</h2>
       <%= form_for(@user, :url => update_setting_path, :html => {:method => :post, :class => "settings-form"}) do |f| %>
         <fieldset>
           <div class="row">
@@ -28,7 +28,7 @@
     </div>
 
     <div class="settings-block">
-      <h2>Email Preferences</h2>
+      <h2>Preferencias de Correo</h2>
       <%= form_for(@user.setting, :html => {:class => "settings-form"}) do |f| %>
         <fieldset>
           <div class="row">
@@ -71,7 +71,7 @@
             <%= f.password_field :password_confirmation, :class => "text" %>
           </div>
           <div class="submit-holder">
-            <a href="#" class="submit form-submit"><span>Change Password</span></a>
+            <a href="#" class="submit form-submit"><span>Cambiar Contraseña</span></a>
           </div>
         </fieldset>
       <% end %>
