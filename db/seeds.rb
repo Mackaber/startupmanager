@@ -9,7 +9,10 @@ if Box.all.empty?
   Box.create(:name => "channels",               :label => 'Canales')
   Box.create(:name => "customer_segments",      :label => 'Segmentos de Clientes')
   Box.create(:name => "cost_structure",         :label => 'Estructura de Costos')
-  Box.create(:name => "revenue_stream",         :label => 'Flujo de Ingresos')
+  Box.create(:name => "advantage",         :label => 'Ventaja competitiva')
+  Box.create(:name => "key_metrics",         :label => 'Metricas clave')
+  Box.create(:name => "solution",         :label => 'Solucion')
+  Box.create(:name => "problems",         :label => 'Problemas')
 end
 
 if ItemStatus.all.empty?

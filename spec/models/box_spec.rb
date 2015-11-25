@@ -11,5 +11,9 @@ describe Box do
     Box.find_by_name("customer_segments").should_not be_nil
     Box.find_by_name("cost_structure").should_not be_nil
     Box.find_by_name("revenue_stream").should_not be_nil
+    Box.find_by_name("problems").should_not be_nil
+    Box.find_by_name("key_metrics").should_not be_nil
+    Box.find_by_name("advantage").should_not be_nil
+    Box.find_by_name("solution").should_not be_nil
   end
 end
