@@ -26,10 +26,14 @@ module Project::Canvas
       
       geometry = {
         "key_partners" => [0, 467, 144, 288],
+        "problems" => [0, 467, 144, 288],
         "key_activities" => [144, 467, 144, 144],
+        "solution" => [144, 467, 144, 144],
         "key_resources" => [144, 323, 144, 144],
+        "key_metrics" => [144, 323, 144, 144],
         "value_propositions" => [288, 467, 144, 288],
         "customer_relationships" => [432, 467, 144, 144],
+        "solution" => [432, 467, 144, 144],
         "channels" => [432, 323, 144, 144],
         "customer_segments" => [576, 467, 144, 288],
         "cost_structure" => [0, 179, 360, 144],
