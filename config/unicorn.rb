@@ -14,7 +14,7 @@ shared = ENV["UNICORN_SHARED"]
 # http://unicorn.bogomips.org/Unicorn/Configurator.html
 preload_app true
 
-timeout 300
+timeout 3000
 
 # This is where we specify the socket.
 # We will point the upstream Nginx module to this socket later on
