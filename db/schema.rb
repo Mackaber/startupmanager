@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20151027161212) do
+ActiveRecord::Schema.define(:version => 20160106170456) do
 
   create_table "active_admin_comments", :force => true do |t|
     t.string   "namespace"
@@ -207,6 +207,7 @@ ActiveRecord::Schema.define(:version => 20151027161212) do
     t.datetime "completed_at"
     t.integer  "hypothesis_id"
     t.string   "completed_reason"
+    t.text     "json_hash"
   end
 
   add_index "hypotheses", ["hypothesis_id"], :name => "index_hypotheses_on_hypothesis_id"
