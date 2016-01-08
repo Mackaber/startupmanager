@@ -194,9 +194,16 @@ class Hypothesis < ActiveRecord::Base
   #   end
   # end
 
+
   def created_by_member
-    a = self.audits.where("user_id IS NOT NULL").order("created_at").select{|x| x.user.members.where(:project_id => self.project_id).first}.first
-    a = a ? a.user.members.where(:project_id => self.project_id).first : nil
+    # IDIOTS WAY:
+    # a = self.audits.where("user_id IS NOT NULL").order("created_at").select{|x| x.user.members.where(:project_id => self.project_id).first}.first
+    # a = a ? a.user.members.where(:project_id => self.project_id).first : nil
+    # MY BEST EFFORT WAY:
+    self.audits.joins("INNER JOIN users ON audits.user_id = users.id INNER JOIN members ON members.user_id = users.id")
+        .where("audits.user_id IS NOT NULL").order("audits.created_at")
+        .where("members.project_id = ?",self.project_id).first
+        .user.members.where(project_id: self.project_id).first
   end
 
   def to_s
